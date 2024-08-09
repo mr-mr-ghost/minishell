@@ -32,11 +32,11 @@ all: $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	##@echo "${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(CFILES:.c=.o)"
+	@echo "${YELLOW}[Libft]${RESET}		${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(CFILES:.c=.o)"
 
-fclean: clean
+fclean:
 	@rm -f $(NAME)
-	@echo "${RED}Deleted library${RESET} $(NAME)"
+	@echo "${YELLOW}[Libft]${RESET}		${RED}Deleted library${RESET} $(NAME)"
 
 re: fclean $(NAME)
 

@@ -37,12 +37,12 @@ all: $(NAME)
 clean:
 	@rm -rf $(OBJ_DIR)
 	@$(MAKE) -s -C ./libft clean
-	@echo "${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(CFILES:.c=.o)"
+	@echo "${YELLOW}[Minishell]${RESET}	${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(CFILES:.c=.o)"
 
 fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -s -C ./libft fclean
-	@echo "${RED}Deleted executable${RESET} $(NAME)"
+	@echo "${YELLOW}[Minishell]${RESET}	${RED}Deleted executable${RESET} $(NAME)"
 
 re: fclean $(NAME)
 
