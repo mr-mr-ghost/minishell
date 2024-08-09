@@ -5,3 +5,5 @@ minishell
 *.o
 *.a
 a.out
+cmake-build-debug
+CMakeLists.txt
