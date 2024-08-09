@@ -10,15 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-TODO: Allow repeated input
-TODO: Split input into tokens
-TODO: Write Commands
-TODO: Piping/flags/etc...
-TODO: Parsing
-TODO: Fix misc. errors
-*/
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
