@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 /*
-TODO: Allow input
+TODO: Allow repeated input
 TODO: Split input into tokens
 TODO: Write Commands
 TODO: Piping/flags/etc...
