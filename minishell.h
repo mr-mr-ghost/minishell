@@ -37,4 +37,7 @@ TODO: Fix misc. errors
 # include <term.h>
 # include "libft/libft.h"
 
+char	**read_and_split(char **cmd);
+void	free_cmd(char **cmd);
+
 #endif

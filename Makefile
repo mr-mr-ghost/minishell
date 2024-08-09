@@ -1,6 +1,6 @@
 NAME = minishell
 
-CFILES = minishell.c
+CFILES = minishell.c utils.c
 
 OBJ_DIR = obj
 

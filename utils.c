@@ -1,42 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/09 15:10:20 by jhoddy           ###   ########.fr       */
+/*   Created: 2024/08/09 16:38:58 by jhoddy            #+#    #+#             */
+/*   Updated: 2024/08/09 16:38:58 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**read_and_split(char **cmd)
+void	free_cmd(char **cmd)
 {
-	char	*line;
+	int	i;
 
-	line = readline("Minishell> ");
-	cmd = ft_split(line, ' ');
-	if (cmd == NULL || cmd[0] == NULL)
-		return (NULL);
-	free(line);
-	return (cmd);
-}
-
-int	main(void)
-{
-	char	**cmd;
-	int		i;
-
-	while (1)
+	if (cmd != NULL)
 	{
-		cmd = NULL;
-		cmd = read_and_split(cmd);
 		i = 0;
-		while (cmd && cmd[i])
-			ft_printf("%s\n", cmd[i++]);
-		free_cmd(cmd);
+		while (cmd[i])
+			free(cmd[i++]);
+		free(cmd);
 	}
-	return (0);
 }
