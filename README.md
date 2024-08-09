@@ -11,3 +11,5 @@ TODO: Parsing
 TODO: Fix misc. errors
 
 https://m4nnb3ll.medium.com/minishell-building-a-mini-bash-a-42-project-b55a10598218
+
+https://medium.com/@abkabex/minishell-42-f680eadde592
