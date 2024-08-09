@@ -1,0 +1,7 @@
+.vscode
+.idea
+minshell
+*.swp
+*.o
+*.a
+a.out
