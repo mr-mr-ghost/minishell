@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/07/10 16:46:05 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/08/09 16:51:55 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ TODO: Write Commands
 TODO: Piping/flags/etc...
 TODO: Parsing
 TODO: Fix misc. errors
+LETS DO THIS!!!
 */
 
 #ifndef MINISHELL_H
