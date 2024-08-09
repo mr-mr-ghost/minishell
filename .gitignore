@@ -1,6 +1,6 @@
 .vscode
 .idea
-minshell
+minishell
 *.swp
 *.o
 *.a
