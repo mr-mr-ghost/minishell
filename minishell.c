@@ -24,19 +24,21 @@ char	**read_and_split(char **cmd)
 	return (cmd);
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
-	char	**cmd;
+	t_data	data;
 	int		i;
 
+	(void)argc;
+	(void)argv;
+	data.cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	while (1)
 	{
-		cmd = NULL;
-		cmd = read_and_split(cmd);
+		data.cmd->line = read_and_split(data.cmd->line);
 		i = 0;
-		while (cmd && cmd[i])
-			ft_printf("%s\n", cmd[i++]);
-		free_cmd(cmd);
+		while (data.cmd->line && data.cmd->line[i])
+			ft_printf("%s\n", data.cmd[i++]);
+		free_cmd(&data);
 	}
 	return (0);
 }

@@ -28,7 +28,29 @@
 # include <term.h>
 # include "libft/libft.h"
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
+typedef struct s_cmd
+{
+	char	**line;
+	char	*pipe;
+	char	*redir;
+	char	*args;
+	char	*env_var;
+}	t_cmd;
+
+typedef struct s_data
+{
+	t_env	*env;
+	t_cmd	*cmd;
+}	t_data;
+
 char	**read_and_split(char **cmd);
-void	free_cmd(char **cmd);
+void	free_cmd(t_data *data);
 
 #endif

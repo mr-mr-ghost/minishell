@@ -12,15 +12,17 @@
 
 #include "minishell.h"
 
-void	free_cmd(char **cmd)
+void	free_cmd(t_data *data)
 {
 	int	i;
 
-	if (cmd != NULL)
+	if (data->cmd->line != NULL)
 	{
 		i = 0;
-		while (cmd[i])
-			free(cmd[i++]);
-		free(cmd);
+		while (data->cmd->line[i])
+			free(data->cmd->line[i++]);
+		free(data->cmd->line);
 	}
+	if (data->cmd)
+		free(data->cmd);
 }
