@@ -35,14 +35,16 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	data.exit = 0;
 	init_env(&data, envp);
 	set_shell_lvl(data.env);
 	data.token = (t_token *)malloc(sizeof(t_token));
-	while (1)
+	while (!data.exit)
 	{
 		data.line = readline("Minishell> ");
 		data.cmd = read_and_split(data.line);
-//		token_split(&data);
+		free_tokens(data.token);
 	}
+	free_env(data.env);
 	return (0);
 }

@@ -55,6 +55,7 @@ typedef struct s_data
 {
 	char	*line;
 	char	**cmd;
+	int		exit;
 	t_env	*env;
 	t_token	*token;
 }	t_data;
@@ -62,7 +63,8 @@ typedef struct s_data
 char	**read_and_split(char *line);
 
 /* utils */
-void	free_cmd(t_data *data);
+void	free_tokens(t_token *token);
+void	free_env(t_env *env);
 char	*get_env_name(char *dest, char *src);
 void	ft_memdel(void *ptr);
 

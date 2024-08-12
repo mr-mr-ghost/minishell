@@ -12,19 +12,29 @@
 
 #include "minishell.h"
 
-void	free_cmd(t_data *data)
+void	free_tokens(t_token *token)
 {
-	int	i;
+	t_token	*tmp;
 
-	if (data->cmd != NULL)
+	while (token)
 	{
-		i = 0;
-		while (data->cmd[i])
-			free(data->cmd[i++]);
-		free(data->cmd);
+		tmp = token;
+		token = token->next;
+		free(tmp);
 	}
-	if (data->line)
-		free(data->line);
+}
+
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env;
+		env = env->next;
+		free(tmp->value);
+		free(tmp);
+	}
 }
 
 char	*get_env_name(char *dest, char *src)
