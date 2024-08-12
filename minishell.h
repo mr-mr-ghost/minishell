@@ -28,11 +28,14 @@
 # include <term.h>
 # include "libft/libft.h"
 
-# define PIPE 1
-# define REDIR 2
-# define ARG 3
-# define CMD 4
-# define ENV 5
+# define EMPTY 0
+# define CMD 1
+# define ARG 2
+# define TRUNC 3
+# define APPEND 4
+# define INPUT 5
+# define PIPE 6
+# define END 7
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
