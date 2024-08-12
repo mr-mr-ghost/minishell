@@ -8,7 +8,7 @@ OFILES = $(addprefix $(OBJ_DIR)/,$(CFILES:.c=.o))
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 LIBRARY = libft/libft.a -lreadline
 
