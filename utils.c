@@ -16,13 +16,36 @@ void	free_cmd(t_data *data)
 {
 	int	i;
 
-	if (data->cmd->line != NULL)
+	if (data->cmd != NULL)
 	{
 		i = 0;
-		while (data->cmd->line[i])
-			free(data->cmd->line[i++]);
-		free(data->cmd->line);
-	}
-	if (data->cmd)
+		while (data->cmd[i])
+			free(data->cmd[i++]);
 		free(data->cmd);
+	}
+	if (data->line)
+		free(data->line);
+}
+
+char	*get_env_name(char *dest, char *src)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] && src[i] != '=')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+void	ft_memdel(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
 }

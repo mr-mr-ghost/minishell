@@ -28,30 +28,46 @@
 # include <term.h>
 # include "libft/libft.h"
 
+# define PIPE 1
+# define REDIR 2
+# define ARG 3
+# define CMD 4
+# define ENV 5
+
+# define MAX_ARGS 42
+# define CMD_SIZE 1024
+# define BUFF_SIZE 4096
+
 typedef struct s_env
 {
-	char			*key;
 	char			*value;
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_cmd
+typedef struct s_token
 {
-	char	**line;
-	char	**flags;
-	char	*pipe;
-	char	*redir;
-	char	*args;
-	char	*env_var;
-}	t_cmd;
+	int				type;
+	struct s_token	*next;
+	struct s_token	*prev;
+}	t_token;
 
 typedef struct s_data
 {
+	char	*line;
+	char	**cmd;
 	t_env	*env;
-	t_cmd	*cmd;
+	t_token	*token;
 }	t_data;
 
-char	**read_and_split(char **cmd);
+char	**read_and_split(char *line);
+
+/* utils */
 void	free_cmd(t_data *data);
+char	*get_env_name(char *dest, char *src);
+void	ft_memdel(void *ptr);
+
+/* initialisation */
+void	init_env(t_data *data, char **envp);
+void	set_shell_lvl(t_env *env);
 
 #endif
