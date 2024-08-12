@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/12 16:39:18 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:17:38 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,39 +29,39 @@ char	**read_and_split(char **cmd)
 }
 
 // Function to handle redirection (edited chatgpt example)
-void	handle_redirection(char **args)
+int	handle_redirection(char **args)
 {
 	int	i;
 	int	fd;
 
 	i = 0;
-	fd = -1;
 	while (args && args[i] != NULL)
 	{
 		if (ft_memcmp(args[i], ">", 2) == 0 || ft_memcmp(args[i], "<", 2) == 0)
 		{
 			if (args[i][0] == '>')
 				fd = open(args[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			else if (args[i][0] == '<')
+			else
 				fd = open(args[i + 1], O_RDONLY);
 			if (fd < 0)
 			{
-				perror("open");	// replace by free cmd and return empty line
-				exit(EXIT_FAILURE);
+				perror("open");
+				return (0);
 			}
 			if (args[i][0] == '>')
 				dup2(fd, STDOUT_FILENO);
-			else if (args[i][0] == '<')
+			else
 				dup2(fd, STDIN_FILENO);
 			close(fd);
 			args[i] = NULL; // not sure if needed
-			break ;
+			return (1);
 		}
 		i++;
 	}
+	return (1);
 }
 
-// Function to execute commands (chat gpt example)
+// Function to execute commands (edited chatgpt example)
 int	execute_command(char **args)
 {
 	pid_t	pid;
@@ -74,7 +74,8 @@ int	execute_command(char **args)
 	pid = fork();
 	if (pid == 0)
 	{ // Child process
-		handle_redirection(args);
+		if (!handle_redirection(args))
+			return (0);
 		if (execvp(args[0], args) == -1) // we need to use execve instead
 			perror("execvp");
 		exit(EXIT_FAILURE);
