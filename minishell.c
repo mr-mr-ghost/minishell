@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/12 17:17:38 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/12 18:11:21 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	handle_redirection(char **args)
 	int	fd;
 
 	i = 0;
-	while (args && args[i] != NULL)
+	while (args[i] != NULL)
 	{
 		if (ft_memcmp(args[i], ">", 2) == 0 || ft_memcmp(args[i], "<", 2) == 0)
 		{
@@ -68,14 +68,14 @@ int	execute_command(char **args)
 	int		status;
 
 	if (args == NULL || args[0] == NULL)
-		return 1;
+		return (1);
 	if (ft_memcmp(args[0], "exit", ft_strlen("exit") + 1) == 0)
-		return 0;
+		return (0);
 	pid = fork();
 	if (pid == 0)
 	{ // Child process
-		if (!handle_redirection(args))
-			return (0);
+		if (handle_redirection(args) == 0)
+			return (1); // not working, because parent process?
 		if (execvp(args[0], args) == -1) // we need to use execve instead
 			perror("execvp");
 		exit(EXIT_FAILURE);
@@ -83,12 +83,12 @@ int	execute_command(char **args)
 	else if (pid < 0)
 		perror("fork");
 	else
-	{ // replace this whole part with allowed functions
-		do // Parent process
-			waitpid(pid, &status, WUNTRACED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	{
+		if (waitpid(pid, &status, 0) == -1) //WUNTRACED
+			perror("waitpid");
+		//while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
-	return 1;
+	return (1);
 }
 
 int	main(void)
