@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/12 08:48:58 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/12 09:16:23 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ char	**read_and_split(char **cmd)
 	line = readline("Minishell> ");
 	cmd = ft_split(line, ' ');
 	if (cmd == NULL || cmd[0] == NULL)
+	{
+		if (line)
+			free(line);
 		return (NULL);
+	}
 	free(line);
 	return (cmd);
 }
