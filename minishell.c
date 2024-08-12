@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/12 22:54:12 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 00:55:57 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ char	**read_and_split(char **cmd)
 	return (cmd);
 }
 
+// delete array element at index and shift the rest of the array
 void	delete_array_element(char **array, int index)
 {
 	int	i;
 
 	i = index;
+	free(array[index]);
 	while (array[i] != NULL)
 	{
 		array[i] = array[i + 1];
@@ -40,7 +42,10 @@ void	delete_array_element(char **array, int index)
 	}
 }
 
-// Function to handle redirection (edited chatgpt example)
+// TODO: <<
+// example of << delimiter: "cat <<'X' > t.txt		contentbla X"
+// TODO: >>
+// handle input/output redirection  (> and <)
 int	handle_redirection(char **args)
 {
 	int	i;
@@ -66,12 +71,14 @@ int	handle_redirection(char **args)
 	else
 		dup2(fd, STDIN_FILENO);
 	close(fd);
-	delete_array_element(args, i);
+	//args[i] = NULL; // bad - cuts off free_cmd and the rest of the command
+	delete_array_element(args, i); // delete redirection symbol
+	delete_array_element(args, i); // delete redirection file
 	return (1);
 }
 
 // Function to execute commands (edited chatgpt example)
-int	execute_command(char **args)
+int	execute_command(char **args, char **envp)
 {
 	pid_t	pid;
 	int		status;
@@ -81,41 +88,42 @@ int	execute_command(char **args)
 	if (ft_memcmp(args[0], "exit", ft_strlen("exit") + 1) == 0)
 		return (0);
 	pid = fork();
-	if (pid == 0)
-	{ // child process
+	if (pid == 0) // child process
+	{
 		if (!handle_redirection(args))
 			exit(EXIT_FAILURE);
-		if (execvp(args[0], args) == -1) // need execve instead
+		if (execve(args[0], args, envp) == -1)
 		{
-			perror("execvp");
+			perror("execve");
 			exit(EXIT_FAILURE);
 		}
 		exit(EXIT_SUCCESS);
 	}
 	else if (pid < 0)
 		perror("fork");
-	else
-	{ // parent process
+	else // parent process
+	{ //WUNTRACED to check if the child process is stopped
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
 	}
 	return (1);
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
-	char		**cmd;
-	int			status;
-	const char	*path;
+	char	**cmd;
+	int		status;
 
-	path = getenv("PATH");
-	printf("%s\n\n", path);
+	if (argc > 1)
+		return (0);
+	(void)argv;
+	printf("%s\n\n", getenv("PATH"));
 	status = 1;
 	while (status)
 	{
 		cmd = NULL;
 		cmd = read_and_split(cmd);
-		status = execute_command(cmd);
+		status = execute_command(cmd, envp);
 		free_cmd(cmd);
 	}
 	return (0);
