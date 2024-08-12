@@ -38,6 +38,7 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	char	**line;
+	char	**flags;
 	char	*pipe;
 	char	*redir;
 	char	*args;
