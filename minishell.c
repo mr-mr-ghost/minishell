@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 12:54:10 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 16:43:22 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,29 +31,47 @@ char	**read_and_split(char **cmd)
 	return (cmd);
 }
 
+void	child_process(char **args, char **envp)
+{
+	if (!handle_redirection(args)) // TODO: adjust redirs for builtins
+			exit(EXIT_FAILURE);
+	if (ft_memcmp(args[0], "echo", ft_strlen("echo") + 1) == 0)
+		echo_command(args); // TODO
+	else if (ft_memcmp(args[0], "cd", ft_strlen("cd") + 1) == 0)
+		cd_command(args); // TODO
+	else if (ft_memcmp(args[0], "pwd", ft_strlen("pwd") + 1) == 0)
+		pwd_command();
+	else if (ft_memcmp(args[0], "export", ft_strlen("export") + 1) == 0)
+		export_command(args); // TODO
+	else if (ft_memcmp(args[0], "unset", ft_strlen("unset") + 1) == 0)
+		unset_command(args); // TODO
+	else if (ft_memcmp(args[0], "env", ft_strlen("env") + 1) == 0)
+		env_command(args); // TODO
+	else
+	{
+		if (execve(args[0], args, envp) == -1)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+	}
+	exit(EXIT_SUCCESS);
+}
+
 // Function to execute commands (edited chatgpt example)
 int	execute_command(char **args, char **envp)
 {
 	pid_t	pid;
 	int		status;
 
-	(void)envp; // delete this when changing to execve
+	//(void)envp; // delete this when changing to execve
 	if (args == NULL || args[0] == NULL)
 		return (1);
 	if (ft_memcmp(args[0], "exit", ft_strlen("exit") + 1) == 0)
 		return (0);
 	pid = fork();
-	if (pid == 0) // child process
-	{
-		if (!handle_redirection(args))
-			exit(EXIT_FAILURE);
-		if (execvp(args[0], args) == -1) // add envp to execve
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-		exit(EXIT_SUCCESS);
-	}
+	if (pid == 0)
+		child_process(args, envp);
 	else if (pid < 0)
 		perror("fork");
 	else // parent process
@@ -79,11 +97,14 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 
 	if (argc > 1)
-		return (0);
+		return (EXIT_SUCCESS);
 	(void)argv;
-	printf("%s\n\n", getenv("PATH"));
+	/* int	i = 0;
+	while (envp[i])
+		printf("%s\n", envp[i++]); */
 	status = 1;
-	signal(SIGINT, handle_sigint);
+	if (signal(SIGINT, handle_sigint) == SIG_ERR)
+		perror("setup handle_sigint()");
 	while (status)
 	{
 		cmd = NULL;
@@ -92,5 +113,5 @@ int	main(int argc, char **argv, char **envp)
 		free_cmd(cmd);
 	}
 	rl_clear_history();
-	return (0);
+	return (EXIT_SUCCESS);
 }

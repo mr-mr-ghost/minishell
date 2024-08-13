@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 11:47:51 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 16:39:33 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 /* INCLUDES ***************************************************************** */
 # include <stdio.h>
-# include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <signal.h>
@@ -106,6 +105,14 @@ char	**read_and_split(char **cmd);
 
 /* redirection_utils.c ****************************************************** */
 int		handle_redirection(char **args);
+
+/* builtin_commands.c ******************************************************* */
+void	echo_command(char **args);
+void	cd_command(char **args);
+void	pwd_command(void);
+void	export_command(char **args);
+void	unset_command(char **args);
+void	env_command(char **args);
 
 /* utils.c ****************************************************************** */
 void	free_cmd(char **cmd);

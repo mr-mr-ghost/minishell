@@ -2,6 +2,7 @@ NAME	=	minishell
 
 CFILES	=	minishell.c \
 			redirection_utils.c \
+			builtin_commands.c \
 			utils.c
 
 OBJ_DIR	=	obj
