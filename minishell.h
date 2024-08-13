@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 11:33:21 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 11:47:51 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 # include "libft/libft.h"
 
 /* DESCRIPTION OF ALLOWED FUNCTIONS ***************************************** */
@@ -30,6 +31,7 @@ readline/readline.h
 	3 rl_on_new_line: Updates internal data structures to reflect that the cursor is on a new line.
 	4 rl_replace_line: Replaces the current line in the readline buffer with a new one.
 	5 rl_redisplay: Redisplays the current contents of the readline buffer.
+readline/history.h
 	6 add_history: Adds a line of text to the readline history.
 stdio.h
 	7 printf: Formats and prints a string to the standard output.

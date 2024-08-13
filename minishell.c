@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 11:38:34 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 12:54:10 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ char	**read_and_split(char **cmd)
 	char	*line;
 
 	line = readline("Minishell> ");
+	if (!line || line[0] == '\0') //bad? bash saves history of such line: ""
+		return (NULL);
+	add_history(line);
 	cmd = ft_split(line, ' ');
 	if (cmd == NULL || cmd[0] == NULL)
 	{
@@ -61,6 +64,15 @@ int	execute_command(char **args, char **envp)
 	return (1);
 }
 
+void	handle_sigint(int sig)
+{
+	if (sig == SIGINT)
+	{
+		rl_clear_history(); // might need to clear cmd too somehow
+		exit(EXIT_SUCCESS);
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	**cmd;
@@ -71,6 +83,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	printf("%s\n\n", getenv("PATH"));
 	status = 1;
+	signal(SIGINT, handle_sigint);
 	while (status)
 	{
 		cmd = NULL;
@@ -78,5 +91,6 @@ int	main(int argc, char **argv, char **envp)
 		status = execute_command(cmd, envp);
 		free_cmd(cmd);
 	}
+	rl_clear_history();
 	return (0);
 }
