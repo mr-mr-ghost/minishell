@@ -1,6 +1,6 @@
 NAME = minishell
 
-CFILES = minishell.c utils.c init.c	tokens_handling.c tokens_utils.c tokens_split_utils.c
+CFILES = minishell.c utils.c env_init.c	tokens_handling.c tokens_utils.c tokens_split_utils.c
 
 OBJ_DIR = obj
 
