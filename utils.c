@@ -20,6 +20,7 @@ void	free_tokens(t_token *token)
 	{
 		tmp = token;
 		token = token->next;
+		free(tmp->value);
 		free(tmp);
 	}
 }
