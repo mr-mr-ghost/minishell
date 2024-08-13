@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 16:43:22 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:28:18 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	child_process(char **args, char **envp)
 	else if (ft_memcmp(args[0], "unset", ft_strlen("unset") + 1) == 0)
 		unset_command(args); // TODO
 	else if (ft_memcmp(args[0], "env", ft_strlen("env") + 1) == 0)
-		env_command(args); // TODO
+		env_command(envp); // TODO
 	else
 	{
 		if (execve(args[0], args, envp) == -1)
@@ -64,7 +64,6 @@ int	execute_command(char **args, char **envp)
 	pid_t	pid;
 	int		status;
 
-	//(void)envp; // delete this when changing to execve
 	if (args == NULL || args[0] == NULL)
 		return (1);
 	if (ft_memcmp(args[0], "exit", ft_strlen("exit") + 1) == 0)
@@ -75,8 +74,8 @@ int	execute_command(char **args, char **envp)
 	else if (pid < 0)
 		perror("fork");
 	else // parent process
-	{ //WUNTRACED to check if the child process is stopped
-		if (waitpid(pid, &status, 0) == -1)
+	{ //WUNTRACED vs 0 ?
+		if (waitpid(pid, &status, WUNTRACED) == -1)
 			perror("waitpid");
 	}
 	return (1);
@@ -99,9 +98,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 1)
 		return (EXIT_SUCCESS);
 	(void)argv;
-	/* int	i = 0;
-	while (envp[i])
-		printf("%s\n", envp[i++]); */
+	(void)envp;
 	status = 1;
 	if (signal(SIGINT, handle_sigint) == SIG_ERR)
 		perror("setup handle_sigint()");

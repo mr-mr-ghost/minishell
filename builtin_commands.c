@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/13 16:42:17 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:12:34 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	pwd_command(void)
 	}
 	printf("%s\n", pwd);
 	free(pwd);
-	return ;
 }
 
 void	export_command(char **args)
@@ -47,7 +46,11 @@ void	unset_command(char **args)
 	printf("builtin command TODO: %s\n", args[0]);
 }
 
-void	env_command(char **args)
+void	env_command(char **envp)
 {
-	printf("builtin command TODO: %s\n", args[0]);
+	int	i;
+
+	i = 0;
+	while (envp && envp[i])
+		printf("%s\n", envp[i++]);
 }

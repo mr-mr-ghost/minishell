@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 16:39:33 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:09:54 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	cd_command(char **args);
 void	pwd_command(void);
 void	export_command(char **args);
 void	unset_command(char **args);
-void	env_command(char **args);
+void	env_command(char **envp);
 
 /* utils.c ****************************************************************** */
 void	free_cmd(char **cmd);
