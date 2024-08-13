@@ -1,6 +1,6 @@
 TODO: Allow repeated input
 
-TODO: Split input into tokens
+TODO: Fix misc. errors in tokens (no pair of quotes, etc...)
 
 TODO: Write Commands
 
