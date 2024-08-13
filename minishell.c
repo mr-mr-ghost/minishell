@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 00:55:57 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 11:38:34 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,61 +28,13 @@ char	**read_and_split(char **cmd)
 	return (cmd);
 }
 
-// delete array element at index and shift the rest of the array
-void	delete_array_element(char **array, int index)
-{
-	int	i;
-
-	i = index;
-	free(array[index]);
-	while (array[i] != NULL)
-	{
-		array[i] = array[i + 1];
-		i++;
-	}
-}
-
-// TODO: <<
-// example of << delimiter: "cat <<'X' > t.txt		contentbla X"
-// TODO: >>
-// handle input/output redirection  (> and <)
-int	handle_redirection(char **args)
-{
-	int	i;
-	int	fd;
-
-	i = 0;
-	while (args[i] != NULL &&
-		ft_memcmp(args[i], ">", 2) != 0 && ft_memcmp(args[i], "<", 2) != 0)
-		i++;
-	if (args[i] == NULL)
-		return (1);
-	if (args[i][0] == '>')
-		fd = open(args[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else
-		fd = open(args[i + 1], O_RDONLY);
-	if (fd < 0)
-	{
-		perror("open");
-		return (0);
-	}
-	if (args[i][0] == '>')
-		dup2(fd, STDOUT_FILENO);
-	else
-		dup2(fd, STDIN_FILENO);
-	close(fd);
-	//args[i] = NULL; // bad - cuts off free_cmd and the rest of the command
-	delete_array_element(args, i); // delete redirection symbol
-	delete_array_element(args, i); // delete redirection file
-	return (1);
-}
-
 // Function to execute commands (edited chatgpt example)
 int	execute_command(char **args, char **envp)
 {
 	pid_t	pid;
 	int		status;
 
+	(void)envp; // delete this when changing to execve
 	if (args == NULL || args[0] == NULL)
 		return (1);
 	if (ft_memcmp(args[0], "exit", ft_strlen("exit") + 1) == 0)
@@ -92,7 +44,7 @@ int	execute_command(char **args, char **envp)
 	{
 		if (!handle_redirection(args))
 			exit(EXIT_FAILURE);
-		if (execve(args[0], args, envp) == -1)
+		if (execvp(args[0], args) == -1) // add envp to execve
 		{
 			perror("execve");
 			exit(EXIT_FAILURE);
