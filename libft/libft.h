@@ -69,13 +69,13 @@ int		ft_lstsize(t_list *lst);
 t_list	*ft_lstnew(void *content);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-int	ft_printf(const char *str, ...);
-int	ft_putaddress(void *ptr);
-int	ft_putchar(char c);
-int	ft_puthexa(unsigned long nb, char format);
-int	ft_putnbr(int nb);
-int	ft_putstr(char *str);
-int	ft_putunsigned(unsigned int nb);
+int		ft_printf(const char *str, ...);
+int		ft_putaddress(void *ptr);
+int		ft_putchar(char c);
+int		ft_puthexa(unsigned long nb, char format);
+int		ft_putnbr(int nb);
+int		ft_putstr(char *str);
+int		ft_putunsigned(unsigned int nb);
 char	*get_next_line(int fd);
 
 #endif

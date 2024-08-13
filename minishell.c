@@ -12,22 +12,15 @@
 
 #include "minishell.h"
 
-char	**read_and_split(char *line)
+void	print_tokens(t_token *token)
 {
-	char	**cmd;
-
-	cmd = ft_split(line, ' ');
-	if (cmd == NULL || cmd[0] == NULL)
-		return (NULL);
-	free(line);
-	return (cmd);
+	while (token)
+	{
+		ft_printf("%s\n", token->value);
+		ft_printf("type: %d\n", token->type);
+		token = token->next;
+	}
 }
-
-//void	token_split(t_data *data)
-//{
-//	/* TODO: Split line into tokens into a linked list */
-//	/* TODO: Determine the type of token */
-//}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -42,7 +35,8 @@ int	main(int argc, char **argv, char **envp)
 	while (!data.exit)
 	{
 		data.line = readline("Minishell> ");
-		data.cmd = read_and_split(data.line);
+		token_split(&data);
+		print_tokens(data.token);
 		free_tokens(data.token);
 	}
 	free_env(data.env);

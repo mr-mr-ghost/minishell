@@ -50,6 +50,7 @@ typedef struct s_env
 typedef struct s_token
 {
 	int				type;
+	char			*value;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -57,22 +58,33 @@ typedef struct s_token
 typedef struct s_data
 {
 	char	*line;
-	char	**cmd;
 	int		exit;
 	t_env	*env;
 	t_token	*token;
 }	t_data;
 
-char	**read_and_split(char *line);
-
-/* utils */
+/*	utils	*/
 void	free_tokens(t_token *token);
 void	free_env(t_env *env);
 char	*get_env_name(char *dest, char *src);
 void	ft_memdel(void *ptr);
+int		ft_strcmp(const char *s1, const char *s2);
 
-/* initialisation */
+/*	initialisation	*/
 void	init_env(t_data *data, char **envp);
 void	set_shell_lvl(t_env *env);
+
+/*	tokens_handling	*/
+void	token_split(t_data *data);
+void	tokens_type_define(t_data *data);
+
+/*	tokens_split_utils	*/
+char	*remove_spaces(char *line);
+void	handle_special_chars(t_data *data, char *line, int *i);
+void	handle_quotes(t_data *data, char *line, int *i);
+void	handle_normal_chars(t_data *data, char *line, int *i);
+/*	tokens utils	*/
+t_token	*token_new(char *value);
+void	token_add_back(t_token **token, t_token *new);
 
 #endif
