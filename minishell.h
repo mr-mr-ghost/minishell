@@ -83,6 +83,7 @@ char	*remove_spaces(char *line);
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i);
+
 /*	tokens utils	*/
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
