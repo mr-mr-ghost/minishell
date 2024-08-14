@@ -35,7 +35,8 @@
 # define APPEND 4
 # define INPUT 5
 # define PIPE 6
-# define END 7
+# define FLAG 7
+# define END 8
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
@@ -74,17 +75,18 @@ int		ft_strcmp(const char *s1, const char *s2);
 void	init_env(t_data *data, char **envp);
 void	set_shell_lvl(t_env *env);
 
-/*	tokens_handling	*/
+/*	tokens handling	*/
 void	token_split(t_data *data);
 void	tokens_type_define(t_data *data);
 
-/*	tokens_split_utils	*/
+/*	tokens split utils	*/
 char	*remove_spaces(char *line);
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i);
+void	handle_flags(t_data *data, char *line, int *i);
 
-/*	tokens utils	*/
+/*	tokens list utils	*/
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 

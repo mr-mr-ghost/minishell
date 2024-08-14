@@ -40,6 +40,20 @@ char	*remove_spaces(char *line)
 	return (new_line);
 }
 
+void	handle_flags(t_data *data, char *line, int *i)
+{
+	int	j;
+
+	j = *i + 1;
+	while (line[j] && !ft_strchr("><|;\'\"", line[j]))
+		j++;
+	if (*i == 0)
+		data->token = token_new(ft_substr(line, *i, j - *i));
+	else
+		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	*i = j;
+}
+
 void	handle_special_chars(t_data *data, char *line, int *i)
 {
 	int	j;
@@ -75,7 +89,7 @@ void	handle_normal_chars(t_data *data, char *line, int *i)
 	int	j;
 
 	j = *i + 1;
-	while (line[j] && !ft_strchr("><|\"\'", line[j]))
+	while (line[j] && !ft_strchr("><|\"\'-", line[j]))
 		j++;
 	if (*i == 0)
 		data->token = token_new(ft_substr(line, *i, j - *i));
