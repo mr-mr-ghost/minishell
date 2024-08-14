@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/14 23:34:36 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 00:41:46 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,34 @@
 
 int	echo_command(char **args)
 {
-	printf("builtin command TODO: %s\n", args[0]);
+	int	i;
+	int	n_flag;
+
+	if (!args[1])
+	{
+		printf("\n");
+		return (1);
+	}
+	if (ft_strncmp(args[1], "-n", 3) == 0)
+	{
+		if (!args[2])
+			return (1);
+		i = 2;
+		n_flag = 1;
+	}
+	else
+	{
+		i = 1;
+		n_flag = 0;
+	}
+	while (args[i])
+	{
+		printf("%s", args[i++]);
+		if (args[i])
+			printf(" ");
+	}
+	if (!n_flag)
+		printf("\n");
 	return (1);
 }
 
@@ -51,13 +78,19 @@ int	unset_command(char **args)
 	return (1);
 }
 
-int	env_command(char **envp)
+int	env_command(char **args, char **envp)
 {
 	int	i;
 
-	i = 0;
-	while (envp && envp[i])
-		printf("%s\n", envp[i++]);
+	if (!args[1])
+	{
+		i = 0;
+		while (envp && envp[i])
+			printf("%s\n", envp[i++]);
+		return (1);
+	}
+	// TODO: "env VARIABLE=value command" line
+	printf("builtin command TODO: env with arguments\n");
 	return (1);
 }
 

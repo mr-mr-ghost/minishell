@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/14 21:57:59 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 23:44:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	check_launch_builtins(t_data *data, char **envp)
 	else if (ft_memcmp(data->cmd[0], "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(data->cmd); // TODO
 	else if (ft_memcmp(data->cmd[0], "env", ft_strlen("env") + 1) == 0)
-		i = env_command(envp);
+		i = env_command(data->cmd, envp);
 	else if (ft_memcmp(data->cmd[0], "exit", ft_strlen("exit") + 1) == 0)
 		i = exit_command(data);
 	return (i);
