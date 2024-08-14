@@ -31,11 +31,11 @@
 # define EMPTY 0
 # define CMD 1
 # define ARG 2
-# define TRUNC 3
-# define APPEND 4
-# define INPUT 5
-# define PIPE 6
-# define FLAG 7
+# define FLAG 3
+# define TRUNC 4
+# define APPEND 5
+# define INPUT 6
+# define PIPE 7
 # define END 8
 
 # define MAX_ARGS 42
@@ -68,7 +68,6 @@ typedef struct s_data
 void	free_tokens(t_token *token);
 void	free_env(t_env *env);
 char	*get_env_name(char *dest, char *src);
-void	ft_memdel(void *ptr);
 int		ft_strcmp(const char *s1, const char *s2);
 
 /*	initialisation	*/

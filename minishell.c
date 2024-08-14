@@ -22,21 +22,30 @@ void	print_tokens(t_token *token)
 	}
 }
 
+void	init_data(t_data *data)
+{
+	data->line = NULL;
+	data->token = NULL;
+	data->env = NULL;
+	data->exit = 0;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
 	(void)argc;
 	(void)argv;
-	data.exit = 0;
+	init_data(&data);
 	init_env(&data, envp);
 	set_shell_lvl(data.env);
-	data.token = (t_token *)malloc(sizeof(t_token));
 	while (!data.exit)
 	{
 		data.line = readline("Minishell> ");
 		token_split(&data);
 		print_tokens(data.token);
+		if (data.line)
+			free(data.line);
 		free_tokens(data.token);
 	}
 	free_env(data.env);

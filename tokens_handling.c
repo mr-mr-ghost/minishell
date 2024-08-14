@@ -12,26 +12,15 @@
 
 #include "minishell.h"
 
-void	handle_flags(t_data *data, char *line, int *i)
-{
-	int	j;
-
-	j = *i + 1;
-	while (line[j] && !ft_strchr("><|;\'\"", line[j]))
-		j++;
-	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
-	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
-	*i = j;
-}
-
 void	token_split(t_data *data)
 {
 	char	*line;
 	int		i;
 
-	line = remove_spaces(data->line);
+	if (!data->line)
+		line = ft_strdup("");
+	else
+		line = remove_spaces(data->line);
 	i = 0;
 	while (line[i])
 	{
@@ -55,7 +44,7 @@ void	tokens_type_define(t_data *data)
 	tmp = data->token;
 	while (tmp)
 	{
-		if (!ft_strcmp(tmp->value, ""))
+		if (!tmp->value || !ft_strcmp(tmp->value, ""))
 			tmp->type = EMPTY;
 		else if (!ft_strcmp(tmp->value, ";"))
 			tmp->type = END;

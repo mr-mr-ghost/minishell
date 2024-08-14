@@ -17,7 +17,13 @@ t_token	*token_new(char *value)
 	t_token	*new;
 
 	new = (t_token *)malloc(sizeof(t_token));
-	new->value = ft_strdup(value);
+	if (!new)
+		return (NULL);
+	if (!value)
+		new->value = NULL;
+	else
+		new->value = value;
+	new->type = 0;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
