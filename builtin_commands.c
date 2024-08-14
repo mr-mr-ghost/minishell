@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/14 22:18:48 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 22:39:18 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,31 +65,27 @@ int	exit_command(t_data *data)
 {
 	int	i;
 
-	if (data->cmd[1])
+	if (!data->cmd[1])
+		return (0);
+	if (data->cmd[2])
 	{
-		if (data->cmd[2])
+		printf("exit: too many arguments\n");
+		return (1);
+	}
+	else
+	{	// TODO: exit nbr as unsigned char value?
+		i = 0;
+		while (data->cmd[1][i] && ft_isdigit(data->cmd[1][i]))
+			i++;
+		if (data->cmd[1][i] != '\0')
 		{
-			printf("exit: too many arguments\n");
+			printf("exit: numeric argument required\n");
 			return (1);
 		}
-		else
-		{
-			i = 0;
-			while (data->cmd[1][i])
-			{
-				if (!ft_isdigit(data->cmd[1][i]))
-				{
-					printf("exit: numeric argument required\n");
-					return (1);
-				}
-				i++;
-			}
-			i = ft_atoi(data->cmd[1]);
-			rl_clear_history();
-			free_data_content(data);
-			free(data);
-			exit(i);
-		}
+		i = ft_atoi(data->cmd[1]);
+		rl_clear_history();
+		free_data_content(data);
+		free(data);
+		exit(i);
 	}
-	return (0);
 }
