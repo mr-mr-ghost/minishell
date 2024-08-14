@@ -12,14 +12,16 @@
 
 #include "minishell.h"
 
-void	free_tokens(t_token *token)
+void	free_tokens(t_data *data)
 {
 	t_token	*tmp;
 
-	while (token)
+	if (data->line)
+		free(data->line);
+	while (data->token)
 	{
-		tmp = token;
-		token = token->next;
+		tmp = data->token;
+		data->token = data->token->next;
 		free(tmp->value);
 		free(tmp);
 	}

@@ -65,7 +65,7 @@ typedef struct s_data
 }	t_data;
 
 /*	utils	*/
-void	free_tokens(t_token *token);
+void	free_tokens(t_data *data);
 void	free_env(t_env *env);
 char	*get_env_name(char *dest, char *src);
 int		ft_strcmp(const char *s1, const char *s2);
