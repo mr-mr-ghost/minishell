@@ -6,27 +6,11 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/14 17:35:02 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:05:43 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* char	**read_and_split(t_data *data)
-{
-	data->line = readline("Minishell> ");
-	if (!data->line || data->line[0] == '\0') //bad? bash saves history of such line: ""
-		return (NULL);
-	add_history(data->line);
-	data->cmd = ft_split(data->line, ' ');
-	if (data->cmd == NULL || data->cmd[0] == NULL)
-	{
-		if (data->line)
-			free(data->line);
-		return (NULL);
-	}
-	return (data);
-} */
 
 void	handle_sigint(int sig)
 {
@@ -38,27 +22,32 @@ void	handle_sigint(int sig)
 	}
 }
 
+void	init_main(t_data **data, int argc)
+{
+	if (argc > 1)
+		exit(EXIT_SUCCESS);
+	if (signal(SIGINT, handle_sigint) == SIG_ERR)
+	{
+		perror("setup handle_sigint()");
+		exit(EXIT_FAILURE);
+	}
+	*data = malloc(sizeof(t_data));
+	if (*data == NULL)
+	{
+		perror("malloc() t_data");
+		exit(EXIT_FAILURE);
+	}
+	(*data)->status = 1;
+	(*data)->cmd = NULL;
+	(*data)->line = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	*data;
 
-	if (argc > 1)
-		return (EXIT_SUCCESS);
 	(void)argv;
-	if (signal(SIGINT, handle_sigint) == SIG_ERR)
-	{
-		perror("setup handle_sigint()");
-		return (EXIT_FAILURE);
-	}
-	data = malloc(sizeof(t_data));
-	if (!data)
-	{
-		perror("malloc() t_data");
-		return (EXIT_FAILURE);
-	}
-	data->status = 1;
-	data->cmd = NULL;
-	data->line = NULL;
+	init_main(&data, argc);
 	while (data->status)
 	{
 		data->line = readline("Minishell> ");
