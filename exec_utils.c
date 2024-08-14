@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/14 11:55:29 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:00:09 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@ void	child_process(char **args, char **envp)
 	if (!handle_redirection(args)) // TODO: adjust redirs for builtins
 			exit(EXIT_FAILURE);
 	if (ft_memcmp(args[0], "echo", ft_strlen("echo") + 1) == 0)
-		echo_command(args); // TODO
+		echo_command(args);
 	else if (ft_memcmp(args[0], "cd", ft_strlen("cd") + 1) == 0)
-		cd_command(args); // TODO
+		cd_command(args);
 	else if (ft_memcmp(args[0], "pwd", ft_strlen("pwd") + 1) == 0)
 		pwd_command();
 	else if (ft_memcmp(args[0], "export", ft_strlen("export") + 1) == 0)
-		export_command(args); // TODO
+		export_command(args);
 	else if (ft_memcmp(args[0], "unset", ft_strlen("unset") + 1) == 0)
-		unset_command(args); // TODO
+		unset_command(args);
 	else if (ft_memcmp(args[0], "env", ft_strlen("env") + 1) == 0)
-		env_command(envp); // TODO
+		env_command(envp);
 	else
 	{
 		if (execve(args[0], args, envp) == -1)

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/14 11:56:19 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 16:47:27 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,16 @@ curses.h or term.h
 # define MAX_ARGS 64
 
 /* STRUCTS ****************************************************************** */
+typedef struct s_data
+{
+	char	*line;
+	char	**cmd;
+	int		status;
+}	t_data;
 
 /* FUNCTIONS **************************************************************** */
 /* minishell.c ************************************************************** */
-char	**read_and_split(char **cmd);
+//char	**read_and_split(t_data *data);
 
 /* exec_utils.c ************************************************************* */
 int		execute_command(char **args, char **envp);
@@ -118,6 +124,6 @@ void	unset_command(char **args);
 void	env_command(char **envp);
 
 /* utils.c ****************************************************************** */
-void	free_cmd(char **cmd);
+void	free_data_content(t_data *data);
 
 #endif
