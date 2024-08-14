@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/14 18:05:43 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 01:38:57 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	handle_sigint(int sig)
 	}
 }
 
-void	init_main(t_data **data, int argc)
+void	init_main(int argc, t_data **data)
 {
 	if (argc > 1)
 		exit(EXIT_SUCCESS);
@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
 	t_data	*data;
 
 	(void)argv;
-	init_main(&data, argc);
+	init_main(argc, &data);
 	while (data->status)
 	{
 		data->line = readline("Minishell> ");

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/14 23:44:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 01:41:13 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ int	check_launch_builtins(t_data *data, char **envp)
 		return (-1); */
 	i = -1;
 	if (ft_memcmp(data->cmd[0], "echo", ft_strlen("echo") + 1) == 0)
-		i = echo_command(data->cmd); //TODO
+		i = echo_command(data->cmd); //TODO pipes n stuff
 	else if (ft_memcmp(data->cmd[0], "cd", ft_strlen("cd") + 1) == 0)
 		i = cd_command(data->cmd); //TODO
 	else if (ft_memcmp(data->cmd[0], "pwd", ft_strlen("pwd") + 1) == 0)
-		i = pwd_command();
+		i = pwd_command(); //TODO pipes n stuff
 	else if (ft_memcmp(data->cmd[0], "export", ft_strlen("export") + 1) == 0)
 		i = export_command(data->cmd); //TODO
 	else if (ft_memcmp(data->cmd[0], "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(data->cmd); // TODO
 	else if (ft_memcmp(data->cmd[0], "env", ft_strlen("env") + 1) == 0)
-		i = env_command(data->cmd, envp);
+		i = env_command(data->cmd, envp); //TODO pipes n stuff
 	else if (ft_memcmp(data->cmd[0], "exit", ft_strlen("exit") + 1) == 0)
 		i = exit_command(data);
 	return (i);

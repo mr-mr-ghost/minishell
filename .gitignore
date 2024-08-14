@@ -4,6 +4,7 @@ minishell
 obj
 tmp
 *.txt
+!operators.txt
 *.swp
 *.o
 *.a
