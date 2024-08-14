@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/14 17:46:49 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 21:58:18 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,13 @@ int		execute_command(t_data *data, char **envp);
 int		handle_redirection(char **args);
 
 /* builtin_commands.c ******************************************************* */
-void	echo_command(char **args);
-void	cd_command(char **args);
-void	pwd_command(void);
-void	export_command(char **args);
-void	unset_command(char **args);
-void	env_command(char **envp);
+int		echo_command(char **args);
+int		cd_command(char **args);
+int		pwd_command(void);
+int		export_command(char **args);
+int		unset_command(char **args);
+int		env_command(char **envp);
+int		exit_command(t_data *data);
 
 /* utils.c ****************************************************************** */
 void	free_data_content(t_data *data);
