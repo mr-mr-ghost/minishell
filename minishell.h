@@ -79,14 +79,17 @@ void	token_split(t_data *data);
 void	tokens_type_define(t_data *data);
 
 /*	tokens split utils	*/
-char	*remove_spaces(char *line);
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i);
 void	handle_flags(t_data *data, char *line, int *i);
+void	handle_cmd(t_data *data, char *line, int *i);
 
 /*	tokens list utils	*/
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
+int		is_cmd(char *line, int i);
+bool	select_cmp(char *line, char *cmp, int start, int len);
+char	*remove_spaces(char *line);
 
 #endif

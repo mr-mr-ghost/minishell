@@ -44,7 +44,7 @@ int	main(int argc, char **argv, char **envp)
 		data.line = readline("Minishell> ");
 		token_split(&data);
 		print_tokens(data.token);
-		free_tokens(data);
+		free_tokens(&data);
 	}
 	free_env(data.env);
 	return (0);

@@ -12,32 +12,17 @@
 
 #include "minishell.h"
 
-char	*remove_spaces(char *line)
+void	handle_cmd(t_data *data, char *line, int *i)
 {
-	int		i;
-	int		j;
-	char	*new_line;
+	int	j;
 
-	i = 0;
-	j = 0;
-	new_line = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));
-	while (line[i])
-	{
-		if (line[i] == '\"' || line[i] == '\'')
-		{
-			new_line[j++] = line[i++];
-			while (line[i] && line[i] != '\"' && line[i] != '\'')
-				new_line[j++] = line[i++];
-			if (line[i] == '\"' || line[i] == '\'')
-				new_line[j++] = line[i++];
-		}
-		else if (line[i] != ' ')
-			new_line[j++] = line[i++];
-		else
-			i++;
-	}
-	new_line[j] = '\0';
-	return (new_line);
+	j = *i;
+	j += is_cmd(line, j);
+	if (*i == 0)
+		data->token = token_new(ft_substr(line, *i, j - *i));
+	else
+		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	*i = j;
 }
 
 void	handle_flags(t_data *data, char *line, int *i)
