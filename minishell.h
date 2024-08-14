@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/14 16:47:27 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:17:29 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ typedef struct s_data
 //char	**read_and_split(t_data *data);
 
 /* exec_utils.c ************************************************************* */
-int		execute_command(char **args, char **envp);
+int		execute_command(t_data *data, char **envp);
 
 /* redirection_utils.c ****************************************************** */
 int		handle_redirection(char **args);

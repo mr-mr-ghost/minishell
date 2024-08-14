@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/14 16:59:12 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:35:02 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,24 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 1)
 		return (EXIT_SUCCESS);
 	(void)argv;
+	if (signal(SIGINT, handle_sigint) == SIG_ERR)
+	{
+		perror("setup handle_sigint()");
+		return (EXIT_FAILURE);
+	}
 	data = malloc(sizeof(t_data));
 	if (!data)
 	{
 		perror("malloc() t_data");
-		return (0);
+		return (EXIT_FAILURE);
 	}
 	data->status = 1;
 	data->cmd = NULL;
 	data->line = NULL;
-	if (signal(SIGINT, handle_sigint) == SIG_ERR)
-		perror("setup handle_sigint()");
 	while (data->status)
 	{
 		data->line = readline("Minishell> ");
-		if (!data->line) // bash saves history of such line: ""
+		if (!data->line || data->line[0] == '\0')
 			continue ;
 		add_history(data->line);
 		data->cmd = ft_split(data->line, ' ');
@@ -69,7 +72,7 @@ int	main(int argc, char **argv, char **envp)
 			free_data_content(data);
 			continue ;
 		}
-		data->status = execute_command(data->cmd, envp);
+		data->status = execute_command(data, envp);
 		free_data_content(data);
 	}
 	rl_clear_history();
