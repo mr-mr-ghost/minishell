@@ -1,6 +1,7 @@
 NAME	=	minishell
 
 CFILES	=	minishell.c \
+			exec_utils.c \
 			redirection_utils.c \
 			builtin_commands.c \
 			utils.c
