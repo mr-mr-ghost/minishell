@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/14 22:39:18 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/14 23:34:36 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,23 +63,20 @@ int	env_command(char **envp)
 
 int	exit_command(t_data *data)
 {
-	int	i;
+	unsigned char	i;
 
 	if (!data->cmd[1])
 		return (0);
-	if (data->cmd[2])
+	if (!data->cmd[2])
 	{
-		printf("exit: too many arguments\n");
-		return (1);
-	}
-	else
-	{	// TODO: exit nbr as unsigned char value?
 		i = 0;
+		if (ft_strchr("-+", data->cmd[1][0]) != NULL && data->cmd[1][1] != '\0')
+			i++;
 		while (data->cmd[1][i] && ft_isdigit(data->cmd[1][i]))
 			i++;
 		if (data->cmd[1][i] != '\0')
 		{
-			printf("exit: numeric argument required\n");
+			ft_putstr_fd("exit: numeric argument required\n", 2);
 			return (1);
 		}
 		i = ft_atoi(data->cmd[1]);
@@ -88,4 +85,6 @@ int	exit_command(t_data *data)
 		free(data);
 		exit(i);
 	}
+	ft_putstr_fd("exit: too many arguments\n", 2);
+	return (1);
 }
