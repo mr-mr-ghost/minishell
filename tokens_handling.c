@@ -12,43 +12,6 @@
 
 #include "minishell.h"
 
-bool	select_cmp(char *line, char *cmp, int start, int len)
-{
-	int	i;
-
-	i = 0;
-	while (line[start] && cmp[i] && line[start] == cmp[i] && i < len)
-	{
-		start++;
-		i++;
-	}
-	if (i == len)
-		return (true);
-	return (false);
-}
-
-int	is_cmd(char *line, int i)
-{
-	if (select_cmp(line, "echo", i, 4))
-		return (4);
-	else if (select_cmp(line, "cd", i, 2))
-		return (2);
-	return (0);
-}
-
-void	handle_cmd(t_data *data, char *line, int *i)
-{
-	int	j;
-
-	j = *i;
-	j += is_cmd(line, j);
-	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
-	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
-	*i = j;
-}
-
 void	token_split(t_data *data)
 {
 	char	*line;
