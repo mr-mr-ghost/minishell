@@ -6,13 +6,13 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/15 01:41:13 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 13:50:49 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Function to check if the command is builtin and then execute it
+// Function to check if the command is builtin and then launch it
 // Returns -1, if command not builtin
 // Returns 1, if builtin command executed successfully
 // Returns 0, if builtin command execution failed
@@ -52,16 +52,12 @@ void	child_process(t_data *data, char **envp)
 	exit(EXIT_SUCCESS);
 }
 
-// Function to execute commands
-int	execute_command(t_data *data, char **envp)
+// Function to execute non builtin command in a child process
+int	launch_nonbuiltins(t_data *data, char **envp)
 {
 	pid_t	pid;
 	int		status;
-	int		i;
 
-	i = check_launch_builtins(data, envp);
-	if (i == 0 || i == 1)
-		return (i);
 	pid = fork();
 	if (pid == 0)
 		child_process(data, envp);
@@ -73,4 +69,21 @@ int	execute_command(t_data *data, char **envp)
 			perror("waitpid");
 	}
 	return (1);
+}
+
+// Function to extract commands, check if they're builtin, launch accordingly
+int	process_n_exec(t_data *data, char **envp)
+{
+	int	status;
+
+	// TODO: divide commands by pipes
+	data->cmd = ft_split(data->line, ' ');
+	if (data->cmd == NULL || data->cmd[0] == NULL
+		|| data->cmd[0][0] == '\0')
+		return (status = 1);
+	status = check_launch_builtins(data, envp);
+	if (status == 0 || status == 1)
+		return (status);
+	status = launch_nonbuiltins(data, envp);
+	return (status);
 }
