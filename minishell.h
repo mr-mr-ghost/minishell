@@ -55,6 +55,13 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+typedef struct s_sig
+{
+	int		sigint;
+	int		sigquit;
+	int		exit_status;
+}	t_sig;
+
 typedef struct s_data
 {
 	char	*line;
@@ -89,5 +96,13 @@ void	token_add_back(t_token **token, t_token *new);
 int		is_cmd(char *line, int i);
 bool	select_cmp(char *line, char *cmp, int start, int len);
 bool	quotes_check(char *line, int i);
+
+/*	signals	*/
+void	sigint_handler(int signum);
+void	sigquit_handler(int signum);
+void	disable_sigquit(void);
+void	sig_init(void);
+
+extern t_sig	g_sig;
 
 #endif

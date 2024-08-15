@@ -12,12 +12,14 @@
 
 #include "minishell.h"
 
+t_sig	g_sig;
+
 void	print_tokens(t_token *token)
 {
 	while (token)
 	{
 		ft_printf("%s\n", token->value);
-		ft_printf("type: %d\n", token->type);
+		ft_printf("type: %d\n\n", token->type);
 		token = token->next;
 	}
 }
@@ -36,16 +38,24 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigquit_handler);
+	disable_sigquit();
 	init_data(&data);
 	init_env(&data, envp);
 	set_shell_lvl(data.env);
 	while (!data.exit)
 	{
+		sig_init();
 		data.line = readline("Minishell> ");
+		if (!data.line)
+			break ;
 		token_split(&data);
 		print_tokens(data.token);
 		free_tokens(&data);
 	}
+	rl_clear_history();
 	free_env(data.env);
+	ft_printf("exit\n");
 	return (0);
 }
