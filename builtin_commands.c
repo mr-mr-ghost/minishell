@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/15 00:41:46 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 13:06:52 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,12 @@ int	env_command(char **args, char **envp)
 			printf("%s\n", envp[i++]);
 		return (1);
 	}
-	// TODO: "env VARIABLE=value command" line
-	printf("builtin command TODO: env with arguments\n");
+	ft_putstr_fd("env: too many arguments\n", 2);
 	return (1);
 }
 
+// exit command frees data and exits the program
+// if
 int	exit_command(t_data *data)
 {
 	unsigned char	i;
