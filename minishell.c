@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/15 14:22:02 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 14:51:55 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	main(int argc, char **argv, char **envp)
 		if (!data->line || data->line[0] == '\0')
 			continue ;
 		add_history(data->line);
+		if (ft_strncmp(data->line, "\"\"", 3) == 0)
+			continue ;
 		data->status = process_n_exec(data, envp);
 		free_data_content(data);
 	}
