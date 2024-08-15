@@ -81,5 +81,6 @@ void	handle_normal_chars(t_data *data, char *line, int *i, bool check)
 		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
 	while (line[j] && line[j] == ' ')
 		j++;
+	check = false;
 	*i = j;
 }
