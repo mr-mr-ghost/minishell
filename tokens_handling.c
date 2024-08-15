@@ -35,7 +35,7 @@ void	token_split(t_data *data)
 		else if (ft_strchr("><|;", line[i]))
 			handle_special_chars(data, line, &i);
 		else
-			handle_normal_chars(data, line, &i, echo);
+			handle_normal_chars(data, line, &i, &echo);
 	}
 	free(line);
 	tokens_type_define(data);

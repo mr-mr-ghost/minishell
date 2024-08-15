@@ -50,14 +50,13 @@ bool	select_cmp(char *line, char *cmp, int start, int len)
 	int	i;
 
 	i = 0;
-	while (line[start] && cmp[i] && line[start] == cmp[i] && i < len)
+	while (i < len)
 	{
-		start++;
+		if (!line[start] || line[start + i] != cmp[i])
+			return (false);
 		i++;
 	}
-	if (i == len)
-		return (true);
-	return (false);
+	return (true);
 }
 
 bool	quotes_check(char *line, int i)
@@ -67,9 +66,7 @@ bool	quotes_check(char *line, int i)
 	j = i + 1;
 	while (line[j] && (line[j] != line[i]))
 		j++;
-	if (line[j] == line[i])
-		return (true);
-	return (false);
+	return (line[j] == line[i]);
 }
 
 int	is_cmd(char *line, int i)

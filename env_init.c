@@ -32,38 +32,6 @@ void	init_env(t_data *data, char **envp)
 	}
 }
 
-char	*find_env_value(t_env *env, char *key)
-{
-	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-
-	tmp = env;
-	while (tmp)
-	{
-		get_env_name(env_name, tmp->value);
-		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
-			return (ft_strdup(tmp->value));
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-int	find_env_lvl(char *env_value)
-{
-	int		i;
-	char	*lvl_str;
-
-	i = 0;
-	while (env_value[i] && env_value[i] != '=')
-		i++;
-	if (env_value[i] == '=')
-		i++;
-	lvl_str = ft_strdup(env_value + i);
-	i = ft_atoi(lvl_str);
-	free(lvl_str);
-	return (i);
-}
-
 void	set_shell_lvl(t_env *env)
 {
 	int		lvl;

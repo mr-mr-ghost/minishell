@@ -40,20 +40,6 @@ void	free_env(t_env *env)
 	}
 }
 
-char	*get_env_name(char *dest, char *src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i] && src[i] != '=')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	int	i;

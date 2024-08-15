@@ -16,8 +16,7 @@ bool	handle_cmd(t_data *data, char *line, int *i)
 {
 	int	j;
 
-	j = *i;
-	j += is_cmd(line, j);
+	j = *i + is_cmd(line, j);
 	if (*i == 0)
 		data->token = token_new(ft_substr(line, *i, j - *i));
 	else
@@ -25,9 +24,7 @@ bool	handle_cmd(t_data *data, char *line, int *i)
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
-	if (!ft_strncmp(line, "echo", 4))
-		return (true);
-	return (false);
+	return (!ft_strncmp(line, "echo", 4));
 }
 
 void	handle_special_chars(t_data *data, char *line, int *i)
@@ -78,10 +75,7 @@ char	*remove_quotes(char *str)
 	while (str[i])
 	{
 		if (str[i] != '\'' && str[i] != '\"')
-		{
-			new[j] = str[i];
-			j++;
-		}
+			new[j++] = str[i];
 		i++;
 	}
 	new[j] = '\0';
@@ -89,7 +83,7 @@ char	*remove_quotes(char *str)
 	return (new);
 }
 
-void	handle_normal_chars(t_data *data, char *line, int *i, bool check)
+void	handle_normal_chars(t_data *data, char *line, int *i, bool *check)
 {
 	int		j;
 	char	*new;

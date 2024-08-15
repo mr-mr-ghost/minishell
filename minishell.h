@@ -73,12 +73,16 @@ typedef struct s_data
 /*	utils	*/
 void	free_tokens(t_data *data);
 void	free_env(t_env *env);
-char	*get_env_name(char *dest, char *src);
 int		ft_strcmp(const char *s1, const char *s2);
 
-/*	initialisation	*/
+/*	environment initialisation	*/
 void	init_env(t_data *data, char **envp);
 void	set_shell_lvl(t_env *env);
+
+/*	environment utils	*/
+char	*find_env_value(t_env *env, char *name);
+int		find_env_lvl(char *lvl);
+char	*get_env_name(char *dest, char *src);
 
 /*	tokens handling	*/
 void	token_split(t_data *data);
@@ -87,7 +91,7 @@ void	tokens_type_define(t_data *data);
 /*	tokens split utils	*/
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
-void	handle_normal_chars(t_data *data, char *line, int *i, bool check);
+void	handle_normal_chars(t_data *data, char *line, int *i, bool *check);
 bool	handle_cmd(t_data *data, char *line, int *i);
 char	*remove_quotes(char *str);
 
