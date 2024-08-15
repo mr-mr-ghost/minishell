@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/15 13:50:49 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 14:42:32 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	process_n_exec(t_data *data, char **envp)
 	// TODO: divide commands by pipes
 	data->cmd = ft_split(data->line, ' ');
 	if (data->cmd == NULL || data->cmd[0] == NULL
-		|| data->cmd[0][0] == '\0')
+		|| data->cmd[0][0] == '\0' || ft_strncmp(data->cmd[0], "\"\"", 3) == 0)
 		return (status = 1);
 	status = check_launch_builtins(data, envp);
 	if (status == 0 || status == 1)

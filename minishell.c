@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/15 13:50:11 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 14:22:02 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,6 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		add_history(data->line);
 		data->status = process_n_exec(data, envp);
-		/* data->cmd = ft_split(data->line, ' ');
-		if (data->cmd == NULL || data->cmd[0] == NULL
-			|| data->cmd[0][0] == '\0')
-		{
-			free_data_content(data);
-			continue ;
-		}
-		data->status = execute_command(data, envp); */
 		free_data_content(data);
 	}
 	rl_clear_history();
