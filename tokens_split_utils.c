@@ -16,7 +16,7 @@ bool	handle_cmd(t_data *data, char *line, int *i)
 {
 	int	j;
 
-	j = *i + is_cmd(line, j);
+	j = *i + is_cmd(line, *i);
 	if (*i == 0)
 		data->token = token_new(ft_substr(line, *i, j - *i));
 	else
