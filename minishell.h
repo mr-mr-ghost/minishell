@@ -80,8 +80,8 @@ void	tokens_type_define(t_data *data);
 /*	tokens split utils	*/
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
-void handle_normal_chars(t_data *data, char *line, int *i, bool check);
-bool handle_cmd(t_data *data, char *line, int *i);
+void	handle_normal_chars(t_data *data, char *line, int *i, bool check);
+bool	handle_cmd(t_data *data, char *line, int *i);
 
 /*	tokens utils	*/
 t_token	*token_new(char *value);
