@@ -89,6 +89,7 @@ void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i, bool check);
 bool	handle_cmd(t_data *data, char *line, int *i);
+char	*remove_quotes(char *str);
 
 /*	tokens utils	*/
 t_token	*token_new(char *value);
@@ -103,6 +104,7 @@ void	sigquit_handler(int signum);
 void	disable_sigquit(void);
 void	sig_init(void);
 
+/*	global	*/
 extern t_sig	g_sig;
 
 #endif

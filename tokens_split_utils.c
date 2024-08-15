@@ -64,9 +64,35 @@ void	handle_quotes(t_data *data, char *line, int *i)
 	*i = j;
 }
 
+char	*remove_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!new)
+		return (NULL);
+	while (str[i])
+	{
+		if (str[i] != '\'' && str[i] != '\"')
+		{
+			new[j] = str[i];
+			j++;
+		}
+		i++;
+	}
+	new[j] = '\0';
+	free(str);
+	return (new);
+}
+
 void	handle_normal_chars(t_data *data, char *line, int *i, bool check)
 {
-	int	j;
+	int		j;
+	char	*new;
 
 	j = *i + 1;
 	if (check)
@@ -75,10 +101,13 @@ void	handle_normal_chars(t_data *data, char *line, int *i, bool check)
 	else
 		while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
 			j++;
+	new = ft_substr(line, *i, j - *i);
+	if (check)
+		new = remove_quotes(new);
 	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
+		data->token = token_new(new);
 	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+		token_add_back(&data->token, token_new(new));
 	while (line[j] && line[j] == ' ')
 		j++;
 	check = false;
