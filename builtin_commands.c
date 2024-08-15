@@ -6,12 +6,16 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/15 13:06:52 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/15 13:27:13 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// echo_command: prints all the subsequent strings
+// if 1 str - prints new line, returns 1
+// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1
+// if more strs - prints all strings, adds new line if str2 = "-n", returns 1
 int	echo_command(char **args)
 {
 	int	i;
@@ -51,6 +55,9 @@ int	cd_command(char **args)
 	return (1);
 }
 
+// pwd_command: prints the working directory
+// any amount of strs - prints pwd and returns 1
+// upon getcwd() fail - prints invalid command in STDERR, returns 1
 int	pwd_command(void)
 {
 	char	*pwd;
@@ -59,7 +66,7 @@ int	pwd_command(void)
 	if (!pwd)
 	{
 		perror("getcwd in pwd_command()");
-		return (0);
+		return (1);
 	}
 	printf("%s\n", pwd);
 	free(pwd);
@@ -78,6 +85,9 @@ int	unset_command(char **args)
 	return (1);
 }
 
+// env_command: prints all the environment variables
+// if 1 str - prints env vars, returns 1
+// if more strs - prints invalid command in STDERR, returns 1
 int	env_command(char **args, char **envp)
 {
 	int	i;
@@ -93,8 +103,10 @@ int	env_command(char **args, char **envp)
 	return (1);
 }
 
-// exit command frees data and exits the program
-// if
+// exit_command: frees data and exits the program
+// if 1 str - returns status 0 to exit command by ending main loop
+// if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
+// if more strs - prints invalid command in STDERR, returns 1
 int	exit_command(t_data *data)
 {
 	unsigned char	i;
