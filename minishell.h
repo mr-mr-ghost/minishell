@@ -31,12 +31,11 @@
 # define EMPTY 0
 # define CMD 1
 # define ARG 2
-# define FLAG 3
-# define TRUNC 4
-# define APPEND 5
-# define INPUT 6
-# define PIPE 7
-# define END 8
+# define TRUNC 3
+# define APPEND 4
+# define INPUT 5
+# define PIPE 6
+# define END 7
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
@@ -81,15 +80,14 @@ void	tokens_type_define(t_data *data);
 /*	tokens split utils	*/
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
-void	handle_normal_chars(t_data *data, char *line, int *i);
-void	handle_flags(t_data *data, char *line, int *i);
-void	handle_cmd(t_data *data, char *line, int *i);
+void handle_normal_chars(t_data *data, char *line, int *i, bool check);
+bool handle_cmd(t_data *data, char *line, int *i);
 
-/*	tokens list utils	*/
+/*	tokens utils	*/
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 int		is_cmd(char *line, int i);
 bool	select_cmp(char *line, char *cmp, int start, int len);
-char	*remove_spaces(char *line);
+bool	quotes_check(char *line, int i);
 
 #endif

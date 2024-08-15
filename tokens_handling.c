@@ -15,25 +15,27 @@
 void	token_split(t_data *data)
 {
 	char	*line;
+	bool	echo;
 	int		i;
 
 	if (!data->line)
 		line = ft_strdup("");
 	else
-		line = remove_spaces(data->line);
+		line = ft_strdup(data->line);
 	i = 0;
+	echo = false;
 	while (line[i])
 	{
-		if (is_cmd(line, i))
-			handle_cmd(data, line, &i);
+		if (line[i] == ' ')
+			i++;
+		else if (is_cmd(line, i))
+			echo = handle_cmd(data, line, &i);
+		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
+			handle_quotes(data, line, &i);
 		else if (ft_strchr("><|;", line[i]))
 			handle_special_chars(data, line, &i);
-		else if (line[i] == '\"' || line[i] == '\'')
-			handle_quotes(data, line, &i);
-		else if (line[i] == '-')
-			handle_flags(data, line, &i);
 		else
-			handle_normal_chars(data, line, &i);
+			handle_normal_chars(data, line, &i, echo);
 	}
 	free(line);
 	tokens_type_define(data);
@@ -60,8 +62,6 @@ void	tokens_type_define(t_data *data)
 			tmp->type = PIPE;
 		else if (!tmp->prev || tmp->prev->type >= TRUNC)
 			tmp->type = CMD;
-		else if (!ft_strncmp(tmp->value, "-", 1) && tmp->prev->type == CMD)
-			tmp->type = FLAG;
 		else
 			tmp->type = ARG;
 		tmp = tmp->next;

@@ -45,34 +45,6 @@ void	token_add_back(t_token **token, t_token *new)
 	new->prev = tmp;
 }
 
-char	*remove_spaces(char *line)
-{
-	int		i;
-	int		j;
-	char	*new_line;
-
-	i = 0;
-	j = 0;
-	new_line = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));
-	while (line[i])
-	{
-		if (line[i] == '\"' || line[i] == '\'')
-		{
-			new_line[j++] = line[i++];
-			while (line[i] && line[i] != '\"' && line[i] != '\'')
-				new_line[j++] = line[i++];
-			if (line[i] == '\"' || line[i] == '\'')
-				new_line[j++] = line[i++];
-		}
-		else if (line[i] != ' ')
-			new_line[j++] = line[i++];
-		else
-			i++;
-	}
-	new_line[j] = '\0';
-	return (new_line);
-}
-
 bool	select_cmp(char *line, char *cmp, int start, int len)
 {
 	int	i;
@@ -88,11 +60,35 @@ bool	select_cmp(char *line, char *cmp, int start, int len)
 	return (false);
 }
 
+bool	quotes_check(char *line, int i)
+{
+	int	j;
+
+	j = i + 1;
+	while (line[j] && (line[j] != line[i]))
+		j++;
+	if (line[j] == line[i])
+		return (true);
+	return (false);
+}
+
 int	is_cmd(char *line, int i)
 {
-	if (select_cmp(line, "echo", i, 4))
+	if (select_cmp(line, "echo -n ", i, 8))
+		return (7);
+	else if (select_cmp(line, "echo ", i, 5))
 		return (4);
-	else if (select_cmp(line, "cd", i, 2))
+	else if (select_cmp(line, "cd ", i, 3))
 		return (2);
+	else if (select_cmp(line, "pwd ", i, 4))
+		return (2);
+	else if (select_cmp(line, "export ", i, 7))
+		return (6);
+	else if (select_cmp(line, "unset ", i, 6))
+		return (5);
+	else if (select_cmp(line, "env ", i, 4))
+		return (3);
+	else if (select_cmp(line, "exit ", i, 5))
+		return (4);
 	return (0);
 }

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	handle_cmd(t_data *data, char *line, int *i)
+bool	handle_cmd(t_data *data, char *line, int *i)
 {
 	int	j;
 
@@ -22,19 +22,12 @@ void	handle_cmd(t_data *data, char *line, int *i)
 		data->token = token_new(ft_substr(line, *i, j - *i));
 	else
 		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	while (line[j] && line[j] == ' ')
+		j++;
 	*i = j;
-}
-
-void	handle_flags(t_data *data, char *line, int *i)
-{
-	int	j;
-
-	j = *i + 2;
-	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
-	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
-	*i = j;
+	if (!ft_strncmp(line, "echo", 4))
+		return (true);
+	return (false);
 }
 
 void	handle_special_chars(t_data *data, char *line, int *i)
@@ -48,6 +41,8 @@ void	handle_special_chars(t_data *data, char *line, int *i)
 		data->token = token_new(ft_substr(line, *i, j - *i));
 	else
 		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	while (line[j] && line[j] == ' ')
+		j++;
 	*i = j;
 }
 
@@ -64,19 +59,27 @@ void	handle_quotes(t_data *data, char *line, int *i)
 		data->token = token_new(ft_substr(line, *i, j - *i));
 	else
 		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	while (line[j] && line[j] == ' ')
+		j++;
 	*i = j;
 }
 
-void	handle_normal_chars(t_data *data, char *line, int *i)
+void	handle_normal_chars(t_data *data, char *line, int *i, bool check)
 {
 	int	j;
 
 	j = *i + 1;
-	while (line[j] && !ft_strchr("><|\"\'-", line[j]))
-		j++;
+	if (check)
+		while (line[j] && !ft_strchr("><|;", line[j]))
+			j++;
+	else
+		while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
+			j++;
 	if (*i == 0)
 		data->token = token_new(ft_substr(line, *i, j - *i));
 	else
 		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	while (line[j] && line[j] == ' ')
+		j++;
 	*i = j;
 }
