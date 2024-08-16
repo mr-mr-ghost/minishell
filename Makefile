@@ -1,14 +1,20 @@
 NAME	=	minishell
 
 CFILES	=	minishell.c \
+			utils.c \
+			env_init.c \
+			env_utils.c \
+			tokens_handling.c \
+			tokens_utils.c \
+			tokens_split_utils.c \
+			signals.c \
 			exec_utils.c \
 			redirection_utils.c \
-			builtin_commands.c \
-			utils.c
+			builtin_commands.c
 
 OBJ_DIR	=	obj
 
-OFILES	= $(addprefix $(OBJ_DIR)/,$(CFILES:.c=.o))
+OFILES	=	$(addprefix $(OBJ_DIR)/,$(CFILES:.c=.o))
 
 CC		=	gcc
 
@@ -41,12 +47,12 @@ all: $(NAME)
 clean:
 	@rm -rf $(OBJ_DIR)
 	@$(MAKE) -s -C ./libft clean
-	@echo "${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(CFILES:.c=.o)"
+	@echo "${YELLOW}[Minishell]${RESET}	${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(CFILES:.c=.o)"
 
 fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -s -C ./libft fclean
-	@echo "${RED}Deleted executable${RESET} $(NAME)"
+	@echo "${YELLOW}[Minishell]${RESET}	${RED}Deleted executable${RESET} $(NAME)"
 
 re: fclean $(NAME)
 

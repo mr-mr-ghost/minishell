@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/15 13:27:13 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 02:02:23 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ int	echo_command(char **args)
 	if (!args[1])
 	{
 		printf("\n");
-		return (1);
+		return (0);
 	}
 	if (ft_strncmp(args[1], "-n", 3) == 0)
 	{
 		if (!args[2])
-			return (1);
+			return (0);
 		i = 2;
 		n_flag = 1;
 	}
@@ -46,13 +46,13 @@ int	echo_command(char **args)
 	}
 	if (!n_flag)
 		printf("\n");
-	return (1);
+	return (0);
 }
 
 int	cd_command(char **args)
 {
 	printf("builtin command TODO: %s\n", args[0]);
-	return (1);
+	return (0);
 }
 
 // pwd_command: prints the working directory
@@ -66,23 +66,23 @@ int	pwd_command(void)
 	if (!pwd)
 	{
 		perror("getcwd in pwd_command()");
-		return (1);
+		return (0);
 	}
 	printf("%s\n", pwd);
 	free(pwd);
-	return (1);
+	return (0);
 }
 
 int	export_command(char **args)
 {
 	printf("builtin command TODO: %s\n", args[0]);
-	return (1);
+	return (0);
 }
 
 int	unset_command(char **args)
 {
 	printf("builtin command TODO: %s\n", args[0]);
-	return (1);
+	return (0);
 }
 
 // env_command: prints all the environment variables
@@ -97,40 +97,41 @@ int	env_command(char **args, char **envp)
 		i = 0;
 		while (envp && envp[i])
 			printf("%s\n", envp[i++]);
-		return (1);
+		return (0);
 	}
 	ft_putstr_fd("env: too many arguments\n", 2);
-	return (1);
+	return (0);
 }
 
 // exit_command: frees data and exits the program
 // if 1 str - returns status 0 to exit command by ending main loop
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
 // if more strs - prints invalid command in STDERR, returns 1
-int	exit_command(t_data *data)
+int	exit_command(t_data *data, char **args)
 {
 	unsigned char	i;
 
-	if (!data->cmd[1])
-		return (0);
-	if (!data->cmd[2])
+	if (!args[1])
+		return (1);
+	if (!args[2])
 	{
 		i = 0;
-		if (ft_strchr("-+", data->cmd[1][0]) != NULL && data->cmd[1][1] != '\0')
+		if (ft_strchr("-+", args[1][0]) != NULL && args[1][1] != '\0')
 			i++;
-		while (data->cmd[1][i] && ft_isdigit(data->cmd[1][i]))
+		while (args[1][i] && ft_isdigit(args[1][i]))
 			i++;
-		if (data->cmd[1][i] != '\0')
+		if (args[1][i] != '\0')
 		{
 			ft_putstr_fd("exit: numeric argument required\n", 2);
-			return (1);
+			return (0);
 		}
-		i = ft_atoi(data->cmd[1]);
+		i = ft_atoi(args[1]);
 		rl_clear_history();
-		free_data_content(data);
-		free(data);
+		free_cmd(args);
+		free_tokens(data);
+		free_env(data->env);
 		exit(i);
 	}
 	ft_putstr_fd("exit: too many arguments\n", 2);
-	return (1);
+	return (0);
 }

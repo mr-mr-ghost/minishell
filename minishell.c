@@ -6,60 +6,66 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/15 14:51:55 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 02:04:00 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_sigint(int sig)
+t_sig	g_sig;
+
+void	print_tokens(t_token *token)
 {
-	if (sig == SIGINT)
+	while (token)
 	{
-		rl_clear_history();
-		// TODO clear data or change data->status = 0
-		exit(EXIT_SUCCESS);
+		ft_printf("%s\n", token->value);
+		ft_printf("type: %d\n\n", token->type);
+		token = token->next;
 	}
 }
 
-void	init_main(int argc, t_data **data)
+void	init_data(t_data *data)
 {
-	if (argc > 1)
-		exit(EXIT_SUCCESS);
-	if (signal(SIGINT, handle_sigint) == SIG_ERR)
-	{
-		perror("setup handle_sigint()");
-		exit(EXIT_FAILURE);
-	}
-	*data = malloc(sizeof(t_data));
-	if (*data == NULL)
-	{
-		perror("malloc() t_data");
-		exit(EXIT_FAILURE);
-	}
-	(*data)->status = 1;
-	(*data)->cmd = NULL;
-	(*data)->line = NULL;
+	data->line = NULL;
+	data->token = NULL;
+	data->env = NULL;
+	data->exit = 0;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_data	*data;
+	t_data	data;
 
+	(void)argc;
 	(void)argv;
-	init_main(argc, &data);
-	while (data->status)
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigquit_handler);
+	disable_sigquit();
+	init_data(&data);
+	init_env(&data, envp);
+	set_shell_lvl(data.env);
+	while (!data.exit)
 	{
-		data->line = readline("Minishell> ");
-		if (!data->line || data->line[0] == '\0')
-			continue ;
-		add_history(data->line);
-		if (ft_strncmp(data->line, "\"\"", 3) == 0)
-			continue ;
-		data->status = process_n_exec(data, envp);
-		free_data_content(data);
+		sig_init();
+		data.line = readline("Minishell> ");
+		if (!data.line)
+			break ; // if continue, signals stop working
+		// pressing enter upon prompt is line == '\0'
+		// this has to be checked before add_history
+		if (data.line[0] == '\0')
+		{
+			free(data.line);
+			data.line = NULL;
+			break ; // if continue, signals stop working
+		}
+		add_history(data.line);
+		token_split(&data);
+		//print_tokens(data.token);
+		data.exit = process_n_exec(&data, envp);
+		free_tokens(&data);
 	}
 	rl_clear_history();
-	free(data);
-	return (EXIT_SUCCESS);
+	free_env(data.env);
+	ft_printf("exit\n");
+	return (0);
 }

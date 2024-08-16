@@ -6,45 +6,60 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/15 14:51:18 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 02:04:37 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	free_cmd(char **cmd)
+{
+	int	i;
+
+	if (!cmd)
+		return ;
+	i = 0;
+	while (cmd[i])
+	{
+		free(cmd[i]);
+		i++;
+	}
+	free(cmd);
+}
+
 // Function to check if the command is builtin and then launch it
 // Returns -1, if command not builtin
 // Returns 1, if builtin command executed successfully
 // Returns 0, if builtin command execution failed
-int	check_launch_builtins(t_data *data, char **envp)
+int	check_launch_builtins(t_data *data, char **cmd, char **envp)
 {
 	int	i;
 
-	/* if (!handle_redirection(data->cmd)) // TODO: redirection in builtins
-		return (-1); */
+	// if (!handle_redirection(cmd)) // TODO: redirection in builtins
+	//	return (-1);
 	i = -1;
-	if (ft_memcmp(data->cmd[0], "echo", ft_strlen("echo") + 1) == 0)
-		i = echo_command(data->cmd); //TODO pipes n stuff
-	else if (ft_memcmp(data->cmd[0], "cd", ft_strlen("cd") + 1) == 0)
-		i = cd_command(data->cmd); //TODO
-	else if (ft_memcmp(data->cmd[0], "pwd", ft_strlen("pwd") + 1) == 0)
-		i = pwd_command(); //TODO pipes n stuff
-	else if (ft_memcmp(data->cmd[0], "export", ft_strlen("export") + 1) == 0)
-		i = export_command(data->cmd); //TODO
-	else if (ft_memcmp(data->cmd[0], "unset", ft_strlen("unset") + 1) == 0)
-		i = unset_command(data->cmd); // TODO
-	else if (ft_memcmp(data->cmd[0], "env", ft_strlen("env") + 1) == 0)
-		i = env_command(data->cmd, envp); //TODO pipes n stuff
-	else if (ft_memcmp(data->cmd[0], "exit", ft_strlen("exit") + 1) == 0)
-		i = exit_command(data);
+	if (ft_memcmp(cmd[0], "echo", ft_strlen("echo") + 1) == 0)
+		i = echo_command(cmd); // TOFIX: not working after merge
+	else if (ft_memcmp(cmd[0], "cd", ft_strlen("cd") + 1) == 0)
+		i = cd_command(cmd);
+	else if (ft_memcmp(cmd[0], "pwd", ft_strlen("pwd") + 1) == 0)
+		i = pwd_command(); // TOFIX: pwd loses letter d after merge if more than 1 arg
+	else if (ft_memcmp(cmd[0], "export", ft_strlen("export") + 1) == 0)
+		i = export_command(cmd);
+	else if (ft_memcmp(cmd[0], "unset", ft_strlen("unset") + 1) == 0)
+		i = unset_command(cmd);
+	else if (ft_memcmp(cmd[0], "env", ft_strlen("env") + 1) == 0)
+		i = env_command(cmd, envp); // TOFIX: works with multiple args after merge
+	else if (ft_memcmp(cmd[0], "exit", ft_strlen("exit") + 1) == 0)
+		i = exit_command(data, cmd); // TOFIX: broken after merge
 	return (i);
 }
 
-void	child_process(t_data *data, char **envp)
+void	child_process(char **cmd, char **envp)
 {
-	if (!handle_redirection(data->cmd))
-		exit(EXIT_FAILURE);
-	if (execve(data->cmd[0], data->cmd, envp) == -1)
+	//if (!handle_redirection(cmd))		// TOFIX: not working after merge
+	//	exit(EXIT_FAILURE);
+	if (execve(cmd[0], cmd, envp) == -1)
 	{
 		perror("execve");
 		exit(EXIT_FAILURE);
@@ -53,36 +68,45 @@ void	child_process(t_data *data, char **envp)
 }
 
 // Function to execute non builtin command in a child process
-int	launch_nonbuiltins(t_data *data, char **envp)
+int	launch_nonbuiltins(char **cmd, char **envp)
 {
 	pid_t	pid;
-	int		status;
+	int		child_status;
 
 	pid = fork();
 	if (pid == 0)
-		child_process(data, envp);
+		child_process(cmd, envp);
 	else if (pid < 0)
 		perror("fork");
-	else // parent process
-	{ //WUNTRACED vs 0 ?
-		if (waitpid(pid, &status, WUNTRACED) == -1)
+	else
+	{
+		if (waitpid(pid, &child_status, WUNTRACED) == -1)
 			perror("waitpid");
 	}
-	return (1);
+	return (0);
 }
 
 // Function to extract commands, check if they're builtin, launch accordingly
 int	process_n_exec(t_data *data, char **envp)
 {
-	int	status;
+	int		status;
+	char	**cmd;
 
-	// TODO: divide commands by pipes
-	data->cmd = ft_split(data->line, ' ');
-	if (data->cmd == NULL || data->cmd[0] == NULL || data->cmd[0][0] == '\0')
-		return (status = 1);
-	status = check_launch_builtins(data, envp);
+	//printf("executing only command 1: %s\n", data->token->value);
+	// TODO: handle multiple commands
+	cmd = ft_split(data->token->value, ' ');
+	if (cmd == NULL || cmd[0] == NULL || cmd[0][0] == '\0')
+	{
+		free_cmd(cmd);
+		return (0);
+	}
+	status = check_launch_builtins(data, cmd, envp);
 	if (status == 0 || status == 1)
-		return (status);
-	status = launch_nonbuiltins(data, envp);
+	{
+		free_cmd(cmd);
+		return (0);
+	}
+	status = launch_nonbuiltins(cmd, envp);
+	free_cmd(cmd);
 	return (status);
 }
