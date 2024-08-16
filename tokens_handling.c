@@ -86,6 +86,8 @@ void	tokens_type_define(t_data *data)
 			tmp->type = TRUNC;
 		else if (!ft_strcmp(tmp->value, ">>"))
 			tmp->type = APPEND;
+		else if (!ft_strcmp(tmp->value, "<<"))
+			tmp->type = HEREDOC;
 		else if (!ft_strcmp(tmp->value, "<"))
 			tmp->type = INPUT;
 		else if (!ft_strcmp(tmp->value, "|"))

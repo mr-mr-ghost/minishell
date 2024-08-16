@@ -49,10 +49,10 @@ int	main(int argc, char **argv, char **envp)
 		data.line = readline("Minishell> ");
 		if (!data.line)
 			break ;
-		add_history(data.line);
+//		add_history(data.line);
 		token_split(&data);
-//		print_tokens(data.token);
-		process_n_exec(&data, envp);
+		print_tokens(data.token);
+//		process_n_exec(&data, envp);
 		free_tokens(&data);
 	}
 	rl_clear_history();

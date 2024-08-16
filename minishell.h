@@ -38,7 +38,8 @@
 # define APPEND 4
 # define INPUT 5
 # define PIPE 6
-# define END 7
+# define HEREDOC 7
+# define END 8
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
