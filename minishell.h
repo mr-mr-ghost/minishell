@@ -91,6 +91,7 @@ char	*set_env_value(char *line);
 char	*find_env_value(t_env *env, char *name);
 int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
+void	env_add_back(t_env **env, char *value);
 
 /*	tokens handling	*/
 void	token_split(t_data *data);
@@ -102,8 +103,9 @@ int		is_cmd(char *line, int i);
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i);
-bool	handle_cmd(t_data *data, char *line, int *i);
+int 	handle_cmd(t_data *data, char *line, int *i);
 void	handle_echo_chars(t_data *data, char *line, int *i);
+void	handle_export_chars(t_data *data, char *line, int *i);
 
 /*	tokens utils	*/
 t_token	*token_new(char *value);
@@ -122,7 +124,7 @@ void	sig_init(void);
 int	echo_command(t_token *token);
 int cd_command(t_token *token);
 int	pwd_command(void);
-int export_command(t_token *token);
+int export_command(t_token *token, t_env *env);
 int unset_command(t_token *token);
 int env_command(t_token *token, t_env *env);
 int	exit_command(t_data *data, t_token *token);

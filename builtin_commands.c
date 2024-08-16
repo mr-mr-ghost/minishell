@@ -21,7 +21,7 @@ int	echo_command(t_token *token)
 	int		n_flag;
 	t_token	*echo_token;
 
-	if (!token || !token->type || !token->next || token->next->type != ARG)
+	if (!token->next || token->next->type != ARG)
 	{
 		printf("\n");
 		return (0);
@@ -65,9 +65,24 @@ int	pwd_command(void)
 	return (0);
 }
 
-int	export_command(t_token *token)
+int export_command(t_token *token, t_env *env)
 {
-	printf("builtin command TODO: %s\n", token->value);
+	t_env	*enviro;
+	t_token	*export_token;
+
+	if (!token->next)
+	{
+		enviro = env;
+		while (enviro)
+		{
+			printf("declare -x %s\n", enviro->line);
+			enviro = enviro->next;
+		}
+		return (0);
+	}
+	export_token = token->next;
+	env_add_back(&env, export_token->value);
+	// TODO: need 2nd env list for export (non-quotes)
 	return (0);
 }
 

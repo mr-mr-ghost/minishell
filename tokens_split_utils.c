@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-bool	handle_cmd(t_data *data, char *line, int *i)
+int	handle_cmd(t_data *data, char *line, int *i)
 {
 	int	j;
 
@@ -24,7 +24,11 @@ bool	handle_cmd(t_data *data, char *line, int *i)
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
-	return (!ft_strncmp(line, "echo", 4));
+	if (!ft_strncmp(line, "echo", 4))
+		return (1);
+	else if (!ft_strncmp(line, "export", 6))
+		return (2);
+	return (0);
 }
 
 void	handle_special_chars(t_data *data, char *line, int *i)
@@ -99,6 +103,29 @@ void	handle_normal_chars(t_data *data, char *line, int *i)
 		data->token = token_new(new);
 	else
 		token_add_back(&data->token, token_new(new));
+	while (line[j] && line[j] == ' ')
+		j++;
+	*i = j;
+}
+
+void	handle_export_chars(t_data *data, char *line, int *i)
+{
+	int		j;
+
+	j = *i + 1;
+	while (line[j] && !ft_strchr("><|;= ", line[j]))
+		j++;
+	if (line[j] == '=')
+	{
+		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+		j++;
+		*i = j;
+	}
+	if (!line[j] || line[j] == ' ' ||
+		((line[j] == '\'' || line[j] == '\"') && !quotes_check(line, j)))
+		return ;
+	if (line[j] == '\'' || line[j] == '\"')
+		handle_quotes(data, line, &j);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;

@@ -47,7 +47,7 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
 		i = pwd_command(); // TOFIX: pwd loses letter d after merge if more than 1 arg
 	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
-		i = export_command(token);
+		i = export_command(token, data->env);
 	else if (ft_memcmp(token->value, "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(token);
 	else if (ft_memcmp(token->value, "env", ft_strlen("env") + 1) == 0)

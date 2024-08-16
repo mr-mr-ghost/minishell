@@ -33,21 +33,24 @@ int	is_cmd(char *line, int i)
 
 void	process_token(t_data *data, char *line)
 {
-	bool	echo;
+	int		edge;
 	int		i;
 
 	i = 0;
-	echo = false;
+	edge = 0;
 	while (line[i])
 	{
 		if (line[i] == ' ')
 			i++;
 		else if (is_cmd(line, i))
-			echo = handle_cmd(data, line, &i);
-		else if (echo)
+			edge = handle_cmd(data, line, &i);
+		else if (edge)
 		{
-			handle_echo_chars(data, line, &i);
-			echo = false;
+			if (edge == 1)
+				handle_echo_chars(data, line, &i);
+			else if (edge == 2)
+				handle_export_chars(data, line, &i);
+			edge = 0;
 		}
 		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
 			handle_quotes(data, line, &i);
