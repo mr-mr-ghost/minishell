@@ -21,7 +21,7 @@ int	echo_command(t_token *token)
 	int		n_flag;
 	t_token	*echo_token;
 
-	if (!token || !token->type || !token->next)
+	if (!token || !token->type || !token->next || token->next->type != ARG)
 	{
 		printf("\n");
 		return (0);
@@ -30,7 +30,7 @@ int	echo_command(t_token *token)
 	n_flag = 0;
 	if (ft_memcmp(echo_token->value, "-n", 3) == 0)
 	{
-		if (!echo_token->next)
+		if (!echo_token->next || echo_token->next->type != ARG)
 			return (0);
 		echo_token = echo_token->next;
 		n_flag = 1;

@@ -77,6 +77,8 @@ bool	handle_echo_chars(t_data *data, char *line, int *i)
 	}
 	while (line[j] && !ft_strchr("><|;", line[j]))
 		j++;
+	if (j == *i)
+		return (false);
 	new = remove_quotes(ft_substr(line, *i, j - *i));
 	token_add_back(&data->token, token_new(new));
 	while (line[j] && line[j] == ' ')
