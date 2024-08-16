@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 13:19:39 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:58:51 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	tokens_type_define(t_data *data)
 			tmp->type = INPUT;
 		else if (!ft_strcmp(tmp->value, "|"))
 			tmp->type = PIPE;
+		else if (!ft_strcmp(tmp->value, "<<"))
+			tmp->type = HEREDOC;
 		else if (!tmp->prev || tmp->prev->type >= TRUNC)
 			tmp->type = CMD;
 		else

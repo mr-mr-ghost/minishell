@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 02:04:00 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 16:13:20 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,14 @@ int	main(int argc, char **argv, char **envp)
 		sig_init();
 		data.line = readline("Minishell> ");
 		if (!data.line)
-			break ; // if continue, signals stop working
-		// pressing enter upon prompt is line == '\0'
-		// this has to be checked before add_history
-		if (data.line[0] == '\0')
+			break ;
+		if (data.line[0] != '\0')
 		{
-			free(data.line);
-			data.line = NULL;
-			break ; // if continue, signals stop working
+			add_history(data.line);
+			token_split(&data);
+			//print_tokens(data.token);
+			data.exit = process_n_exec(&data, envp);
 		}
-		add_history(data.line);
-		token_split(&data);
-		//print_tokens(data.token);
-		data.exit = process_n_exec(&data, envp);
 		free_tokens(&data);
 	}
 	rl_clear_history();

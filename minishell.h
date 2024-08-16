@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 13:57:56 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 15:22:23 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define INPUT 5	// <
 # define PIPE 6		// |
 # define END 7		// ;
+# define HEREDOC 8	// <<
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
@@ -67,6 +68,8 @@ typedef struct s_data
 {
 	char	*line;
 	int		exit;
+	//char	**envarr;
+	//char	**cmd;
 	t_env	*env;
 	t_token	*token;
 }	t_data;

@@ -6,16 +6,16 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 14:03:50 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 15:02:09 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // echo_command: prints all the subsequent strings
-// if 1 str - prints new line, returns 1
-// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1
-// if more strs - prints all strings, adds new line if str2 = "-n", returns 1
+// if 1 str - prints new line, returns 0
+// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 0
+// if more strs - prints all strings, adds new line if str2 = "-n", returns 0
 int	echo_command(char **args)
 {
 	int	i;
@@ -56,8 +56,8 @@ int	cd_command(char **args)
 }
 
 // pwd_command: prints the working directory
-// any amount of strs - prints pwd and returns 1
-// upon getcwd() fail - prints invalid command in STDERR, returns 1
+// any amount of strs - prints pwd and returns 0
+// upon getcwd() fail - prints invalid command in STDERR, returns 0
 int	pwd_command(void)
 {
 	char	*pwd;
@@ -86,8 +86,8 @@ int	unset_command(char **args)
 }
 
 // env_command: prints all the environment variables
-// if 1 str - prints env vars, returns 1
-// if more strs - prints invalid command in STDERR, returns 1
+// if 1 str - prints env vars, returns 0
+// if more strs - prints invalid command in STDERR, returns 0
 int	env_command(char **args, t_env *env)
 {
 	t_env	*tmp;
@@ -95,7 +95,6 @@ int	env_command(char **args, t_env *env)
 	if (!args[1])
 	{
 		tmp = env;
-		printf("deal with our env");
 		while (tmp)
 		{
 			printf("%s\n", tmp->value);
@@ -107,16 +106,24 @@ int	env_command(char **args, t_env *env)
 	return (0);
 }
 
+// MIGHT NEED CONNECTING WITH SIGNALS TO CHECK FOR ALIVE CHILDREN
 // exit_command: frees data and exits the program
-// if 1 str - returns status 0 to exit command by ending main loop
+// if 1 str - exits program
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
-// if more strs - prints invalid command in STDERR, returns 1
+// if more strs - prints invalid command in STDERR, returns 0
 int	exit_command(t_data *data, char **args)
 {
 	unsigned char	i;
 
 	if (!args[1])
-		return (1);
+	{
+		// return (1); // not working after merge
+		rl_clear_history();
+		free_cmd(args);
+		free_tokens(data);
+		free_env(data->env);
+		exit(EXIT_SUCCESS);
+	}
 	if (!args[2])
 	{
 		i = 0;

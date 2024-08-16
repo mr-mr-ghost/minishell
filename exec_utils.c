@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 14:03:16 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 15:05:47 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,8 @@ int	process_n_exec(t_data *data, char **envp)
 	token = token->next->next;
 	if (!token)
 	{
-		perror("minishell: syntax error near unexpected token `newline'");
+		ft_putstr_fd(
+			"minishell: syntax error near unexpected token `newline'\n", 2);
 		free_cmd(cmd);
 		return (0);
 	}
