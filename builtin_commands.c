@@ -6,16 +6,16 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 02:02:23 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 18:02:03 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // echo_command: prints all the subsequent strings
-// if 1 str - prints new line, returns 1
-// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1
-// if more strs - prints all strings, adds new line if str2 = "-n", returns 1
+// if 1 str - prints new line, returns 0
+// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 0
+// if more strs - prints all strings, adds new line if str2 = "-n", returns 0
 int	echo_command(t_token *token)
 {
 	int		n_flag;
@@ -46,8 +46,8 @@ int	cd_command(t_token *token)
 }
 
 // pwd_command: prints the working directory
-// any amount of strs - prints pwd and returns 1
-// upon getcwd() fail - prints invalid command in STDERR, returns 1
+// any amount of strs - prints pwd and returns 0
+// upon getcwd() fail - prints invalid command in STDERR, returns 0
 int	pwd_command(void)
 {
 	char	*pwd;
@@ -76,8 +76,8 @@ int	unset_command(t_token *token)
 }
 
 // env_command: prints all the environment variables
-// if 1 str - prints env vars, returns 1
-// if more strs - prints invalid command in STDERR, returns 1
+// if 1 str - prints env vars, returns 0
+// if more strs - prints invalid command in STDERR, returns 0
 int env_command(t_token *token, t_env *env)
 {
 	t_env	*enviro;
@@ -97,16 +97,21 @@ int env_command(t_token *token, t_env *env)
 }
 
 // exit_command: frees data and exits the program
-// if 1 str - returns status 0 to exit command by ending main loop
+// if 1 str - exits program with STDERR=0
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
-// if more strs - prints invalid command in STDERR, returns 1
+// if more strs - prints invalid command in STDERR, returns 0
 int	exit_command(t_data *data, t_token *token)
 {
 	unsigned char	i;
 	t_token			*exit_token;
 
 	if (!token->next)
-		return (1);
+	{
+		rl_clear_history();
+		free_tokens(data);
+		free_env(data->env);
+		exit(0);
+	}
 	exit_token = token->next;
 	if (!exit_token->next)
 	{

@@ -3,30 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 14:05:48 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/08/16 19:25:24 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	is_connector(char c)
+{
+	if (c == ' ' || c == '>' || c == '<' || c == '|' || c == ';' || c == '\"')
+		return (1);
+	return (0);
+}
+
 int	is_cmd(char *line, int i)
 {
-	if (select_cmp(line, "echo ", i, 5))
+	if (ft_memcmp(line + i, "echo", 4) == 0 && is_connector(line[i + 4]))
 		return (4);
-	else if (select_cmp(line, "cd ", i, 3))
+	else if (ft_memcmp(line + i, "cd", 2) == 0 && is_connector(line[i + 2]))
 		return (2);
-	else if (select_cmp(line, "pwd ", i, 4))
-		return (2);
-	else if (select_cmp(line, "export ", i, 7))
-		return (6);
-	else if (select_cmp(line, "unset ", i, 6))
-		return (5);
-	else if (select_cmp(line, "env ", i, 4))
+	else if (ft_memcmp(line + i, "pwd", 3) == 0 && is_connector(line[i + 3]))
 		return (3);
-	else if (select_cmp(line, "exit ", i, 5))
+	else if (ft_memcmp(line + i, "export", 6) == 0 && is_connector(line[i + 6]))
+		return (6);
+	else if (ft_memcmp(line + i, "unset", 5) == 0 && is_connector(line[i + 5]))
+		return (5);
+	else if (ft_memcmp(line + i, "env", 3) == 0 && is_connector(line[i + 3]))
+		return (3);
+	else if (ft_memcmp(line + i, "exit", 4) == 0 && is_connector(line[i + 4]))
 		return (4);
 	return (0);
 }
@@ -87,6 +94,8 @@ void	tokens_type_define(t_data *data)
 			tmp->type = INPUT;
 		else if (!ft_strcmp(tmp->value, "|"))
 			tmp->type = PIPE;
+		else if (!ft_strcmp(tmp->value, "<<"))
+			tmp->type = HEREDOC;
 		else if (!tmp->prev || tmp->prev->type >= TRUNC)
 			tmp->type = CMD;
 		else

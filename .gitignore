@@ -3,6 +3,7 @@
 minishell
 obj
 tmp
+before_merge
 *.txt
 !operators.txt
 *.swp

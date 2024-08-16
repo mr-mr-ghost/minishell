@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 17:47:52 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 18:04:57 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,23 +119,23 @@ void	disable_sigquit(void);
 void	sig_init(void);
 
 /*	builtins	*/
-int	echo_command(t_token *token);
-int cd_command(t_token *token);
-int	pwd_command(void);
-int export_command(t_token *token);
-int unset_command(t_token *token);
-int env_command(t_token *token, t_env *env);
-int	exit_command(t_data *data, t_token *token);
+int		echo_command(t_token *token);
+int		cd_command(t_token *token);
+int		pwd_command(void);
+int		export_command(t_token *token);
+int		unset_command(t_token *token);
+int		env_command(t_token *token, t_env *env);
+int		exit_command(t_data *data, t_token *token);
 
 /*	execution	*/
-int	process_n_exec(t_data *data, char **envp);
-int	launch_nonbuiltins(char **cmd, char **envp);
-int check_launch_builtins(t_data *data, t_token *token, char **envp);
+int		process_n_exec(t_data *data, char **envp);
+int		launch_nonbuiltins(char **cmd, char **envp);
+int		check_launch_builtins(t_data *data, t_token *token, char **envp);
 void	child_process(char **cmd, char **envp);
 void	free_cmd(char **cmd);
 
 /*	redirections	*/
-int	handle_redirection(char **cmd);
+int		handle_redirection(char **cmd);
 void	delete_array_element(char **array, int index);
 
 /*	global	*/
