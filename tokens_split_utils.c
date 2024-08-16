@@ -61,49 +61,44 @@ void	handle_quotes(t_data *data, char *line, int *i)
 	*i = j;
 }
 
-char	*remove_quotes(char *str)
+bool	handle_echo_chars(t_data *data, char *line, int *i)
 {
-	int		i;
 	int		j;
 	char	*new;
 
-	i = 0;
-	j = 0;
-	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!new)
-		return (NULL);
-	while (str[i])
+	j = *i;
+	if (line[j] == '-' && select_cmp(line, "-n ", j, 3))
 	{
-		if (str[i] != '\'' && str[i] != '\"')
-			new[j++] = str[i];
-		i++;
+		token_add_back(&data->token, token_new(ft_substr(line, j, 2)));
+		j += 2;
+		while (line[j] && line[j] == ' ')
+			j++;
+		*i = j;
 	}
-	new[j] = '\0';
-	free(str);
-	return (new);
+	while (line[j] && !ft_strchr("><|;", line[j]))
+		j++;
+	new = remove_quotes(ft_substr(line, *i, j - *i));
+	token_add_back(&data->token, token_new(new));
+	while (line[j] && line[j] == ' ')
+		j++;
+	*i = j;
+	return (false);
 }
 
-void	handle_normal_chars(t_data *data, char *line, int *i, bool *check)
+void	handle_normal_chars(t_data *data, char *line, int *i)
 {
 	int		j;
 	char	*new;
 
-	j = *i + 1;
-	if (check)
-		while (line[j] && !ft_strchr("><|;", line[j]))
-			j++;
-	else
-		while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
-			j++;
+	j = *i;
+	while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
+		j++;
 	new = ft_substr(line, *i, j - *i);
-	if (check)
-		new = remove_quotes(new);
 	if (*i == 0)
 		data->token = token_new(new);
 	else
 		token_add_back(&data->token, token_new(new));
 	while (line[j] && line[j] == ' ')
 		j++;
-	check = false;
 	*i = j;
 }

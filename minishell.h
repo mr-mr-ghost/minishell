@@ -6,14 +6,13 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 15:22:23 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:47:52 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <fcntl.h>
 # include <stdio.h>
 # include <string.h>
 # include <readline/readline.h>
@@ -27,6 +26,9 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <stdbool.h>
 # include "libft/libft.h"
 
 # define EMPTY 0	// ""
@@ -45,6 +47,8 @@
 
 typedef struct s_env
 {
+	char			*line;
+	char			*name;
 	char			*value;
 	struct s_env	*next;
 }	t_env;
@@ -68,8 +72,6 @@ typedef struct s_data
 {
 	char	*line;
 	int		exit;
-	//char	**envarr;
-	//char	**cmd;
 	t_env	*env;
 	t_token	*token;
 }	t_data;
@@ -82,6 +84,8 @@ int		ft_strcmp(const char *s1, const char *s2);
 /*	environment initialisation	*/
 void	init_env(t_data *data, char **envp);
 void	set_shell_lvl(t_env *env);
+char	*set_env_name(char *line);
+char	*set_env_value(char *line);
 
 /*	environment utils	*/
 char	*find_env_value(t_env *env, char *name);
@@ -91,20 +95,22 @@ char	*get_env_name(char *dest, char *src);
 /*	tokens handling	*/
 void	token_split(t_data *data);
 void	tokens_type_define(t_data *data);
+void	process_token(t_data *data, char *line);
+int		is_cmd(char *line, int i);
 
 /*	tokens split utils	*/
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
-void	handle_normal_chars(t_data *data, char *line, int *i, bool *check);
+void	handle_normal_chars(t_data *data, char *line, int *i);
 bool	handle_cmd(t_data *data, char *line, int *i);
-char	*remove_quotes(char *str);
+bool	handle_echo_chars(t_data *data, char *line, int *i);
 
 /*	tokens utils	*/
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
-int		is_cmd(char *line, int i);
 bool	select_cmp(char *line, char *cmp, int start, int len);
 bool	quotes_check(char *line, int i);
+char	*remove_quotes(char *str);
 
 /*	signals	*/
 void	sigint_handler(int signum);
@@ -112,21 +118,25 @@ void	sigquit_handler(int signum);
 void	disable_sigquit(void);
 void	sig_init(void);
 
-/*	exec utils	*/
+/*	builtins	*/
+int	echo_command(t_token *token);
+int cd_command(t_token *token);
+int	pwd_command(void);
+int export_command(t_token *token);
+int unset_command(t_token *token);
+int env_command(t_token *token, t_env *env);
+int	exit_command(t_data *data, t_token *token);
+
+/*	execution	*/
+int	process_n_exec(t_data *data, char **envp);
+int	launch_nonbuiltins(char **cmd, char **envp);
+int check_launch_builtins(t_data *data, t_token *token, char **envp);
+void	child_process(char **cmd, char **envp);
 void	free_cmd(char **cmd);
-int		process_n_exec(t_data *data, char **envp);
 
-/*	redirection utils	*/
-int		handle_redirection(char **args);
-
-/*	builtin commands	*/
-int		echo_command(char **args);
-int		cd_command(char **args);
-int		pwd_command(void);
-int		export_command(char **args);
-int		unset_command(char **args);
-int		env_command(char **args, t_env *env);
-int		exit_command(t_data *data, char **args);
+/*	redirections	*/
+int	handle_redirection(char **cmd);
+void	delete_array_element(char **array, int index);
 
 /*	global	*/
 extern t_sig	g_sig;

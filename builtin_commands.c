@@ -6,58 +6,48 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 15:02:09 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 02:02:23 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // echo_command: prints all the subsequent strings
-// if 1 str - prints new line, returns 0
-// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 0
-// if more strs - prints all strings, adds new line if str2 = "-n", returns 0
-int	echo_command(char **args)
+// if 1 str - prints new line, returns 1
+// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1
+// if more strs - prints all strings, adds new line if str2 = "-n", returns 1
+int	echo_command(t_token *token)
 {
-	int	i;
-	int	n_flag;
+	int		n_flag;
+	t_token	*echo_token;
 
-	if (!args[1])
+	if (!token || !token->type || !token->next)
 	{
 		printf("\n");
 		return (0);
 	}
-	if (ft_strncmp(args[1], "-n", 3) == 0)
+	echo_token = token->next;
+	n_flag = 0;
+	if (ft_memcmp(echo_token->value, "-n", 3) == 0)
 	{
-		if (!args[2])
-			return (0);
-		i = 2;
+		echo_token = echo_token->next;
 		n_flag = 1;
 	}
-	else
-	{
-		i = 1;
-		n_flag = 0;
-	}
-	while (args[i])
-	{
-		printf("%s", args[i++]);
-		if (args[i])
-			printf(" ");
-	}
+	printf("%s", echo_token->value);
 	if (!n_flag)
 		printf("\n");
 	return (0);
 }
 
-int	cd_command(char **args)
+int	cd_command(t_token *token)
 {
-	printf("builtin command TODO: %s\n", args[0]);
+	printf("builtin command TODO: %s\n", token->value);
 	return (0);
 }
 
 // pwd_command: prints the working directory
-// any amount of strs - prints pwd and returns 0
-// upon getcwd() fail - prints invalid command in STDERR, returns 0
+// any amount of strs - prints pwd and returns 1
+// upon getcwd() fail - prints invalid command in STDERR, returns 1
 int	pwd_command(void)
 {
 	char	*pwd;
@@ -73,74 +63,68 @@ int	pwd_command(void)
 	return (0);
 }
 
-int	export_command(char **args)
+int	export_command(t_token *token)
 {
-	printf("builtin command TODO: %s\n", args[0]);
+	printf("builtin command TODO: %s\n", token->value);
 	return (0);
 }
 
-int	unset_command(char **args)
+int	unset_command(t_token *token)
 {
-	printf("builtin command TODO: %s\n", args[0]);
+	printf("builtin command TODO: %s\n", token->value);
 	return (0);
 }
 
 // env_command: prints all the environment variables
-// if 1 str - prints env vars, returns 0
-// if more strs - prints invalid command in STDERR, returns 0
-int	env_command(char **args, t_env *env)
+// if 1 str - prints env vars, returns 1
+// if more strs - prints invalid command in STDERR, returns 1
+int env_command(t_token *token, t_env *env)
 {
-	t_env	*tmp;
+	t_env	*enviro;
 
-	if (!args[1])
+	if (token->next && token->next->type == ARG)
 	{
-		tmp = env;
-		while (tmp)
-		{
-			printf("%s\n", tmp->value);
-			tmp = tmp->next;
-		}
+		ft_putstr_fd("env: too many arguments\n", 2);
 		return (0);
 	}
-	ft_putstr_fd("env: too many arguments\n", 2);
+	enviro = env;
+	while (enviro)
+	{
+		printf("%s\n", enviro->line);
+		enviro = enviro->next;
+	}
 	return (0);
 }
 
-// MIGHT NEED CONNECTING WITH SIGNALS TO CHECK FOR ALIVE CHILDREN
 // exit_command: frees data and exits the program
-// if 1 str - exits program
+// if 1 str - returns status 0 to exit command by ending main loop
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
-// if more strs - prints invalid command in STDERR, returns 0
-int	exit_command(t_data *data, char **args)
+// if more strs - prints invalid command in STDERR, returns 1
+int	exit_command(t_data *data, t_token *token)
 {
 	unsigned char	i;
+	t_token			*exit_token;
 
-	if (!args[1])
-	{
-		// return (1); // not working after merge
-		rl_clear_history();
-		free_cmd(args);
-		free_tokens(data);
-		free_env(data->env);
-		exit(EXIT_SUCCESS);
-	}
-	if (!args[2])
+	if (!token->next)
+		return (1);
+	exit_token = token->next;
+	if (!exit_token->next)
 	{
 		i = 0;
-		if (ft_strchr("-+", args[1][0]) != NULL && args[1][1] != '\0')
+		if (ft_strchr("-+", exit_token->value[0]) != NULL && exit_token->value[1] != '\0')
 			i++;
-		while (args[1][i] && ft_isdigit(args[1][i]))
+		while (exit_token->value[i] && ft_isdigit(exit_token->value[i]))
 			i++;
-		if (args[1][i] != '\0')
+		if (exit_token->value[i] != '\0')
 		{
 			ft_putstr_fd("exit: numeric argument required\n", 2);
 			return (0);
 		}
-		i = ft_atoi(args[1]);
+		i = ft_atoi(exit_token->value);
 		rl_clear_history();
-		free_cmd(args);
 		free_tokens(data);
 		free_env(data->env);
+		ft_putstr_fd("exit\n", 2);
 		exit(i);
 	}
 	ft_putstr_fd("exit: too many arguments\n", 2);

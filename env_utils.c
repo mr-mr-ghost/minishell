@@ -20,9 +20,9 @@ char	*find_env_value(t_env *env, char *key)
 	tmp = env;
 	while (tmp)
 	{
-		get_env_name(env_name, tmp->value);
+		get_env_name(env_name, tmp->line);
 		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
-			return (ft_strdup(tmp->value));
+			return (ft_strdup(tmp->line));
 		tmp = tmp->next;
 	}
 	return (NULL);

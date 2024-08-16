@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 16:13:20 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:22:37 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	main(int argc, char **argv, char **envp)
 	disable_sigquit();
 	init_data(&data);
 	init_env(&data, envp);
-	set_shell_lvl(data.env);
 	while (!data.exit)
 	{
 		sig_init();
@@ -54,8 +53,8 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(data.line);
 			token_split(&data);
-			//print_tokens(data.token);
-			data.exit = process_n_exec(&data, envp);
+			// print_tokens(data.token);
+			process_n_exec(&data, envp);
 		}
 		free_tokens(&data);
 	}

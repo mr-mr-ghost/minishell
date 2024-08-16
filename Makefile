@@ -1,34 +1,24 @@
-NAME	=	minishell
+NAME = minishell
 
-CFILES	=	minishell.c \
-			utils.c \
-			env_init.c \
-			env_utils.c \
-			tokens_handling.c \
-			tokens_utils.c \
-			tokens_split_utils.c \
-			signals.c \
-			exec_utils.c \
-			redirection_utils.c \
-			builtin_commands.c
+CFILES = minishell.c utils.c env_init.c	env_utils.c tokens_handling.c tokens_utils.c tokens_split_utils.c signals.c exec_utils.c redirection_utils.c builtin_commands.c
 
-OBJ_DIR	=	obj
+OBJ_DIR = obj
 
-OFILES	=	$(addprefix $(OBJ_DIR)/,$(CFILES:.c=.o))
+OFILES = $(addprefix $(OBJ_DIR)/,$(CFILES:.c=.o))
 
-CC		=	gcc
+CC = cc
 
-CFLAGS	=	-Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g
 
-LIBRARY	=	libft/libft.a -lreadline
+LIBRARY = libft/libft.a -lreadline
 
-RED		=	\033[1;31m
-GREEN	=	\033[1;32m
-YELLOW	=	\033[1;33m
-RESET	=	\033[0m
+RED = \033[1;31m
+GREEN = \033[1;32m
+YELLOW = \033[1;33m
+RESET = \033[0m
 
-TOTAL_FILES		=	$(words $(CFILES))
-COMPILED_FILES	=	0
+TOTAL_FILES = $(words $(CFILES))
+COMPILED_FILES = 0
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OBJ_DIR)
