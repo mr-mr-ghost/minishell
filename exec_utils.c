@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 13:13:05 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:03:16 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	free_cmd(char **cmd)
 // Returns -1, if command not builtin
 // Returns 1, if builtin command executed successfully
 // Returns 0, if builtin command execution failed
-int	check_launch_builtins(t_data *data, char **cmd, char **envp)
+int	check_launch_builtins(t_data *data, char **cmd)
 {
 	int	i;
 
@@ -49,7 +49,7 @@ int	check_launch_builtins(t_data *data, char **cmd, char **envp)
 	else if (ft_memcmp(cmd[0], "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(cmd);
 	else if (ft_memcmp(cmd[0], "env", ft_strlen("env") + 1) == 0)
-		i = env_command(cmd, envp); // TOFIX: works with multiple args after merge
+		i = env_command(cmd, data->env); // TOFIX: works with multiple args after merge
 	else if (ft_memcmp(cmd[0], "exit", ft_strlen("exit") + 1) == 0)
 		i = exit_command(data, cmd); // TOFIX: broken after merge
 	return (i);
@@ -107,8 +107,8 @@ int	process_n_exec(t_data *data, char **envp)
 	}
 	if (token->next == NULL || token->next->type < TRUNC)
 	{
-		printf("str 2: %s\n", token->value);
-		status = check_launch_builtins(data, cmd, envp);
+		printf("is str 2: %d\n", token->next? token->next->type : -1);
+		status = check_launch_builtins(data, cmd);
 		if (status == 0 || status == 1)
 		{
 			free_cmd(cmd);
@@ -137,7 +137,8 @@ int	process_n_exec(t_data *data, char **envp)
 	// TODO: handle more than 1 command
 	if (token->prev->type == END)
 	{
-		status = check_launch_builtins(data, cmd, envp);
+		printf("str 1: %s\n", token->prev->prev->value);
+		status = check_launch_builtins(data, cmd);
 		if (status == 1)
 		{
 			free_cmd(cmd);
@@ -153,7 +154,7 @@ int	process_n_exec(t_data *data, char **envp)
 		}
 		status = launch_nonbuiltins(cmd, envp);
 		// TODO: check if nonbuiltin fails
-		status = check_launch_builtins(data, cmd2, envp);
+		status = check_launch_builtins(data, cmd2);
 		if (status == 1)
 		{
 			free_cmd(cmd);

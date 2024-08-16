@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 02:02:23 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:03:50 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,19 @@ int	unset_command(char **args)
 // env_command: prints all the environment variables
 // if 1 str - prints env vars, returns 1
 // if more strs - prints invalid command in STDERR, returns 1
-int	env_command(char **args, char **envp)
+int	env_command(char **args, t_env *env)
 {
-	int	i;
+	t_env	*tmp;
 
 	if (!args[1])
 	{
-		i = 0;
-		while (envp && envp[i])
-			printf("%s\n", envp[i++]);
+		tmp = env;
+		printf("deal with our env");
+		while (tmp)
+		{
+			printf("%s\n", tmp->value);
+			tmp = tmp->next;
+		}
 		return (0);
 	}
 	ft_putstr_fd("env: too many arguments\n", 2);

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 12:28:31 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 13:57:56 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int		cd_command(char **args);
 int		pwd_command(void);
 int		export_command(char **args);
 int		unset_command(char **args);
-int		env_command(char **args, char **envp);
+int		env_command(char **args, t_env *env);
 int		exit_command(t_data *data, char **args);
 
 /*	global	*/
