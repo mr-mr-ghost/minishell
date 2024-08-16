@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 02:04:37 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 13:13:05 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,22 +91,89 @@ int	process_n_exec(t_data *data, char **envp)
 {
 	int		status;
 	char	**cmd;
+	char	**cmd2;
+	t_token	*token;
 
-	//printf("executing only command 1: %s\n", data->token->value);
-	// TODO: handle multiple commands
-	cmd = ft_split(data->token->value, ' ');
+	cmd = NULL;
+	cmd2 = NULL;
+	// check it cmd1, connector and cm2
+	token = data->token;
+	printf("str 1: %s\n", token->value);
+	cmd = ft_split(token->value, ' ');
 	if (cmd == NULL || cmd[0] == NULL || cmd[0][0] == '\0')
 	{
 		free_cmd(cmd);
 		return (0);
 	}
-	status = check_launch_builtins(data, cmd, envp);
-	if (status == 0 || status == 1)
+	if (token->next == NULL || token->next->type < TRUNC)
 	{
+		printf("str 2: %s\n", token->value);
+		status = check_launch_builtins(data, cmd, envp);
+		if (status == 0 || status == 1)
+		{
+			free_cmd(cmd);
+			return (0);
+		}
+		status = launch_nonbuiltins(cmd, envp);
+		free_cmd(cmd);
+		return (status);
+	}
+	printf("connector: %s\n", token->next->value);
+	token = token->next->next;
+	if (!token)
+	{
+		perror("minishell: syntax error near unexpected token `newline'");
 		free_cmd(cmd);
 		return (0);
 	}
-	status = launch_nonbuiltins(cmd, envp);
+	printf("str 3: %s\n", token->value);
+	cmd2 = ft_split(token->value, ' ');
+	if (cmd2 == NULL || cmd2[0] == NULL || cmd2[0][0] == '\0')
+	{
+		free_cmd(cmd);
+		free_cmd(cmd2);
+		return (0);
+	}
+	// TODO: handle more than 1 command
+	if (token->prev->type == END)
+	{
+		status = check_launch_builtins(data, cmd, envp);
+		if (status == 1)
+		{
+			free_cmd(cmd);
+			free_cmd(cmd2);
+			return (1);
+		}
+		else if (status == 0)
+		{
+			status = launch_nonbuiltins(cmd2, envp);
+			free_cmd(cmd);
+			free_cmd(cmd2);
+			return (status);
+		}
+		status = launch_nonbuiltins(cmd, envp);
+		// TODO: check if nonbuiltin fails
+		status = check_launch_builtins(data, cmd2, envp);
+		if (status == 1)
+		{
+			free_cmd(cmd);
+			free_cmd(cmd2);
+			return (1);
+		}
+		else if (status == 0)
+		{
+			free_cmd(cmd);
+			free_cmd(cmd2);
+			return (0);
+		}
+		status = launch_nonbuiltins(cmd2, envp);
+		free_cmd(cmd);
+		free_cmd(cmd2);
+		return (status);
+	}
+	// TODO: handle other connectors
 	free_cmd(cmd);
-	return (status);
+	free_cmd(cmd2);
+	// TODO: handle more than 2 commands
+	return (0);
 }

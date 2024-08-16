@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 01:56:03 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 12:28:31 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@
 # include <term.h>
 # include "libft/libft.h"
 
-# define EMPTY 0
-# define CMD 1
-# define ARG 2
-# define TRUNC 3
-# define APPEND 4
-# define INPUT 5
-# define PIPE 6
-# define END 7
+# define EMPTY 0	// ""
+# define CMD 1		// command
+# define ARG 2		// option or argument
+# define TRUNC 3	// >
+# define APPEND 4	// >>
+# define INPUT 5	// <
+# define PIPE 6		// |
+# define END 7		// ;
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024

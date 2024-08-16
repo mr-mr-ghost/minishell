@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 14:05:48 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/08/16 13:19:39 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	token_split(t_data *data)
 	{
 		if (line[i] == ' ')
 			i++;
-		else if (is_cmd(line, i))
-			echo = handle_cmd(data, line, &i);
+		//else if (is_cmd(line, i))
+		//	echo = handle_cmd(data, line, &i);
 		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
 			handle_quotes(data, line, &i);
 		else if (ft_strchr("><|;", line[i]))
