@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 20:31:13 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 00:47:16 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,11 @@ void	free_cmd(char **cmd);
 /*	redirections	*/
 int		handle_redirection(char **cmd);
 void	delete_array_element(char **array, int index);
+
+/*	commands array utils	*/
+int		count_args(t_token *token);
+char	**form_cmd(t_token *token, int len);
+void	delete_command_from_list(t_token **token, int clen);
 
 /*	global	*/
 extern t_sig	g_sig;

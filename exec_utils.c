@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 19:42:08 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 01:03:49 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,22 +93,29 @@ int	process_n_exec(t_data *data, char **envp)
 {
 	int		status;
 	t_token	*token;
-	//char	**cmd;
-	//char	**cmd2;
+	char	**cmd;
+	int		clen;
 
-	//cmd = NULL;
-	//cmd2 = NULL;
+	cmd = NULL;
 	token = data->token;
+	if (!token)
+		return (0);
+	// TODO: check token type after first command, then launch accordingly
 	if (token->type == BCMD)
-	{
-		printf("Builtin command\n");
 		status = check_launch_builtins(data, token, envp);
-		if (status == 0 || status == 1)
+	else if (token->type == NCMD)
+	{
+		clen = count_args(token);
+		printf("clen: %d\n", clen);
+		cmd = form_cmd(token, clen);
+		if (!cmd)
 			return (0);
+		status = launch_nonbuiltins(cmd, envp);
+		free_cmd(cmd);
+		//delete_command_from_list(&token, clen);
+		return (status = 0);
 	}
-	if (token->type == NCMD)
-		printf("Non-builtin command\n");
-
-//	status = launch_nonbuiltins(cmd, envp);
-	return (status);
+	//if (data->token)
+	//	printf("next token: %s\n", data->token->value);
+	return (status = 0);
 }
