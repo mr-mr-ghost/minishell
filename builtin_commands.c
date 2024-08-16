@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 18:02:03 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 21:22:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	echo_command(t_token *token)
 	int		n_flag;
 	t_token	*echo_token;
 
-	if (!token || !token->type || !token->next)
+	if (!token || !token->type || !token->next || token->next->type != ARG)
 	{
 		printf("\n");
 		return (0);
@@ -30,10 +30,19 @@ int	echo_command(t_token *token)
 	n_flag = 0;
 	if (ft_memcmp(echo_token->value, "-n", 3) == 0)
 	{
+		if (!echo_token->next || echo_token->next->type != ARG)
+			return (0);
 		echo_token = echo_token->next;
 		n_flag = 1;
 	}
-	printf("%s", echo_token->value);
+	while (echo_token && echo_token->type == ARG)
+	{
+		if (echo_token->next && echo_token->next->type == ARG)
+			printf("%s ", echo_token->value);
+		else
+			printf("%s", echo_token->value);
+		echo_token = echo_token->next;
+	}
 	if (!n_flag)
 		printf("\n");
 	return (0);
@@ -82,7 +91,7 @@ int env_command(t_token *token, t_env *env)
 {
 	t_env	*enviro;
 
-	if (token->next && token->next->type == ARG)
+	if (token->next) // && token->next->type == ARG)
 	{
 		ft_putstr_fd("env: too many arguments\n", 2);
 		return (0);
@@ -96,6 +105,14 @@ int env_command(t_token *token, t_env *env)
 	return (0);
 }
 
+void	exit_command_cleanup(t_data *data, int errnum)
+{
+	rl_clear_history();
+	free_tokens(data);
+	free_env(data->env);
+	exit(errnum);
+}
+
 // exit_command: frees data and exits the program
 // if 1 str - exits program with STDERR=0
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
@@ -106,17 +123,13 @@ int	exit_command(t_data *data, t_token *token)
 	t_token			*exit_token;
 
 	if (!token->next)
-	{
-		rl_clear_history();
-		free_tokens(data);
-		free_env(data->env);
-		exit(0);
-	}
+		exit_command_cleanup(data, 0);
 	exit_token = token->next;
 	if (!exit_token->next)
 	{
 		i = 0;
-		if (ft_strchr("-+", exit_token->value[0]) != NULL && exit_token->value[1] != '\0')
+		if (ft_strchr("-+", exit_token->value[0]) != NULL
+			&& exit_token->value[1] != '\0')
 			i++;
 		while (exit_token->value[i] && ft_isdigit(exit_token->value[i]))
 			i++;
@@ -126,11 +139,7 @@ int	exit_command(t_data *data, t_token *token)
 			return (0);
 		}
 		i = ft_atoi(exit_token->value);
-		rl_clear_history();
-		free_tokens(data);
-		free_env(data->env);
-		ft_putstr_fd("exit\n", 2);
-		exit(i);
+		exit_command_cleanup(data, i);
 	}
 	ft_putstr_fd("exit: too many arguments\n", 2);
 	return (0);

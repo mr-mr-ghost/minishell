@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 19:37:00 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 21:26:14 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(data.line);
 			token_split(&data);
-			print_tokens(data.token);
+			//print_tokens(data.token);
 			process_n_exec(&data, envp);
 		}
 		free_tokens(&data);

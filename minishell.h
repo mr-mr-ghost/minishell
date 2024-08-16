@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 19:36:51 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 20:31:13 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,10 @@
 # define TRUNC 4	// >
 # define APPEND 5	// >>
 # define INPUT 6	// <
-# define PIPE 7		// |
-# define END 8		// ;
-# define HEREDOC 9	// <<
+# define HEREDOC 7	// <<
+# define PIPE 8		// |
+# define END 9		// ;
+
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
