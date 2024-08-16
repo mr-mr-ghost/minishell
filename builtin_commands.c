@@ -30,6 +30,8 @@ int	echo_command(t_token *token)
 	n_flag = 0;
 	if (ft_memcmp(echo_token->value, "-n", 3) == 0)
 	{
+		if (!echo_token->next)
+			return (0);
 		echo_token = echo_token->next;
 		n_flag = 1;
 	}
