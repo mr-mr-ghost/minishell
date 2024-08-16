@@ -69,23 +69,24 @@ bool	quotes_check(char *line, int i)
 	return (line[j] == line[i]);
 }
 
-int	is_cmd(char *line, int i)
+char	*remove_quotes(char *str)
 {
-	if (select_cmp(line, "echo -n ", i, 8))
-		return (7);
-	else if (select_cmp(line, "echo ", i, 5))
-		return (4);
-	else if (select_cmp(line, "cd ", i, 3))
-		return (2);
-	else if (select_cmp(line, "pwd ", i, 4))
-		return (2);
-	else if (select_cmp(line, "export ", i, 7))
-		return (6);
-	else if (select_cmp(line, "unset ", i, 6))
-		return (5);
-	else if (select_cmp(line, "env ", i, 4))
-		return (3);
-	else if (select_cmp(line, "exit ", i, 5))
-		return (4);
-	return (0);
+	int		i;
+	int		j;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!new)
+		return (NULL);
+	while (str[i])
+	{
+		if (str[i] != '\'' && str[i] != '\"')
+			new[j++] = str[i];
+		i++;
+	}
+	new[j] = '\0';
+	free(str);
+	return (new);
 }

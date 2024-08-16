@@ -18,7 +18,7 @@ void	init_env(t_data *data, char **envp)
 	t_env	*new;
 
 	data->env = (t_env *)malloc(sizeof(t_env));
-	data->env->value = ft_strdup(envp[0]);
+	data->env->line = ft_strdup(envp[0]);
 	data->env->next = NULL;
 	i = 1;
 	new = data->env;
@@ -26,10 +26,45 @@ void	init_env(t_data *data, char **envp)
 	{
 		new->next = (t_env *)malloc(sizeof(t_env));
 		new = new->next;
-		new->value = ft_strdup(envp[i]);
+		new->line = ft_strdup(envp[i]);
+		new->name = set_env_name(envp[i]);
+		new->value = set_env_value(envp[i]);
 		new->next = NULL;
 		i++;
 	}
+	set_shell_lvl(data->env);
+}
+
+char	*set_env_value(char *line)
+{
+	char	*new_line;
+	char	env_value[BUFF_SIZE];
+	int		i;
+	int		j;
+
+	new_line = ft_strdup(line);
+	i = 0;
+	while (new_line[i] && new_line[i] != '=')
+		i++;
+	if (new_line[i] == '=')
+		i++;
+	j = 0;
+	while (new_line[i])
+		env_value[j++] = new_line[i++];
+	env_value[j] = '\0';
+	free(new_line);
+	return (ft_strdup(env_value));
+}
+
+char	*set_env_name(char *line)
+{
+	char	*new_line;
+	char	env_name[BUFF_SIZE];
+
+	new_line = ft_strdup(line);
+	get_env_name(env_name, new_line);
+	free(new_line);
+	return (ft_strdup(env_name));
 }
 
 void	set_shell_lvl(t_env *env)
@@ -44,12 +79,12 @@ void	set_shell_lvl(t_env *env)
 	free(lvl_value);
 	while (env && env->next)
 	{
-		get_env_name(env_name, env->value);
+		get_env_name(env_name, env->line);
 		if (!ft_strncmp(env_name, "SHLVL", ft_strlen(env_name)))
 		{
-			free(env->value);
+			free(env->line);
 			lvl_str = ft_itoa(lvl);
-			env->value = ft_strjoin("SHLVL=", lvl_str);
+			env->line = ft_strjoin("SHLVL=", lvl_str);
 			free(lvl_str);
 			return ;
 		}

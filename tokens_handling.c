@@ -12,16 +12,30 @@
 
 #include "minishell.h"
 
-void	token_split(t_data *data)
+int	is_cmd(char *line, int i)
 {
-	char	*line;
+	if (select_cmp(line, "echo ", i, 5))
+		return (4);
+	else if (select_cmp(line, "cd ", i, 3))
+		return (2);
+	else if (select_cmp(line, "pwd ", i, 4))
+		return (2);
+	else if (select_cmp(line, "export ", i, 7))
+		return (6);
+	else if (select_cmp(line, "unset ", i, 6))
+		return (5);
+	else if (select_cmp(line, "env ", i, 4))
+		return (3);
+	else if (select_cmp(line, "exit ", i, 5))
+		return (4);
+	return (0);
+}
+
+void	process_token(t_data *data, char *line)
+{
 	bool	echo;
 	int		i;
 
-	if (!data->line)
-		line = ft_strdup("");
-	else
-		line = ft_strdup(data->line);
 	i = 0;
 	echo = false;
 	while (line[i])
@@ -30,13 +44,26 @@ void	token_split(t_data *data)
 			i++;
 		else if (is_cmd(line, i))
 			echo = handle_cmd(data, line, &i);
+		else if (echo)
+			echo = handle_echo_chars(data, line, &i);
 		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
 			handle_quotes(data, line, &i);
 		else if (ft_strchr("><|;", line[i]))
 			handle_special_chars(data, line, &i);
 		else
-			handle_normal_chars(data, line, &i, &echo);
+			handle_normal_chars(data, line, &i);
 	}
+}
+
+void	token_split(t_data *data)
+{
+	char	*line;
+
+	if (!data->line)
+		line = ft_strdup("");
+	else
+		line = ft_strdup(data->line);
+	process_token(data, line);
 	free(line);
 	tokens_type_define(data);
 }
