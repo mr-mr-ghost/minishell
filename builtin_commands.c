@@ -70,7 +70,7 @@ int export_command(t_token *token, t_env *env)
 	t_env	*enviro;
 	t_token	*export_token;
 
-	if (!token->next)
+	if (!token->next || token->next->type != ARG)
 	{
 		enviro = env;
 		while (enviro)
