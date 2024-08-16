@@ -91,7 +91,7 @@ void	handle_normal_chars(t_data *data, char *line, int *i)
 	int		j;
 	char	*new;
 
-	j = *i;
+	j = *i + 1;
 	while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
 		j++;
 	new = ft_substr(line, *i, j - *i);
