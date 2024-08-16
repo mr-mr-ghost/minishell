@@ -6,34 +6,35 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 19:25:24 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 19:48:42 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_connector(char c)
+int	is_validc(char c)
 {
-	if (c == ' ' || c == '>' || c == '<' || c == '|' || c == ';' || c == '\"')
+	if (c == ' ' || c == '\0' || c == '\"'
+		|| c == '>' || c == '<' || c == '|' || c == ';')
 		return (1);
 	return (0);
 }
 
 int	is_cmd(char *line, int i)
 {
-	if (ft_memcmp(line + i, "echo", 4) == 0 && is_connector(line[i + 4]))
+	if (ft_memcmp(line + i, "echo", 4) == 0 && is_validc(line[i + 4]))
 		return (4);
-	else if (ft_memcmp(line + i, "cd", 2) == 0 && is_connector(line[i + 2]))
+	else if (ft_memcmp(line + i, "cd", 2) == 0 && is_validc(line[i + 2]))
 		return (2);
-	else if (ft_memcmp(line + i, "pwd", 3) == 0 && is_connector(line[i + 3]))
+	else if (ft_memcmp(line + i, "pwd", 3) == 0 && is_validc(line[i + 3]))
 		return (3);
-	else if (ft_memcmp(line + i, "export", 6) == 0 && is_connector(line[i + 6]))
+	else if (ft_memcmp(line + i, "export", 6) == 0 && is_validc(line[i + 6]))
 		return (6);
-	else if (ft_memcmp(line + i, "unset", 5) == 0 && is_connector(line[i + 5]))
+	else if (ft_memcmp(line + i, "unset", 5) == 0 && is_validc(line[i + 5]))
 		return (5);
-	else if (ft_memcmp(line + i, "env", 3) == 0 && is_connector(line[i + 3]))
+	else if (ft_memcmp(line + i, "env", 3) == 0 && is_validc(line[i + 3]))
 		return (3);
-	else if (ft_memcmp(line + i, "exit", 4) == 0 && is_connector(line[i + 4]))
+	else if (ft_memcmp(line + i, "exit", 4) == 0 && is_validc(line[i + 4]))
 		return (4);
 	return (0);
 }
@@ -97,7 +98,13 @@ void	tokens_type_define(t_data *data)
 		else if (!ft_strcmp(tmp->value, "<<"))
 			tmp->type = HEREDOC;
 		else if (!tmp->prev || tmp->prev->type >= TRUNC)
-			tmp->type = CMD;
+		{
+			printf("checking value %s\n", tmp->value);
+			if (is_cmd(tmp->value, 0))
+				tmp->type = BCMD;
+			else
+				tmp->type = NCMD;
+		}
 		else
 			tmp->type = ARG;
 		tmp = tmp->next;

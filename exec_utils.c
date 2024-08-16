@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 19:18:48 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/16 19:42:08 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,15 @@ int	process_n_exec(t_data *data, char **envp)
 	//cmd = NULL;
 	//cmd2 = NULL;
 	token = data->token;
-	if (token->type == CMD)
+	if (token->type == BCMD)
+	{
+		printf("Builtin command\n");
 		status = check_launch_builtins(data, token, envp);
-	if (status == 0 || status == 1)
-		return (0);
-
+		if (status == 0 || status == 1)
+			return (0);
+	}
+	if (token->type == NCMD)
+		printf("Non-builtin command\n");
 
 //	status = launch_nonbuiltins(cmd, envp);
 	return (status);
