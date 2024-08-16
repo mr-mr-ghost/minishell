@@ -18,8 +18,8 @@ int	is_cmd(char *line, int i)
 		return (4);
 	else if (select_cmp(line, "cd ", i, 3))
 		return (2);
-	else if (select_cmp(line, "pwd ", i, 4))
-		return (2);
+	else if (select_cmp(line, "pwd", i, 3))
+		return (3);
 	else if (select_cmp(line, "export ", i, 7))
 		return (6);
 	else if (select_cmp(line, "unset ", i, 6))
@@ -45,7 +45,10 @@ void	process_token(t_data *data, char *line)
 		else if (is_cmd(line, i))
 			echo = handle_cmd(data, line, &i);
 		else if (echo)
-			echo = handle_echo_chars(data, line, &i);
+		{
+			handle_echo_chars(data, line, &i);
+			echo = false;
+		}
 		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
 			handle_quotes(data, line, &i);
 		else if (ft_strchr("><|;", line[i]))

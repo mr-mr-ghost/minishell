@@ -61,7 +61,7 @@ void	handle_quotes(t_data *data, char *line, int *i)
 	*i = j;
 }
 
-bool	handle_echo_chars(t_data *data, char *line, int *i)
+void	handle_echo_chars(t_data *data, char *line, int *i)
 {
 	int		j;
 	char	*new;
@@ -78,13 +78,12 @@ bool	handle_echo_chars(t_data *data, char *line, int *i)
 	while (line[j] && !ft_strchr("><|;", line[j]))
 		j++;
 	if (j == *i)
-		return (false);
+		return ;
 	new = remove_quotes(ft_substr(line, *i, j - *i));
 	token_add_back(&data->token, token_new(new));
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
-	return (false);
 }
 
 void	handle_normal_chars(t_data *data, char *line, int *i)

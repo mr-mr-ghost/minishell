@@ -102,7 +102,7 @@ void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i);
 bool	handle_cmd(t_data *data, char *line, int *i);
-bool	handle_echo_chars(t_data *data, char *line, int *i);
+void	handle_echo_chars(t_data *data, char *line, int *i);
 
 /*	tokens utils	*/
 t_token	*token_new(char *value);
