@@ -6,25 +6,30 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/17 10:09:58 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 15:07:21 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_cmd(char **cmd)
+// returns the nth token from the list
+t_token *get_nth_token(t_token *token, int n)
 {
-	int	i;
+	t_token	*tmp;
+	int		i;
 
-	if (!cmd)
-		return ;
+	if (!token)
+		return (NULL);
 	i = 0;
-	while (cmd[i])
+	tmp = token;
+	while (tmp && i < n)
 	{
-		free(cmd[i]);
 		i++;
+		tmp = tmp->next;
 	}
-	free(cmd);
+	if (i < n)
+		return (NULL);
+	return (tmp);
 }
 
 // Function to check if the command is builtin and then launch it
@@ -35,8 +40,6 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 {
 	int	i;
 
-	// if (!handle_redirection(cmd)) // TODO: redirection in builtins
-	//	return (-1);
 	(void)data;
 	(void)envp;
 	i = -1;
@@ -57,63 +60,85 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	return (i);
 }
 
-void	child_process(char **cmd, char **envp)
-{
-	//if (!handle_redirection(cmd))		// TOFIX: not working after merge
-	//	exit(EXIT_FAILURE);
-	if (execve(cmd[0], cmd, envp) == -1)
-	{
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
-	exit(EXIT_SUCCESS);
-}
-
 // Function to execute non builtin command in a child process
-int	launch_nonbuiltins(char **cmd, char **envp)
+int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 {
 	pid_t	pid;
-	int		child_status;
+	int		status;
+	int		result;
 
 	pid = fork();
 	if (pid == 0)
-		child_process(cmd, envp);
+	{
+		if (token && handle_redirection(token->next, token->type) == -1)
+			exit(EXIT_FAILURE);
+		execve(cmd[0], cmd, envp);
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
 	else if (pid < 0)
 		perror("fork");
 	else
 	{
-		if (waitpid(pid, &child_status, WUNTRACED) == -1)
+		result = waitpid(pid, &status, WUNTRACED); // WNOHANG no wait, res 0
+		if (result == -1)
 			perror("waitpid");
+		/* else
+		{
+			if (WIFEXITED(status))
+				printf("child exited with status %d\n", WEXITSTATUS(status));
+			else if (WIFSIGNALED(status))
+				printf("child terminated by signal %d\n", WTERMSIG(status));
+			else if (WIFSTOPPED(status))
+				printf("child stopped by signal %d\n", WSTOPSIG(status));
+		} */
 	}
 	return (0);
+}
+
+int	launch_both_cmd_types(char **cmd, int clen, char **envp, t_data *data)
+{
+	int	status;
+
+	status = check_launch_builtins(data, data->token, envp);
+	if (status != -1)
+		return (status);
+	cmd = form_cmd(data->token, clen);
+	if (!cmd)
+		return (0);
+	status = launch_nonbuiltins(cmd, envp, NULL);
+	free_cmd(cmd);
+	return (status);
 }
 
 // Function to extract commands, check if they're builtin, launch accordingly
 int	process_n_exec(t_data *data, char **envp)
 {
 	int		status;
-	t_token	*token;
+	t_token	*ltoken;
 	char	**cmd;
 	int		clen;
 
 	cmd = NULL;
-	token = data->token;
-	if (!token)
+	status = 0;
+	if (!data->token)
 		return (0);
-	// TODO: check token type after first command, then launch accordingly
-	if (check_launch_builtins(data, token, envp) == -1)
+
+	clen = count_args(data->token, TRUNC);
+	//printf("clen: %d\n", clen);
+	ltoken = get_nth_token(data->token, clen);
+	if (!ltoken)
+		launch_both_cmd_types(cmd, clen, envp, data);
+	else if ((ltoken->type == TRUNC || ltoken->type == INPUT ||
+			ltoken->type == APPEND) && ltoken->next)
 	{
-		clen = count_args(token);
-		printf("clen: %d\n", clen);
-		cmd = form_cmd(token, clen);
+		cmd = form_cmd(data->token, clen);
 		if (!cmd)
 			return (0);
-		status = launch_nonbuiltins(cmd, envp);
+		status = launch_nonbuiltins(cmd, envp, ltoken);
 		free_cmd(cmd);
-		//delete_command_from_list(&token, clen);
-		return (status = 0);
+		return (status);
 	}
-	//if (data->token)
-	//	printf("next token: %s\n", data->token->value);
+
 	return (status = 0);
 }

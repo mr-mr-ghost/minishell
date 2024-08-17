@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/17 09:57:58 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 15:04:25 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@
 # include <stdbool.h>
 # include "libft/libft.h"
 
-# define EMPTY 0
-# define CMD 1
-# define ARG 2
-# define TRUNC 3
-# define APPEND 4
-# define INPUT 5
-# define PIPE 6
-# define HEREDOC 7
-# define END 8
+# define EMPTY 0	// ""
+# define CMD 1		// command
+# define ARG 2		// option or argument
+# define TRUNC 3	// >
+# define APPEND 4	// >>
+# define INPUT 5	// <
+# define HEREDOC 6	// <<
+# define PIPE 7		// |
+# define END 8		// ;
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
@@ -121,29 +121,27 @@ void	disable_sigquit(void);
 void	sig_init(void);
 
 /*	builtins	*/
-int	echo_command(t_token *token);
-int cd_command(t_token *token);
-int	pwd_command(void);
-int export_command(t_token *token, t_env *env);
-int unset_command(t_token *token);
-int env_command(t_token *token, t_env *env);
-int	exit_command(t_data *data, t_token *token);
+int		echo_command(t_token *token);
+int		cd_command(t_token *token);
+int		pwd_command(void);
+int		export_command(t_token *token, t_env *env);
+int		unset_command(t_token *token);
+int		env_command(t_token *token, t_env *env);
+int		exit_command(t_data *data, t_token *token);
 
 /*	execution	*/
-int	process_n_exec(t_data *data, char **envp);
-int	launch_nonbuiltins(char **cmd, char **envp);
-int check_launch_builtins(t_data *data, t_token *token, char **envp);
-void	child_process(char **cmd, char **envp);
-void	free_cmd(char **cmd);
+int		process_n_exec(t_data *data, char **envp);
+int		launch_nonbuiltins(char **cmd, char **envp, t_token *token);
+t_token	*get_nth_token(t_token *token, int n);
+int		check_launch_builtins(t_data *data, t_token *token, char **envp);
 
 /*	redirections	*/
-int	handle_redirection(char **cmd);
-void	delete_array_element(char **array, int index);
+int		handle_redirection(t_token *token, int type);
 
 /*	commands array utils	*/
-int		count_args(t_token *token);
+void	free_cmd(char **cmd);
+int		count_args(t_token *token, int type);
 char	**form_cmd(t_token *token, int len);
-void	delete_command_from_list(t_token **token, int clen);
 
 /*	global	*/
 extern t_sig	g_sig;

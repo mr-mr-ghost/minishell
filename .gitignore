@@ -1,10 +1,10 @@
-.gitignore
 .vscode
 .idea
 minishell
 obj
 tmp
 before_merge
+readline.supp
 *.txt
 !operators.txt
 *.swp
