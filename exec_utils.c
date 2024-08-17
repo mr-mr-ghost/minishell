@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/17 01:03:49 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 10:09:58 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
 		i = pwd_command();
 	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
-		i = export_command(token);
+		i = export_command(token, data->env);
 	else if (ft_memcmp(token->value, "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(token);
 	else if (ft_memcmp(token->value, "env", ft_strlen("env") + 1) == 0)
@@ -101,9 +101,7 @@ int	process_n_exec(t_data *data, char **envp)
 	if (!token)
 		return (0);
 	// TODO: check token type after first command, then launch accordingly
-	if (token->type == BCMD)
-		status = check_launch_builtins(data, token, envp);
-	else if (token->type == NCMD)
+	if (check_launch_builtins(data, token, envp) == -1)
 	{
 		clen = count_args(token);
 		printf("clen: %d\n", clen);

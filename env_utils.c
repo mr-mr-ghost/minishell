@@ -57,3 +57,24 @@ char	*get_env_name(char *dest, char *src)
 	dest[i] = '\0';
 	return (dest);
 }
+
+void	env_add_back(t_env **env, char *value)
+{
+	t_env	*new;
+	t_env	*tmp;
+
+	new = (t_env *)malloc(sizeof(t_env));
+	new->line = ft_strdup(value);
+	new->name = set_env_name(value);
+	new->value = set_env_value(value);
+	new->next = NULL;
+	if (*env == NULL)
+	{
+		*env = new;
+		return ;
+	}
+	tmp = *env;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/17 00:47:16 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 09:57:58 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,15 @@
 # include <stdbool.h>
 # include "libft/libft.h"
 
-# define EMPTY 0	// ""
-# define BCMD 1		// builtin cmd
-# define NCMD 2		// non builtin cmd
-# define ARG 3		// option or argument
-# define TRUNC 4	// >
-# define APPEND 5	// >>
-# define INPUT 6	// <
-# define HEREDOC 7	// <<
-# define PIPE 8		// |
-# define END 9		// ;
-
+# define EMPTY 0
+# define CMD 1
+# define ARG 2
+# define TRUNC 3
+# define APPEND 4
+# define INPUT 5
+# define PIPE 6
+# define HEREDOC 7
+# define END 8
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
@@ -93,6 +91,7 @@ char	*set_env_value(char *line);
 char	*find_env_value(t_env *env, char *name);
 int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
+void	env_add_back(t_env **env, char *value);
 
 /*	tokens handling	*/
 void	token_split(t_data *data);
@@ -104,8 +103,9 @@ int		is_cmd(char *line, int i);
 void	handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *line, int *i);
 void	handle_normal_chars(t_data *data, char *line, int *i);
-bool	handle_cmd(t_data *data, char *line, int *i);
-bool	handle_echo_chars(t_data *data, char *line, int *i);
+int 	handle_cmd(t_data *data, char *line, int *i);
+void	handle_echo_chars(t_data *data, char *line, int *i);
+void	handle_export_chars(t_data *data, char *line, int *i);
 
 /*	tokens utils	*/
 t_token	*token_new(char *value);
@@ -121,23 +121,23 @@ void	disable_sigquit(void);
 void	sig_init(void);
 
 /*	builtins	*/
-int		echo_command(t_token *token);
-int		cd_command(t_token *token);
-int		pwd_command(void);
-int		export_command(t_token *token);
-int		unset_command(t_token *token);
-int		env_command(t_token *token, t_env *env);
-int		exit_command(t_data *data, t_token *token);
+int	echo_command(t_token *token);
+int cd_command(t_token *token);
+int	pwd_command(void);
+int export_command(t_token *token, t_env *env);
+int unset_command(t_token *token);
+int env_command(t_token *token, t_env *env);
+int	exit_command(t_data *data, t_token *token);
 
 /*	execution	*/
-int		process_n_exec(t_data *data, char **envp);
-int		launch_nonbuiltins(char **cmd, char **envp);
-int		check_launch_builtins(t_data *data, t_token *token, char **envp);
+int	process_n_exec(t_data *data, char **envp);
+int	launch_nonbuiltins(char **cmd, char **envp);
+int check_launch_builtins(t_data *data, t_token *token, char **envp);
 void	child_process(char **cmd, char **envp);
 void	free_cmd(char **cmd);
 
 /*	redirections	*/
-int		handle_redirection(char **cmd);
+int	handle_redirection(char **cmd);
 void	delete_array_element(char **array, int index);
 
 /*	commands array utils	*/

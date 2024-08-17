@@ -6,22 +6,22 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 21:22:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 10:02:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // echo_command: prints all the subsequent strings
-// if 1 str - prints new line, returns 0
-// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 0
-// if more strs - prints all strings, adds new line if str2 = "-n", returns 0
+// if 1 str - prints new line, returns 1
+// if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1
+// if more strs - prints all strings, adds new line if str2 = "-n", returns 1
 int	echo_command(t_token *token)
 {
 	int		n_flag;
 	t_token	*echo_token;
 
-	if (!token || !token->type || !token->next || token->next->type != ARG)
+	if (!token->next || token->next->type != ARG)
 	{
 		printf("\n");
 		return (0);
@@ -35,14 +35,7 @@ int	echo_command(t_token *token)
 		echo_token = echo_token->next;
 		n_flag = 1;
 	}
-	while (echo_token && echo_token->type == ARG)
-	{
-		if (echo_token->next && echo_token->next->type == ARG)
-			printf("%s ", echo_token->value);
-		else
-			printf("%s", echo_token->value);
-		echo_token = echo_token->next;
-	}
+	printf("%s", echo_token->value);
 	if (!n_flag)
 		printf("\n");
 	return (0);
@@ -55,8 +48,8 @@ int	cd_command(t_token *token)
 }
 
 // pwd_command: prints the working directory
-// any amount of strs - prints pwd and returns 0
-// upon getcwd() fail - prints invalid command in STDERR, returns 0
+// any amount of strs - prints pwd and returns 1
+// upon getcwd() fail - prints invalid command in STDERR, returns 1
 int	pwd_command(void)
 {
 	char	*pwd;
@@ -72,9 +65,24 @@ int	pwd_command(void)
 	return (0);
 }
 
-int	export_command(t_token *token)
+int export_command(t_token *token, t_env *env)
 {
-	printf("builtin command TODO: %s\n", token->value);
+	t_env	*enviro;
+	t_token	*export_token;
+
+	if (!token->next || token->next->type != ARG)
+	{
+		enviro = env;
+		while (enviro)
+		{
+			printf("declare -x %s\n", enviro->line);
+			enviro = enviro->next;
+		}
+		return (0);
+	}
+	export_token = token->next;
+	env_add_back(&env, export_token->value);
+	// TODO: need 2nd env list for export (non-quotes)
 	return (0);
 }
 
@@ -85,13 +93,13 @@ int	unset_command(t_token *token)
 }
 
 // env_command: prints all the environment variables
-// if 1 str - prints env vars, returns 0
-// if more strs - prints invalid command in STDERR, returns 0
+// if 1 str - prints env vars, returns 1
+// if more strs - prints invalid command in STDERR, returns 1
 int env_command(t_token *token, t_env *env)
 {
 	t_env	*enviro;
 
-	if (token->next) // && token->next->type == ARG)
+	if (token->next && token->next->type == ARG)
 	{
 		ft_putstr_fd("env: too many arguments\n", 2);
 		return (0);
@@ -114,9 +122,9 @@ void	exit_command_cleanup(t_data *data, int errnum)
 }
 
 // exit_command: frees data and exits the program
-// if 1 str - exits program with STDERR=0
+// if 1 str - returns status 0 to exit command by ending main loop
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
-// if more strs - prints invalid command in STDERR, returns 0
+// if more strs - prints invalid command in STDERR, returns 1
 int	exit_command(t_data *data, t_token *token)
 {
 	unsigned char	i;
@@ -128,8 +136,7 @@ int	exit_command(t_data *data, t_token *token)
 	if (!exit_token->next)
 	{
 		i = 0;
-		if (ft_strchr("-+", exit_token->value[0]) != NULL
-			&& exit_token->value[1] != '\0')
+		if (ft_strchr("-+", exit_token->value[0]) != NULL && exit_token->value[1] != '\0')
 			i++;
 		while (exit_token->value[i] && ft_isdigit(exit_token->value[i]))
 			i++;

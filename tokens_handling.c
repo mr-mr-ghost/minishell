@@ -3,71 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/16 20:39:50 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/13 14:05:48 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_validc(char c)
-{
-	if (c == '\0' || c == ' ' || c == '\"'
-		|| c == '>' || c == '<' || c == '|' || c == ';')
-		return (1);
-	return (0);
-}
-
 int	is_cmd(char *line, int i)
 {
-	if (ft_memcmp(line + i, "echo", 5) == 0)
+	if (select_cmp(line, "echo ", i, 5))
 		return (4);
-	else if (ft_memcmp(line + i, "cd", 3) == 0)
+	else if (select_cmp(line, "cd ", i, 3))
 		return (2);
-	else if (ft_memcmp(line + i, "pwd", 4) == 0)
+	else if (select_cmp(line, "pwd", i, 3))
 		return (3);
-	else if (ft_memcmp(line + i, "export", 7) == 0)
+	else if (select_cmp(line, "export ", i, 7))
 		return (6);
-	else if (ft_memcmp(line + i, "unset", 6) == 0)
+	else if (select_cmp(line, "unset ", i, 6))
 		return (5);
-	else if (ft_memcmp(line + i, "env", 4) == 0)
+	else if (select_cmp(line, "env ", i, 4))
 		return (3);
-	else if (ft_memcmp(line + i, "exit", 5) == 0)
+	else if (select_cmp(line, "exit ", i, 5))
 		return (4);
-	/* if (ft_memcmp(line + i, "echo", 4) == 0 && is_validc(line[i + 4]))
-		return (4);
-	else if (ft_memcmp(line + i, "cd", 2) == 0 && is_validc(line[i + 2]))
-		return (2);
-	else if (ft_memcmp(line + i, "pwd", 3) == 0 && is_validc(line[i + 3]))
-		return (3);
-	else if (ft_memcmp(line + i, "export", 6) == 0 && is_validc(line[i + 6]))
-		return (6);
-	else if (ft_memcmp(line + i, "unset", 5) == 0 && is_validc(line[i + 5]))
-		return (5);
-	else if (ft_memcmp(line + i, "env", 3) == 0 && is_validc(line[i + 3]))
-		return (3);
-	else if (ft_memcmp(line + i, "exit", 4) == 0 && is_validc(line[i + 4]))
-		return (4); */
 	return (0);
 }
 
 void	process_token(t_data *data, char *line)
 {
-	bool	echo;
+	int		edge;
 	int		i;
 
 	i = 0;
-	echo = false;
+	edge = 0;
 	while (line[i])
 	{
 		if (line[i] == ' ')
 			i++;
-		//else if (is_cmd(line, i))
-		//	echo = handle_cmd(data, line, &i);
-		else if (echo)
-			echo = handle_echo_chars(data, line, &i);
+		else if (is_cmd(line, i))
+			edge = handle_cmd(data, line, &i);
+		else if (edge)
+		{
+			if (edge == 1)
+				handle_echo_chars(data, line, &i);
+			else if (edge == 2)
+				handle_export_chars(data, line, &i);
+			edge = 0;
+		}
 		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
 			handle_quotes(data, line, &i);
 		else if (ft_strchr("><|;", line[i]))
@@ -90,14 +74,6 @@ void	token_split(t_data *data)
 	tokens_type_define(data);
 }
 
-void	set_cmd_type(t_token *token)
-{
-	if (is_cmd(token->value, 0))
-		token->type = BCMD;
-	else
-		token->type = NCMD;
-}
-
 void	tokens_type_define(t_data *data)
 {
 	t_token	*tmp;
@@ -113,14 +89,14 @@ void	tokens_type_define(t_data *data)
 			tmp->type = TRUNC;
 		else if (!ft_strcmp(tmp->value, ">>"))
 			tmp->type = APPEND;
+		else if (!ft_strcmp(tmp->value, "<<"))
+			tmp->type = HEREDOC;
 		else if (!ft_strcmp(tmp->value, "<"))
 			tmp->type = INPUT;
 		else if (!ft_strcmp(tmp->value, "|"))
 			tmp->type = PIPE;
-		else if (!ft_strcmp(tmp->value, "<<"))
-			tmp->type = HEREDOC;
-		else if (!tmp->prev || tmp->prev->type >= PIPE)
-			set_cmd_type(tmp);
+		else if (!tmp->prev || tmp->prev->type >= TRUNC)
+			tmp->type = CMD;
 		else
 			tmp->type = ARG;
 		tmp = tmp->next;

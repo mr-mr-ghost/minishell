@@ -7,8 +7,7 @@ CFILES	=	minishell.c \
 			tokens_handling.c \
 			tokens_utils.c \
 			tokens_split_utils.c \
-			signals.c \
-			exec_utils.c \
+			signals.c exec_utils.c \
 			redirection_utils.c \
 			builtin_commands.c \
 			cmd_array_utils.c
