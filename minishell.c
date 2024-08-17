@@ -24,6 +24,15 @@ void	print_tokens(t_token *token)
 	}
 }
 
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf("%s\n", env->line);
+		env = env->next;
+	}
+}
+
 void	init_data(t_data *data)
 {
 	data->line = NULL;

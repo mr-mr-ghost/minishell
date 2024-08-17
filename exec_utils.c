@@ -41,19 +41,19 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	(void)envp;
 	i = -1;
 	if (ft_memcmp(token->value, "echo", ft_strlen("echo") + 1) == 0)
-		i = echo_command(token); // TOFIX: not working after merge
+		i = echo_command(token);
 	else if (ft_memcmp(token->value, "cd", ft_strlen("cd") + 1) == 0)
 		i = cd_command(token);
 	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
-		i = pwd_command(); // TOFIX: pwd loses letter d after merge if more than 1 arg
+		i = pwd_command();
 	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
-		i = export_command(token, data->env);
+		i = export_command(data, token);
 	else if (ft_memcmp(token->value, "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(token);
 	else if (ft_memcmp(token->value, "env", ft_strlen("env") + 1) == 0)
-		i = env_command(token, data->env); // TOFIX: works with multiple args after merge
+		i = env_command(token, data->env);
 	else if (ft_memcmp(token->value, "exit", ft_strlen("exit") + 1) == 0)
-		i = exit_command(data, token); // TOFIX: broken after merge
+		i = exit_command(data, token);
 	return (i);
 }
 

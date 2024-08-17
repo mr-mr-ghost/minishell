@@ -73,6 +73,7 @@ typedef struct s_data
 	char	*line;
 	int		exit;
 	t_env	*env;
+	t_env	*secret_env;
 	t_token	*token;
 }	t_data;
 
@@ -80,9 +81,11 @@ typedef struct s_data
 void	free_tokens(t_data *data);
 void	free_env(t_env *env);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*remove_quotes(char *line);
 
 /*	environment initialisation	*/
-void	init_env(t_data *data, char **envp);
+int init_env(t_data *data, char **envp);
+t_env * create_env_list(t_env *env, char **envp);
 void	set_shell_lvl(t_env *env);
 char	*set_env_name(char *line);
 char	*set_env_value(char *line);
@@ -112,7 +115,7 @@ t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 bool	select_cmp(char *line, char *cmp, int start, int len);
 bool	quotes_check(char *line, int i);
-char	*remove_quotes(char *str);
+char	*token_remove_quotes(char *str);
 
 /*	signals	*/
 void	sigint_handler(int signum);
@@ -124,7 +127,7 @@ void	sig_init(void);
 int	echo_command(t_token *token);
 int cd_command(t_token *token);
 int	pwd_command(void);
-int export_command(t_token *token, t_env *env);
+int export_command(t_data *data, t_token *token);
 int unset_command(t_token *token);
 int env_command(t_token *token, t_env *env);
 int	exit_command(t_data *data, t_token *token);
