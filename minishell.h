@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/17 15:04:25 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 16:56:04 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,12 @@ int		exit_command(t_data *data, t_token *token);
 
 /*	execution	*/
 int		process_n_exec(t_data *data, char **envp);
+int		check_launch_builtins(t_data *data);
 int		launch_nonbuiltins(char **cmd, char **envp, t_token *token);
 t_token	*get_nth_token(t_token *token, int n);
-int		check_launch_builtins(t_data *data, t_token *token, char **envp);
 
 /*	redirections	*/
+int		redirection_wrap_builtins(t_data *data, t_token *redir);
 int		handle_redirection(t_token *token, int type);
 
 /*	commands array utils	*/

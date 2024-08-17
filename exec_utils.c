@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/17 15:07:21 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 16:54:59 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ t_token *get_nth_token(t_token *token, int n)
 // Returns -1, if command not builtin
 // Returns 0, if builtin command executed successfully
 // Returns 1, if builtin command execution failed
-int check_launch_builtins(t_data *data, t_token *token, char **envp)
+int check_launch_builtins(t_data *data)
 {
-	int	i;
+	t_token	*token;
+	int		i;
 
-	(void)data;
-	(void)envp;
+	token = data->token;
 	i = -1;
 	if (ft_memcmp(token->value, "echo", ft_strlen("echo") + 1) == 0)
 		i = echo_command(token);
@@ -67,11 +67,17 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 	int		status;
 	int		result;
 
+	(void)token;
 	pid = fork();
 	if (pid == 0)
 	{
-		if (token && handle_redirection(token->next, token->type) == -1)
-			exit(EXIT_FAILURE);
+		if (token)
+		{
+			result = handle_redirection(token->next, token->type);
+			printf("handle_redir return: %d\n", result);
+			if (result == -1)
+				exit(EXIT_FAILURE);
+		}
 		execve(cmd[0], cmd, envp);
 		perror("execve");
 		exit(EXIT_FAILURE);
@@ -83,7 +89,7 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 		result = waitpid(pid, &status, WUNTRACED); // WNOHANG no wait, res 0
 		if (result == -1)
 			perror("waitpid");
-		/* else
+		else
 		{
 			if (WIFEXITED(status))
 				printf("child exited with status %d\n", WEXITSTATUS(status));
@@ -91,7 +97,7 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 				printf("child terminated by signal %d\n", WTERMSIG(status));
 			else if (WIFSTOPPED(status))
 				printf("child stopped by signal %d\n", WSTOPSIG(status));
-		} */
+		}
 	}
 	return (0);
 }
@@ -100,7 +106,7 @@ int	launch_both_cmd_types(char **cmd, int clen, char **envp, t_data *data)
 {
 	int	status;
 
-	status = check_launch_builtins(data, data->token, envp);
+	status = check_launch_builtins(data);
 	if (status != -1)
 		return (status);
 	cmd = form_cmd(data->token, clen);
@@ -115,7 +121,7 @@ int	launch_both_cmd_types(char **cmd, int clen, char **envp, t_data *data)
 int	process_n_exec(t_data *data, char **envp)
 {
 	int		status;
-	t_token	*ltoken;
+	t_token	*ntoken;
 	char	**cmd;
 	int		clen;
 
@@ -126,19 +132,24 @@ int	process_n_exec(t_data *data, char **envp)
 
 	clen = count_args(data->token, TRUNC);
 	//printf("clen: %d\n", clen);
-	ltoken = get_nth_token(data->token, clen);
-	if (!ltoken)
-		launch_both_cmd_types(cmd, clen, envp, data);
-	else if ((ltoken->type == TRUNC || ltoken->type == INPUT ||
-			ltoken->type == APPEND) && ltoken->next)
+	ntoken = get_nth_token(data->token, clen);
+	if (!ntoken)
 	{
+		status = launch_both_cmd_types(cmd, clen, envp, data);
+		return (status);
+	}
+	else if ((ntoken->type == TRUNC || ntoken->type == INPUT ||
+			ntoken->type == APPEND) && ntoken->next)
+	{
+		status = redirection_wrap_builtins(data, ntoken);
+		if (status != -1)
+			return (status);
 		cmd = form_cmd(data->token, clen);
 		if (!cmd)
 			return (0);
-		status = launch_nonbuiltins(cmd, envp, ltoken);
+		status = launch_nonbuiltins(cmd, envp, ntoken);
 		free_cmd(cmd);
 		return (status);
 	}
-
 	return (status = 0);
 }

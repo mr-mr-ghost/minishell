@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/17 09:59:58 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/17 16:37:32 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,6 @@ int	main(int argc, char **argv, char **envp)
 	}
 	rl_clear_history();
 	free_env(data.env);
-	ft_printf("exit\n");
+	ft_printf("exit end of main\n");
 	return (0);
 }
