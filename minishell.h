@@ -84,8 +84,8 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*remove_quotes(char *line);
 
 /*	environment initialisation	*/
-int init_env(t_data *data, char **envp);
-t_env * create_env_list(t_env *env, char **envp);
+int 	init_env(t_data *data, char **envp);
+t_env	*create_env_list(t_env *env, char **envp);
 void	set_shell_lvl(t_env *env);
 char	*set_env_name(char *line);
 char	*set_env_value(char *line);
@@ -94,6 +94,7 @@ char	*set_env_value(char *line);
 char	*find_env_line(t_env *env, char *key);
 int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
+t_env	*env_new(char *value);
 void	env_add_back(t_env **env, char *value);
 
 /*	tokens handling	*/
@@ -128,13 +129,16 @@ int		echo_command(t_token *token);
 int		cd_command(t_token *token);
 int		pwd_command(void);
 int		unset_command(t_token *token);
-int		env_command(t_token *token, t_env *env);
 int		exit_command(t_data *data, t_token *token);
 
 /*	export command	*/
 int 	export_command(t_data *data, t_token *token);
 bool	valid_env_name(t_env *env, char *key);
 void	single_export(t_env *env);
+
+/*	env command	*/
+int		env_command(t_token *token, t_env *env);
+int		print_env(t_env *env);
 
 /*	execution	*/
 int	process_n_exec(t_data *data, char **envp);

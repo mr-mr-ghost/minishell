@@ -27,29 +27,14 @@ int	init_env(t_data *data, char **envp)
 t_env	*create_env_list(t_env *env, char **envp)
 {
 	int		i;
-	t_env	*new;
 
-	env = (t_env *)malloc(sizeof(t_env));
+	env = env_new(envp[0]);
 	if (!env)
 		return (NULL);
-	env->line = ft_strdup(envp[0]);
-	env->name = set_env_name(envp[0]);
-	env->value = set_env_value(envp[0]);
-	env->next = NULL;
 	i = 1;
-	new = env;
 	while (envp[i])
 	{
-		new->next = (t_env *)malloc(sizeof(t_env));
-		if (!new->next)
-			return (NULL);
-		new = new->next;
-		new->line = ft_strdup(envp[i]);
-		new->name = set_env_name(envp[i]);
-		new->value = set_env_value(envp[i]);
-		if (!new->line || !new->name || !new->value)
-			return (NULL);
-		new->next = NULL;
+		env_add_back(&env, envp[i]);
 		i++;
 	}
 	set_shell_lvl(env);
