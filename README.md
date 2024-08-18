@@ -5,7 +5,7 @@
 - [ ] FIX nonbuiltin command redirection
 - [ ] Pipes
 - [ ] Heredoc
-- [ ] FIX memory error on using command exit (possibly double free or free on unitialized value)
+- [ ] FIX memory error in using command exit (conditional jump in free_env)
 
 ## LINKS:
 - https://www.codequoi.com/en/handling-a-file-by-its-descriptor-in-c/
