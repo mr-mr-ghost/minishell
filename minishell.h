@@ -134,7 +134,7 @@ int		exit_command(t_data *data, t_token *token);
 /*	export command	*/
 int 	export_command(t_data *data, t_token *token);
 bool	valid_env_name(t_env *env, char *key);
-void	single_export(t_env *env);
+int single_export(t_env *env);
 
 /*	env command	*/
 int		env_command(t_token *token, t_env *env);

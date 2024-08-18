@@ -28,7 +28,7 @@ bool	valid_env_name(t_env *env, char *key)
 	return (false);
 }
 
-void single_export(t_env *env)
+int	single_export(t_env *env)
 {
 	t_env	*enviro;
 
@@ -38,6 +38,7 @@ void single_export(t_env *env)
 		printf("declare -x %s\n", enviro->line);
 		enviro = enviro->next;
 	}
+	return (0);
 }
 
 int export_command(t_data *data, t_token *token)
@@ -46,10 +47,7 @@ int export_command(t_data *data, t_token *token)
 	char	*env_line;
 
 	if (!token->next || token->next->type != ARG)
-	{
-		single_export(data->env);
-		return (0);
-	}
+		return (single_export(data->env));
 	export_token = token->next;
 	if (valid_env_name(data->secret_env, export_token->value))
 	{
@@ -57,9 +55,11 @@ int export_command(t_data *data, t_token *token)
 		if (!env_line)
 			return (1);
 		env_add_back(&data->env, env_line);
-		return (0);
 	}
-	env_add_back(&data->secret_env, export_token->value);
-	env_add_back(&data->env, export_token->value);
+	else
+	{
+		env_add_back(&data->secret_env, export_token->value);
+		env_add_back(&data->env, export_token->value);
+	}
 	return (0);
 }
