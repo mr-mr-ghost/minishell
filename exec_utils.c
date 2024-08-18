@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/17 16:54:59 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/18 11:49:17 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,16 @@ t_token *get_nth_token(t_token *token, int n)
 
 // Function to check if the command is builtin and then launch it
 // Returns -1, if command not builtin
-// Returns 0, if builtin command executed successfully
-// Returns 1, if builtin command execution failed
-int check_launch_builtins(t_data *data)
+// Returns 1, if builtin command executed successfully
+// Returns 0, if builtin command execution failed
+int check_launch_builtins(t_data *data, t_token *token, char **envp)
 {
-	t_token	*token;
-	int		i;
+	int	i;
 
-	token = data->token;
+	// if (!handle_redirection(cmd)) // TODO: redirection in builtins
+	//	return (-1);
+	(void)data;
+	(void)envp;
 	i = -1;
 	if (ft_memcmp(token->value, "echo", ft_strlen("echo") + 1) == 0)
 		i = echo_command(token);
@@ -50,7 +52,7 @@ int check_launch_builtins(t_data *data)
 	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
 		i = pwd_command();
 	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
-		i = export_command(token, data->env);
+		i = export_command(data, token);
 	else if (ft_memcmp(token->value, "unset", ft_strlen("unset") + 1) == 0)
 		i = unset_command(token);
 	else if (ft_memcmp(token->value, "env", ft_strlen("env") + 1) == 0)
@@ -60,6 +62,10 @@ int check_launch_builtins(t_data *data)
 	return (i);
 }
 
+void debug_child_process() {
+	printf("Inside child process with PID: %d\n", getpid());
+}
+
 // Function to execute non builtin command in a child process
 int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 {
@@ -67,14 +73,13 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 	int		status;
 	int		result;
 
-	(void)token;
 	pid = fork();
 	if (pid == 0)
 	{
+		debug_child_process();
 		if (token)
 		{
 			result = handle_redirection(token->next, token->type);
-			printf("handle_redir return: %d\n", result);
 			if (result == -1)
 				exit(EXIT_FAILURE);
 		}
@@ -86,7 +91,8 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 		perror("fork");
 	else
 	{
-		result = waitpid(pid, &status, WUNTRACED); // WNOHANG no wait, res 0
+		printf("Inside parent process with PID: %d\n", getpid());
+		result = waitpid(pid, &status, 0); // WNOHANG no wait, res 0
 		if (result == -1)
 			perror("waitpid");
 		else
@@ -106,7 +112,7 @@ int	launch_both_cmd_types(char **cmd, int clen, char **envp, t_data *data)
 {
 	int	status;
 
-	status = check_launch_builtins(data);
+	status = check_launch_builtins(data, data->token, envp);
 	if (status != -1)
 		return (status);
 	cmd = form_cmd(data->token, clen);
@@ -131,7 +137,7 @@ int	process_n_exec(t_data *data, char **envp)
 		return (0);
 
 	clen = count_args(data->token, TRUNC);
-	//printf("clen: %d\n", clen);
+	printf("clen: %d\n", clen);
 	ntoken = get_nth_token(data->token, clen);
 	if (!ntoken)
 	{
@@ -141,7 +147,7 @@ int	process_n_exec(t_data *data, char **envp)
 	else if ((ntoken->type == TRUNC || ntoken->type == INPUT ||
 			ntoken->type == APPEND) && ntoken->next)
 	{
-		status = redirection_wrap_builtins(data, ntoken);
+		status = redirection_wrap_builtins(data, ntoken, envp);
 		if (status != -1)
 			return (status);
 		cmd = form_cmd(data->token, clen);

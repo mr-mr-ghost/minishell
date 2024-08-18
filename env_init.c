@@ -12,27 +12,46 @@
 
 #include "minishell.h"
 
-void	init_env(t_data *data, char **envp)
+int	init_env(t_data *data, char **envp)
+{
+	data->env = create_env_list(data->env, envp);
+	data->secret_env = create_env_list(data->secret_env, envp);
+	if (!data->env || !data->secret_env)
+	{
+		perror("Environment allocation failed\n");
+		return(1);
+	}
+	return (0);
+}
+
+t_env	*create_env_list(t_env *env, char **envp)
 {
 	int		i;
 	t_env	*new;
 
-	data->env = (t_env *)malloc(sizeof(t_env));
-	data->env->line = ft_strdup(envp[0]);
-	data->env->next = NULL;
+	env = (t_env *)malloc(sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->line = ft_strdup(envp[0]);
+	env->next = NULL;
 	i = 1;
-	new = data->env;
+	new = env;
 	while (envp[i])
 	{
 		new->next = (t_env *)malloc(sizeof(t_env));
+		if (!new->next)
+			return (NULL);
 		new = new->next;
 		new->line = ft_strdup(envp[i]);
 		new->name = set_env_name(envp[i]);
 		new->value = set_env_value(envp[i]);
+		if (!new->line || !new->name || !new->value)
+			return (NULL);
 		new->next = NULL;
 		i++;
 	}
-	set_shell_lvl(data->env);
+	set_shell_lvl(env);
+	return (env);
 }
 
 char	*set_env_value(char *line)

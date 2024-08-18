@@ -1,5 +1,6 @@
 .vscode
 .idea
+README.md
 minishell
 obj
 tmp

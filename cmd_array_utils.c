@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 00:41:44 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/17 15:05:11 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/18 11:07:22 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,8 @@
 // frees the command array
 void	free_cmd(char **cmd)
 {
-	int	i;
-
 	if (!cmd)
 		return ;
-	i = 0;
-	while (cmd[i])
-		free(cmd[i++]);
 	free(cmd);
 	cmd = NULL;
 }
@@ -58,12 +53,12 @@ char	**form_cmd(t_token *token, int len)
 	tmp = token;
 	while (tmp && i < len)
 	{
-		cmd[i] = ft_strdup(tmp->value);
-		if (!cmd[i])
+		cmd[i] = tmp->value;
+		/* if (!cmd[i])
 		{
 			free_cmd(cmd);
 			return (NULL);
-		}
+		} */
 		i++;
 		tmp = tmp->next;
 	}

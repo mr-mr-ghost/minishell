@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/17 16:56:04 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/18 11:49:57 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@
 # define TRUNC 3	// >
 # define APPEND 4	// >>
 # define INPUT 5	// <
-# define HEREDOC 6	// <<
-# define PIPE 7		// |
+# define PIPE 6		// |
+# define HEREDOC 7	// <<
 # define END 8		// ;
 
 # define MAX_ARGS 42
@@ -73,6 +73,7 @@ typedef struct s_data
 	char	*line;
 	int		exit;
 	t_env	*env;
+	t_env	*secret_env;
 	t_token	*token;
 }	t_data;
 
@@ -80,9 +81,11 @@ typedef struct s_data
 void	free_tokens(t_data *data);
 void	free_env(t_env *env);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*remove_quotes(char *line);
 
 /*	environment initialisation	*/
-void	init_env(t_data *data, char **envp);
+int init_env(t_data *data, char **envp);
+t_env * create_env_list(t_env *env, char **envp);
 void	set_shell_lvl(t_env *env);
 char	*set_env_name(char *line);
 char	*set_env_value(char *line);
@@ -112,7 +115,7 @@ t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 bool	select_cmp(char *line, char *cmp, int start, int len);
 bool	quotes_check(char *line, int i);
-char	*remove_quotes(char *str);
+char	*token_remove_quotes(char *str);
 
 /*	signals	*/
 void	sigint_handler(int signum);
@@ -124,19 +127,19 @@ void	sig_init(void);
 int		echo_command(t_token *token);
 int		cd_command(t_token *token);
 int		pwd_command(void);
-int		export_command(t_token *token, t_env *env);
+int		export_command(t_data *data, t_token *token);
 int		unset_command(t_token *token);
 int		env_command(t_token *token, t_env *env);
 int		exit_command(t_data *data, t_token *token);
 
 /*	execution	*/
 int		process_n_exec(t_data *data, char **envp);
-int		check_launch_builtins(t_data *data);
 int		launch_nonbuiltins(char **cmd, char **envp, t_token *token);
+int		check_launch_builtins(t_data *data, t_token *token, char **envp);
 t_token	*get_nth_token(t_token *token, int n);
 
 /*	redirections	*/
-int		redirection_wrap_builtins(t_data *data, t_token *redir);
+int		redirection_wrap_builtins(t_data *data, t_token *redir, char **envp);
 int		handle_redirection(t_token *token, int type);
 
 /*	commands array utils	*/

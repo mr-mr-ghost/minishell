@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/17 16:37:32 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/18 11:37:16 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@ void	print_tokens(t_token *token)
 		ft_printf("%s\n", token->value);
 		ft_printf("type: %d\n\n", token->type);
 		token = token->next;
+	}
+}
+
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		ft_printf("%s\n", env->line);
+		env = env->next;
 	}
 }
 
@@ -55,11 +64,11 @@ int	main(int argc, char **argv, char **envp)
 			token_split(&data);
 			//print_tokens(data.token);
 			process_n_exec(&data, envp);
+			free_tokens(&data);
 		}
-		free_tokens(&data);
 	}
 	rl_clear_history();
 	free_env(data.env);
-	ft_printf("exit end of main\n");
+	ft_printf("exit\n");
 	return (0);
 }

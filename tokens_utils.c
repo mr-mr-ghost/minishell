@@ -69,7 +69,7 @@ bool	quotes_check(char *line, int i)
 	return (line[j] == line[i]);
 }
 
-char	*remove_quotes(char *str)
+char	*token_remove_quotes(char *str)
 {
 	int		i;
 	int		j;

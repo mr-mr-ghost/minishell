@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/17 10:02:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/18 11:26:18 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ int	pwd_command(void)
 	return (0);
 }
 
-int export_command(t_token *token, t_env *env)
+int export_command(t_data *data, t_token *token)
 {
 	t_env	*enviro;
 	t_token	*export_token;
 
 	if (!token->next || token->next->type != ARG)
 	{
-		enviro = env;
+		enviro = data->secret_env;
 		while (enviro)
 		{
 			printf("declare -x %s\n", enviro->line);
@@ -81,8 +81,8 @@ int export_command(t_token *token, t_env *env)
 		return (0);
 	}
 	export_token = token->next;
-	env_add_back(&env, export_token->value);
-	// TODO: need 2nd env list for export (non-quotes)
+	env_add_back(&data->secret_env, export_token->value);
+	env_add_back(&data->env, remove_quotes(export_token->value));
 	return (0);
 }
 
