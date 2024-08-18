@@ -91,7 +91,7 @@ char	*set_env_name(char *line);
 char	*set_env_value(char *line);
 
 /*	environment utils	*/
-char	*find_env_value(t_env *env, char *name);
+char	*find_env_line(t_env *env, char *key);
 int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
 void	env_add_back(t_env **env, char *value);
@@ -124,13 +124,17 @@ void	disable_sigquit(void);
 void	sig_init(void);
 
 /*	builtins	*/
-int	echo_command(t_token *token);
-int cd_command(t_token *token);
-int	pwd_command(void);
-int export_command(t_data *data, t_token *token);
-int unset_command(t_token *token);
-int env_command(t_token *token, t_env *env);
-int	exit_command(t_data *data, t_token *token);
+int		echo_command(t_token *token);
+int		cd_command(t_token *token);
+int		pwd_command(void);
+int		unset_command(t_token *token);
+int		env_command(t_token *token, t_env *env);
+int		exit_command(t_data *data, t_token *token);
+
+/*	export command	*/
+int 	export_command(t_data *data, t_token *token);
+bool	valid_env_name(t_env *env, char *key);
+void	single_export(t_env *env);
 
 /*	execution	*/
 int	process_n_exec(t_data *data, char **envp);

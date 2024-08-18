@@ -98,6 +98,13 @@ void	handle_normal_chars(t_data *data, char *line, int *i)
 	j = *i + 1;
 	while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
 		j++;
+	if (j == *i)
+		return ;
+	if (line[j] == '"')
+	{
+		handle_export_chars(data, line, i);
+		return ;
+	}
 	new = ft_substr(line, *i, j - *i);
 	if (*i == 0)
 		data->token = token_new(new);

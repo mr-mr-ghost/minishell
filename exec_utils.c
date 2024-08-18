@@ -96,7 +96,9 @@ int	process_n_exec(t_data *data, char **envp)
 
 	// TODO: handle multiple commands
 	token = data->token;
-	if (token->type == CMD)
+	if (token->type == CMD && ft_strnstr(token->value, "=", ft_strlen(token->value)))
+		env_add_back(&data->secret_env, token->value);
+	else if (token->type == CMD)
 		status = check_launch_builtins(data, token, envp);
 	if (status == 0 || status == 1)
 		return (0);

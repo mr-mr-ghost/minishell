@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*find_env_value(t_env *env, char *key)
+char	*find_env_line(t_env *env, char *key)
 {
 	t_env	*tmp;
 	char	env_name[BUFF_SIZE];

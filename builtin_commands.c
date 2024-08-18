@@ -65,27 +65,6 @@ int	pwd_command(void)
 	return (0);
 }
 
-int export_command(t_data *data, t_token *token)
-{
-	t_env	*enviro;
-	t_token	*export_token;
-
-	if (!token->next || token->next->type != ARG)
-	{
-		enviro = data->secret_env;
-		while (enviro)
-		{
-			printf("declare -x %s\n", enviro->line);
-			enviro = enviro->next;
-		}
-		return (0);
-	}
-	export_token = token->next;
-	env_add_back(&data->secret_env, export_token->value);
-	env_add_back(&data->env, remove_quotes(export_token->value));
-	return (0);
-}
-
 int	unset_command(t_token *token)
 {
 	printf("builtin command TODO: %s\n", token->value);
@@ -98,6 +77,7 @@ int	unset_command(t_token *token)
 int env_command(t_token *token, t_env *env)
 {
 	t_env	*enviro;
+	char	*quote;
 
 	if (token->next && token->next->type == ARG)
 	{
@@ -107,7 +87,11 @@ int env_command(t_token *token, t_env *env)
 	enviro = env;
 	while (enviro)
 	{
-		printf("%s\n", enviro->line);
+		if (enviro->value && (ft_strchr(enviro->value, '\"') || ft_strchr(enviro->value, '\'')))
+			quote = remove_quotes(enviro->line);
+		else
+			quote = enviro->line;
+		printf("%s\n", quote);
 		enviro = enviro->next;
 	}
 	return (0);

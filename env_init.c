@@ -93,7 +93,7 @@ void	set_shell_lvl(t_env *env)
 	char	*lvl_value;
 	char	env_name[BUFF_SIZE];
 
-	lvl_value = find_env_value(env, "SHLVL");
+	lvl_value = find_env_line(env, "SHLVL");
 	lvl = find_env_lvl(lvl_value) + 1;
 	free(lvl_value);
 	while (env && env->next)
