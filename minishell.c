@@ -66,6 +66,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	rl_clear_history();
 	free_env(data.env);
+	free_env(data.secret_env);
 	ft_printf("exit\n");
 	return (0);
 }

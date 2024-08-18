@@ -33,6 +33,8 @@ t_env	*create_env_list(t_env *env, char **envp)
 	if (!env)
 		return (NULL);
 	env->line = ft_strdup(envp[0]);
+	env->name = set_env_name(envp[0]);
+	env->value = set_env_value(envp[0]);
 	env->next = NULL;
 	i = 1;
 	new = env;

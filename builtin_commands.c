@@ -71,32 +71,6 @@ int	unset_command(t_token *token)
 	return (0);
 }
 
-// env_command: prints all the environment variables
-// if 1 str - prints env vars, returns 1
-// if more strs - prints invalid command in STDERR, returns 1
-int env_command(t_token *token, t_env *env)
-{
-	t_env	*enviro;
-	char	*quote;
-
-	if (token->next && token->next->type == ARG)
-	{
-		ft_putstr_fd("env: too many arguments\n", 2);
-		return (0);
-	}
-	enviro = env;
-	while (enviro)
-	{
-		if (enviro->value && (ft_strchr(enviro->value, '\"') || ft_strchr(enviro->value, '\'')))
-			quote = remove_quotes(enviro->line);
-		else
-			quote = enviro->line;
-		printf("%s\n", quote);
-		enviro = enviro->next;
-	}
-	return (0);
-}
-
 // exit_command: frees data and exits the program
 // if 1 str - returns status 0 to exit command by ending main loop
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr

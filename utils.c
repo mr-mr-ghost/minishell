@@ -35,9 +35,12 @@ void	free_env(t_env *env)
 	{
 		tmp = env;
 		env = env->next;
-		free(tmp->value);
-		free(tmp->name);
-		free(tmp->line);
+		if (tmp->value)
+			free(tmp->value);
+		if (tmp->name)
+			free(tmp->name);
+		if (tmp->line)
+			free(tmp->line);
 		free(tmp);
 	}
 }
@@ -69,9 +72,8 @@ char	*remove_quotes(char *line)
 	{
 		if (line[i] == '\'' || line[i] == '\"')
 			i++;
-		new_line[j] = line[i];
-		i++;
-		j++;
+		else
+			new_line[j++] = line[i++];
 	}
 	new_line[j] = '\0';
 	return (new_line);
