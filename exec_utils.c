@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 11:53:50 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/18 11:49:17 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:16:21 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,25 @@ t_token *get_nth_token(t_token *token, int n)
 	return (tmp);
 }
 
+int	is_builtin(char *cmd_word)
+{
+	if (ft_memcmp(cmd_word, "echo", 5) == 0)
+		return (1);
+	else if (ft_memcmp(cmd_word, "cd", 3) == 0)
+		return (1);
+	else if (ft_memcmp(cmd_word, "pwd", 4) == 0)
+		return (1);
+	else if (ft_memcmp(cmd_word, "export", 7) == 0)
+		return (1);
+	else if (ft_memcmp(cmd_word, "unset", 6) == 0)
+		return (1);
+	else if (ft_memcmp(cmd_word, "env", 4) == 0)
+		return (1);
+	else if (ft_memcmp(cmd_word, "exit", 5) == 0)
+		return (1);
+	return (0);
+}
+
 // Function to check if the command is builtin and then launch it
 // Returns -1, if command not builtin
 // Returns 1, if builtin command executed successfully
@@ -40,8 +59,6 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 {
 	int	i;
 
-	// if (!handle_redirection(cmd)) // TODO: redirection in builtins
-	//	return (-1);
 	(void)data;
 	(void)envp;
 	i = -1;
@@ -62,10 +79,6 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	return (i);
 }
 
-void debug_child_process() {
-	printf("Inside child process with PID: %d\n", getpid());
-}
-
 // Function to execute non builtin command in a child process
 int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 {
@@ -76,7 +89,7 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 	pid = fork();
 	if (pid == 0)
 	{
-		debug_child_process();
+		//printf("Inside child process with PID: %d\n", getpid());
 		if (token)
 		{
 			result = handle_redirection(token->next, token->type);
@@ -91,11 +104,11 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 		perror("fork");
 	else
 	{
-		printf("Inside parent process with PID: %d\n", getpid());
+		//printf("Inside parent process with PID: %d\n", getpid());
 		result = waitpid(pid, &status, 0); // WNOHANG no wait, res 0
 		if (result == -1)
 			perror("waitpid");
-		else
+		/* else
 		{
 			if (WIFEXITED(status))
 				printf("child exited with status %d\n", WEXITSTATUS(status));
@@ -103,7 +116,7 @@ int	launch_nonbuiltins(char **cmd, char **envp, t_token *token)
 				printf("child terminated by signal %d\n", WTERMSIG(status));
 			else if (WIFSTOPPED(status))
 				printf("child stopped by signal %d\n", WSTOPSIG(status));
-		}
+		} */
 	}
 	return (0);
 }
@@ -137,7 +150,7 @@ int	process_n_exec(t_data *data, char **envp)
 		return (0);
 
 	clen = count_args(data->token, TRUNC);
-	printf("clen: %d\n", clen);
+	//printf("clen: %d\n", clen);
 	ntoken = get_nth_token(data->token, clen);
 	if (!ntoken)
 	{
@@ -147,9 +160,12 @@ int	process_n_exec(t_data *data, char **envp)
 	else if ((ntoken->type == TRUNC || ntoken->type == INPUT ||
 			ntoken->type == APPEND) && ntoken->next)
 	{
-		status = redirection_wrap_builtins(data, ntoken, envp);
-		if (status != -1)
-			return (status);
+		if (is_builtin(data->token->value))
+		{
+			status = redirection_wrap_builtins(data, ntoken, envp);
+			if (status != -1)
+				return (status);
+		}
 		cmd = form_cmd(data->token, clen);
 		if (!cmd)
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/18 11:48:52 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:32:01 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	handle_redirection(t_token *fname, int type)
 {
 	int	fd;
 
-	printf("type: %d, file name: %s\n", type, fname->value);
+	//printf("type: %d, file name: %s\n", type, fname->value);
 	// TODO: handle different file permissions
 	if (type == TRUNC)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
