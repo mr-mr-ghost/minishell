@@ -94,10 +94,12 @@ char	*set_env_value(char *line);
 char	*find_env_line(t_env *env, char *key);
 int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
-t_env	*env_new(char *value);
-void	env_add_back(t_env **env, char *value);
 char	*find_env_value(t_env *env, char *key);
 char	*find_env_name(t_env *env, char *key);
+
+/*	environment list utils	*/
+t_env	*env_new(char *value);
+void	env_add_back(t_env **env, char *value);
 
 /*	tokens handling	*/
 void	token_split(t_data *data);
@@ -143,8 +145,9 @@ int		print_env(t_env *env);
 
 /*	echo command	*/
 bool	select_valid_env(t_env *env, char *line, int start);
-char *get_echo_value(t_env *env, char *line, int *start);
+char	*get_echo_value(t_env *env, char *line, int *start);
 void	print_echo(char *line, t_env *env);
+void	process_dollar(char *line, t_env *env, int *i);
 int		echo_command(t_token *token, t_env *env);
 
 /*	execution	*/

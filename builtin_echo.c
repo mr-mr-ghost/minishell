@@ -21,6 +21,8 @@ bool	select_valid_env(t_env *env, char *line, int start)
 	char	*env_name;
 
 	env_name = find_env_name(env, line + start);
+	if (!env_name)
+		return (false);
 	if (valid_env_name(env, env_name))
 	{
 		free(env_name);
@@ -41,6 +43,8 @@ char	*get_echo_value(t_env *env, char *line, int *start)
 	while (line[i] && line[i] != ' ' && line[i] != '$')
 		i++;
 	env_name = ft_substr(line, *start, i - *start);
+	if (!env_name)
+		return (NULL);
 	tmp = find_env_value(env, env_name);
 	free(env_name);
 	env_value = remove_quotes(tmp);
@@ -48,28 +52,34 @@ char	*get_echo_value(t_env *env, char *line, int *start)
 	return (env_value);
 }
 
+void	process_dollar(char *line, t_env *env, int *i)
+{
+	char	*env_value;
+
+	(*i)++;
+	if (line[*i] == '?')
+		env_value = ft_itoa(g_sig.exit_status);
+	else if (line[*i] == '$')
+		env_value = find_env_value(env, "SYSTEMD_EXEC_PID");
+	else if (select_valid_env(env, line, *i))
+		env_value = get_echo_value(env, line, i);
+	else if (!select_valid_env(env, line, *i) && (line[*i] || line[*i] == ' '))
+		env_value = ft_strdup("");
+	else
+		env_value = ft_strdup("$");
+	ft_putstr_fd(env_value, 1);
+	free(env_value);
+}
+
 void	print_echo(char *line, t_env *env)
 {
 	int		i;
-	char	*env_value;
 
 	i = 0;
 	while (line[i])
 	{
 		if (line[i] == '$')
-		{
-			i++;
-			if (line[i] == '?')
-				env_value = ft_itoa(g_sig.exit_status);
-			else if (line[i] == '$')
-				env_value = find_env_value(env, "SYSTEMD_EXEC_PID");
-			else if (select_valid_env(env, line, i))
-				env_value = get_echo_value(env, line, &i);
-			else
-				env_value = ft_strdup("$");
-			ft_putstr_fd(env_value, 1);
-			free(env_value);
-		}
+			process_dollar(line, env, &i);
 		else
 			ft_putchar_fd(line[i], 1);
 		i++;
