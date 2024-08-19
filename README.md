@@ -2,7 +2,7 @@
 - [ ] Convert environment into array of strings
 - [ ] Check and update environment array each nonbuiltin command call
 - [ ] Find nonbuiltin command pathway in $PATH and update command word
-- [ ] FIX nonbuiltin command redirection
+- [*] FIX nonbuiltin command redirection
 - [ ] File paths
 - [ ] Pipes
 - [ ] Heredoc
