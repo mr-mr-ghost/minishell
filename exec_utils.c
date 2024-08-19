@@ -48,7 +48,7 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
 		i = export_command(data, token);
 	else if (ft_memcmp(token->value, "unset", ft_strlen("unset") + 1) == 0)
-		i = unset_command(token);
+		i = unset_command(data, token);
 	else if (ft_memcmp(token->value, "env", ft_strlen("env") + 1) == 0)
 		i = env_command(token, data->env);
 	else if (ft_memcmp(token->value, "exit", ft_strlen("exit") + 1) == 0)

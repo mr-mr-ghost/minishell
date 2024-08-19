@@ -131,7 +131,6 @@ void	sig_init(void);
 /*	builtins	*/
 int		cd_command(t_token *token);
 int		pwd_command(void);
-int		unset_command(t_token *token);
 int		exit_command(t_data *data, t_token *token);
 
 /*	export command	*/
@@ -149,6 +148,10 @@ char	*get_echo_value(t_env *env, char *line, int *start);
 void	print_echo(char *line, t_env *env);
 void	process_dollar(char *line, t_env *env, int *i);
 int		echo_command(t_token *token, t_env *env);
+
+/*	unset command	*/
+int		unset_command(t_data *data, t_token *token);
+int del_env(t_env **env, char *key);
 
 /*	execution	*/
 int		process_n_exec(t_data *data, char **envp);

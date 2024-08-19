@@ -36,12 +36,6 @@ int	pwd_command(void)
 	return (0);
 }
 
-int	unset_command(t_token *token)
-{
-	printf("builtin command TODO: %s\n", token->value);
-	return (0);
-}
-
 // exit_command: frees data and exits the program
 // if 1 str - returns status 0 to exit command by ending main loop
 // if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr
