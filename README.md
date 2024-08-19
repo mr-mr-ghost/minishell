@@ -3,6 +3,7 @@
 - [ ] Check and update environment array each nonbuiltin command call
 - [ ] Find nonbuiltin command pathway in $PATH and update command word
 - [ ] FIX nonbuiltin command redirection
+- [ ] File paths
 - [ ] Pipes
 - [ ] Heredoc
 - [ ] FIX memory error in using command exit (conditional jump in free_env)
