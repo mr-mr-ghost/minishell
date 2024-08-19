@@ -27,10 +27,7 @@ int	del_env(t_env **env, char *key)
 				prev->next = tmp->next;
 			else
 				*env = tmp->next;
-			free(tmp->line);
-			free(tmp->name);
-			free(tmp->value);
-			free(tmp);
+			env_delone(tmp);
 			return (0);
 		}
 		prev = tmp;

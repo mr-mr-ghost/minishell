@@ -46,3 +46,14 @@ void	env_add_back(t_env **env, char *value)
 		tmp = tmp->next;
 	tmp->next = new;
 }
+
+void	env_delone(t_env *env)
+{
+	if (env->line)
+		free(env->line);
+	if (env->name)
+		free(env->name);
+	if (env->value)
+		free(env->value);
+	free(env);
+}

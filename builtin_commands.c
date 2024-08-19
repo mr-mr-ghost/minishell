@@ -29,7 +29,7 @@ int	pwd_command(void)
 	if (!pwd)
 	{
 		perror("getcwd in pwd_command()");
-		return (0);
+		return (1);
 	}
 	printf("%s\n", pwd);
 	free(pwd);

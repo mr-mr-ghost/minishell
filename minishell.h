@@ -100,6 +100,7 @@ char	*find_env_name(t_env *env, char *key);
 /*	environment list utils	*/
 t_env	*env_new(char *value);
 void	env_add_back(t_env **env, char *value);
+void	env_delone(t_env *env);
 
 /*	tokens handling	*/
 void	token_split(t_data *data);
