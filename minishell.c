@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/09 15:10:20 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/08/18 11:37:16 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,17 @@ int	main(int argc, char **argv, char **envp)
 		data.line = readline("Minishell> ");
 		if (!data.line)
 			break ;
-		add_history(data.line);
-		token_split(&data);
-//		print_tokens(data.token);
-		process_n_exec(&data, envp);
-		free_tokens(&data);
+		if (data.line[0] != '\0')
+		{
+			add_history(data.line);
+			token_split(&data);
+			//print_tokens(data.token);
+			process_n_exec(&data, envp);
+			free_tokens(&data);
+		}
 	}
 	rl_clear_history();
 	free_env(data.env);
-	free_env(data.secret_env);
 	ft_printf("exit\n");
 	return (0);
 }

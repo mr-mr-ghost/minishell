@@ -1,12 +1,13 @@
 .vscode
 .idea
 minishell
+readline.supp
+tmp
+obj
+*.txt
 *.swp
 *.o
 *.a
-obj
-libft/libft.a
-libft/obj
 a.out
 cmake-build-debug
 CMakeLists.txt

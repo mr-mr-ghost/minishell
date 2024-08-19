@@ -6,7 +6,8 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:49:19 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/16 02:02:23 by gklimasa         ###   ########.fr       */
+
+/*   Updated: 2024/08/18 11:26:18 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +30,7 @@ int	echo_command(t_token *token)
 	echo_token = token->next;
 	n_flag = 0;
 	if (!ft_memcmp(echo_token->value, "-n", 3))
+
 	{
 		if (!echo_token->next || echo_token->next->type != ARG)
 			return (0);
