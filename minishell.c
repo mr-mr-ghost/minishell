@@ -43,19 +43,21 @@ int	main(int argc, char **argv, char **envp)
 	disable_sigquit();
 	init_data(&data);
 	init_env(&data, envp);
-	set_shell_lvl(data.env);
 	while (!data.exit)
 	{
 		sig_init();
 		data.line = readline("Minishell> ");
 		if (!data.line)
 			break ;
+		add_history(data.line);
 		token_split(&data);
-		print_tokens(data.token);
+//		print_tokens(data.token);
+		process_n_exec(&data, envp);
 		free_tokens(&data);
 	}
 	rl_clear_history();
 	free_env(data.env);
+	free_env(data.secret_env);
 	ft_printf("exit\n");
 	return (0);
 }

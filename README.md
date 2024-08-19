@@ -1,8 +1,6 @@
 TODOS *************************************************
 
-TODO: Allow repeated input
-
-TODO: Fix misc. errors in tokens (no pair of quotes, etc...)
+TODO: Fix misc. errors in tokens
 
 TODO: Write Commands
 

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-bool	handle_cmd(t_data *data, char *line, int *i)
+int	handle_cmd(t_data *data, char *line, int *i)
 {
 	int	j;
 
@@ -24,7 +24,11 @@ bool	handle_cmd(t_data *data, char *line, int *i)
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
-	return (!ft_strncmp(line, "echo", 4));
+	if (!ft_strncmp(line, "echo", 4))
+		return (1);
+	else if (!ft_strncmp(line, "export", 6))
+		return (2);
+	return (0);
 }
 
 void	handle_special_chars(t_data *data, char *line, int *i)
@@ -61,49 +65,65 @@ void	handle_quotes(t_data *data, char *line, int *i)
 	*i = j;
 }
 
-char	*remove_quotes(char *str)
+void	handle_echo_chars(t_data *data, char *line, int *i)
 {
-	int		i;
 	int		j;
 	char	*new;
 
-	i = 0;
-	j = 0;
-	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!new)
-		return (NULL);
-	while (str[i])
+	j = *i;
+	if (line[j] == '-' && select_cmp(line, "-n ", j, 3))
 	{
-		if (str[i] != '\'' && str[i] != '\"')
-			new[j++] = str[i];
-		i++;
+		token_add_back(&data->token, token_new(ft_substr(line, j, 2)));
+		j += 2;
+		while (line[j] && line[j] == ' ')
+			j++;
+		*i = j;
 	}
-	new[j] = '\0';
-	free(str);
-	return (new);
+	while (line[j] && !ft_strchr("><|;", line[j]))
+		j++;
+	if (j == *i)
+		return ;
+	new = token_remove_quotes(ft_substr(line, *i, j - *i));
+	token_add_back(&data->token, token_new(new));
+	while (line[j] && line[j] == ' ')
+		j++;
+	*i = j;
 }
 
-void	handle_normal_chars(t_data *data, char *line, int *i, bool *check)
+void	handle_normal_chars(t_data *data, char *line, int *i)
 {
 	int		j;
 	char	*new;
 
 	j = *i + 1;
-	if (check)
-		while (line[j] && !ft_strchr("><|;", line[j]))
-			j++;
-	else
-		while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
-			j++;
+	while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
+		j++;
+	if (j == *i)
+		return ;
+	if (line[j] == '"')
+	{
+		handle_export_chars(data, line, i);
+		return ;
+	}
 	new = ft_substr(line, *i, j - *i);
-	if (check)
-		new = remove_quotes(new);
 	if (*i == 0)
 		data->token = token_new(new);
 	else
 		token_add_back(&data->token, token_new(new));
 	while (line[j] && line[j] == ' ')
 		j++;
-	check = false;
+	*i = j;
+}
+
+void	handle_export_chars(t_data *data, char *line, int *i)
+{
+	int		j;
+
+	j = *i + 1;
+	while (line[j] && !ft_strchr("><|; ", line[j]))
+		j++;
+	token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	while (line[j] && line[j] == ' ')
+		j++;
 	*i = j;
 }

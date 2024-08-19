@@ -35,7 +35,12 @@ void	free_env(t_env *env)
 	{
 		tmp = env;
 		env = env->next;
-		free(tmp->value);
+		if (tmp->value)
+			free(tmp->value);
+		if (tmp->name)
+			free(tmp->name);
+		if (tmp->line)
+			free(tmp->line);
 		free(tmp);
 	}
 }
@@ -50,4 +55,26 @@ int	ft_strcmp(const char *s1, const char *s2)
 	while (s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char	*remove_quotes(char *line)
+{
+	int		i;
+	int		j;
+	char	*new_line;
+
+	i = 0;
+	j = 0;
+	new_line = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));
+	if (!new_line)
+		return (NULL);
+	while (line[i])
+	{
+		if (line[i] == '\'' || line[i] == '\"')
+			i++;
+		else
+			new_line[j++] = line[i++];
+	}
+	new_line[j] = '\0';
+	return (new_line);
 }
