@@ -87,6 +87,17 @@ int	launch_nonbuiltins(char **cmd, char **envp)
 	return (0);
 }
 
+void	handle_declaration(t_env *secret_env, t_token *token)
+{
+	if (valid_env_name(secret_env, token->value))
+	{
+		del_env(&secret_env, token->value);
+		env_add_back(&secret_env, token->value);
+	}
+	else
+		env_add_back(&secret_env, token->value);
+}
+
 // Function to extract commands, check if they're builtin, launch accordingly
 int	process_n_exec(t_data *data, char **envp)
 {
@@ -98,8 +109,8 @@ int	process_n_exec(t_data *data, char **envp)
 		return (0);
 	token = data->token;
 	status = -1;
-	if (token->type == CMD && ft_strnstr(token->value, "=", ft_strlen(token->value)))
-		env_add_back(&data->secret_env, token->value);
+	if (token->type == CMD && ft_strstr(token->value, "="))
+		handle_declaration(data->secret_env, token);
 	else if (token->type == CMD)
 		status = check_launch_builtins(data, token, envp);
 	if (status == 0 || status == 1)

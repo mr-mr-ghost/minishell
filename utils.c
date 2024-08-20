@@ -78,3 +78,23 @@ char	*remove_quotes(char *line)
 	new_line[j] = '\0';
 	return (new_line);
 }
+
+char	*ft_strstr(const char *big, const char *little)
+{
+	size_t	i;
+	size_t	j;
+
+	if (!*little)
+		return ((char *)big);
+	i = 0;
+	while (big[i])
+	{
+		j = 0;
+		while (big[i + j] == little[j] && little[j])
+			j++;
+		if (!little[j])
+			return ((char *)&big[i]);
+		i++;
+	}
+	return (NULL);
+}

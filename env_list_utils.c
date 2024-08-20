@@ -57,3 +57,41 @@ void	env_delone(t_env *env)
 		free(env->value);
 	free(env);
 }
+
+void env_replace(t_env *env, char *name, char *line)
+{
+	t_env	*tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->name, name, ft_strlen(tmp->name)))
+		{
+			if (tmp->line)
+				free(tmp->line);
+			tmp->line = ft_strdup(line);
+			if (tmp->name)
+				free(tmp->name);
+			tmp->name = set_env_name(line);
+			if (tmp->value)
+				free(tmp->value);
+			tmp->value = set_env_value(line);
+			return ;
+		}
+		tmp = tmp->next;
+	}
+}
+
+t_env	*find_env(t_env *env, char *key)
+{
+	t_env	*tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->name, key, ft_strlen(tmp->name)))
+			return (tmp);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}

@@ -41,21 +41,68 @@ int	single_export(t_env *env)
 	return (0);
 }
 
-int export_command(t_data *data, t_token *token)
+void	delete_replace(t_env **env, char *key, char *line)
+{
+	t_env	*tmp;
+	t_env	*prev;
+
+	tmp = *env;
+	prev = NULL;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->name, key, ft_strlen(tmp->name)))
+		{
+			if (prev)
+				prev->next = tmp->next;
+			else
+				*env = tmp->next;
+			env_delone(tmp);
+			env_add_back(env, line);
+			return ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
+int	handle_assign(t_data *data, t_token *token)
 {
 	t_token	*export_token;
 	char	*env_line;
 
-	if (!token->next || token->next->type != ARG)
-		return (single_export(data->env));
-	export_token = token->next;
-	if (valid_env_name(data->secret_env, export_token->value))
+	export_token = token;
+	if (!ft_strstr(export_token->value, "="))
 	{
 		env_line = find_env_line(data->secret_env, export_token->value);
 		if (!env_line)
 			return (1);
 		env_add_back(&data->env, env_line);
 	}
+	else if (ft_strstr(export_token->value, "="))
+	{
+		if (valid_env_name(data->env, export_token->value))
+		{
+			env_line = find_env_name(data->env, export_token->value);
+			if (!env_line)
+				return (1);
+			delete_replace(&data->env, env_line, export_token->value);
+			delete_replace(&data->secret_env, env_line, export_token->value);
+		}
+		else
+			env_add_back(&data->env, export_token->value);
+	}
+	return (0);
+}
+
+int	export_command(t_data *data, t_token *token)
+{
+	t_token	*export_token;
+
+	if (!token->next || token->next->type != ARG)
+		return (single_export(data->env));
+	export_token = token->next;
+	if (valid_env_name(data->secret_env, export_token->value))
+		return (handle_assign(data, export_token));
 	else
 	{
 		env_add_back(&data->secret_env, export_token->value);
