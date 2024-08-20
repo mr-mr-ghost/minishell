@@ -106,7 +106,7 @@ void	env_replace(t_env *env, char *name, char *line);
 t_env	*find_env(t_env *env, char *key);
 
 /*	tokens handling	*/
-void	token_split(t_data *data);
+int token_split(t_data *data);
 void	tokens_type_define(t_data *data);
 void	process_token(t_data *data, char *line);
 int		is_cmd(char *line, int i);
@@ -123,8 +123,9 @@ void	handle_export_chars(t_data *data, char *line, int *i);
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 bool	select_cmp(char *line, char *cmp, int start, int len);
-bool	quotes_check(char *line, int i);
+bool	select_quotes_check(char *line, int i);
 char	*token_remove_quotes(char *str);
+bool	quotes_check(char *line);
 
 /*	signals	*/
 void	sigint_handler(int signum);

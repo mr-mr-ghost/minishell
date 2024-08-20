@@ -74,13 +74,17 @@ void	process_dollar(char *line, t_env *env, int *i)
 void	print_echo(char *line, t_env *env)
 {
 	int		i;
+	bool	quote;
 
 	i = 0;
+	quote = false;
 	while (line[i])
 	{
-		if (line[i] == '$')
+		if (line[i] == '\'')
+			quote = true;
+		else if (!quote && line[i] == '$')
 			process_dollar(line, env, &i);
-		else
+		else if (line[i] != '\"')
 			ft_putchar_fd(line[i], 1);
 		i++;
 	}

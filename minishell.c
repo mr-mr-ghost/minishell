@@ -50,7 +50,8 @@ int	main(int argc, char **argv, char **envp)
 		if (!data.line)
 			break ;
 		add_history(data.line);
-		token_split(&data);
+		if (token_split(&data))
+			break ;
 //		print_tokens(data.token);
 		process_n_exec(&data, envp);
 		free_tokens(&data);

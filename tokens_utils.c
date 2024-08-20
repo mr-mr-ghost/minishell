@@ -59,7 +59,28 @@ bool	select_cmp(char *line, char *cmp, int start, int len)
 	return (true);
 }
 
-bool	quotes_check(char *line, int i)
+bool	quotes_check(char *line)
+{
+	int		i;
+	bool	quote;
+
+	i = 0;
+	quote = false;
+	while (line[i])
+	{
+		if (line[i] == '\'' || line[i] == '\"')
+		{
+			if (quote)
+				quote = false;
+			else
+				quote = true;
+		}
+		i++;
+	}
+	return (quote);
+}
+
+bool	select_quotes_check(char *line, int i)
 {
 	int	j;
 

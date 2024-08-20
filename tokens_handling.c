@@ -52,7 +52,7 @@ void	process_token(t_data *data, char *line)
 				handle_export_chars(data, line, &i);
 			edge = 0;
 		}
-		else if ((line[i] == '\"' || line[i] == '\'') && quotes_check(line, i))
+		else if ((line[i] == '\"' || line[i] == '\'') && select_quotes_check(line, i))
 			handle_quotes(data, line, &i);
 		else if (ft_strchr("><|;", line[i]))
 			handle_special_chars(data, line, &i);
@@ -61,7 +61,7 @@ void	process_token(t_data *data, char *line)
 	}
 }
 
-void	token_split(t_data *data)
+int	token_split(t_data *data)
 {
 	char	*line;
 
@@ -69,9 +69,18 @@ void	token_split(t_data *data)
 		line = ft_strdup("");
 	else
 		line = ft_strdup(data->line);
+	if (!line)
+		return (1);
+	if (quotes_check(line))
+	{
+		free(line);
+		ft_putendl_fd("ERROR: Unclosed quotes", 2);
+		return (1);
+	}
 	process_token(data, line);
 	free(line);
 	tokens_type_define(data);
+	return (0);
 }
 
 void	tokens_type_define(t_data *data)
