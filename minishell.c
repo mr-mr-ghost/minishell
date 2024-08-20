@@ -58,7 +58,7 @@ char	*read_line(t_env *env)
 	char	*env_path;
 
 	line = ft_strdup("Minishell: ~");
-	env_path = find_env_value(env, "OLDPWD");
+	env_path = find_env_value(env, "PWD");
 	env_path = shorten_path(env_path);
 	if (env_path)
 	{

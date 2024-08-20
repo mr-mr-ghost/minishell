@@ -135,7 +135,6 @@ void	disable_sigquit(void);
 void	sig_init(void);
 
 /*	builtins	*/
-int		cd_command(t_token *token);
 int		pwd_command(void);
 int		exit_command(t_data *data, t_token *token);
 
@@ -160,6 +159,9 @@ int		echo_command(t_token *token, t_env *env);
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);
 int		del_env(t_env **env, char *key);
+
+/*	cd command	*/
+int		cd_command(t_data *data, t_token *token);
 
 /*	execution	*/
 int		process_n_exec(t_data *data, char **envp);

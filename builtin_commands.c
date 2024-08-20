@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-int	cd_command(t_token *token)
-{
-	printf("builtin command TODO: %s\n", token->value);
-	return (0);
-}
-
 // pwd_command: prints the working directory
 // any amount of strs - prints pwd and returns 1
 // upon getcwd() fail - prints invalid command in STDERR, returns 1

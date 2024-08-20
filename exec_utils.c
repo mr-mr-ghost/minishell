@@ -42,7 +42,7 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	if (ft_memcmp(token->value, "echo", ft_strlen("echo") + 1) == 0)
 		i = echo_command(token, data->env);
 	else if (ft_memcmp(token->value, "cd", ft_strlen("cd") + 1) == 0)
-		i = cd_command(token);
+		i = cd_command(data, token);
 	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
 		i = pwd_command();
 	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
