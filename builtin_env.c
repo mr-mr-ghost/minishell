@@ -14,7 +14,6 @@
 
 /* env_command: prints all the environment variables			*/
 /* if 1 str - prints env vars, returns 1						*/
-/* if more strs - prints invalid command in STDERR, returns 1	*/
 int	print_env(t_env *env)
 {
 	t_env	*enviro;
@@ -25,7 +24,8 @@ int	print_env(t_env *env)
 	while (enviro)
 	{
 		flag = 0;
-		if (enviro->value && (ft_strchr(enviro->value, '\"') || ft_strchr(enviro->value, '\'')))
+		if (enviro->value && (ft_strchr(enviro->value, '\"')
+				|| ft_strchr(enviro->value, '\'')))
 		{
 			line = remove_quotes(enviro->line);
 			if (!line)
@@ -42,12 +42,38 @@ int	print_env(t_env *env)
 	return (0);
 }
 
-int env_command(t_token *token, t_env *env)
+int	handle_env(t_data *data, t_token *token)
 {
-	if (token->next && token->next->type == ARG)
+	t_token	*env_token;
+	char	*env_line;
+
+	env_token = token;
+	if (valid_env_name(data->env, env_token->value))
 	{
-		ft_putstr_fd("env: too many arguments\n", 2);
-		return (0);
+		env_line = find_env_name(data->env, env_token->value);
+		if (!env_line)
+			return (1);
+		delete_replace(&data->env, env_line, env_token->value);
+		delete_replace(&data->secret_env, env_line, env_token->value);
 	}
-	return (print_env(env));
+	else
+	{
+		env_add_back(&data->env, env_token->value);
+		env_add_back(&data->secret_env, env_token->value);
+	}
+	return (0);
+}
+
+int	env_command(t_data *data, t_token *token)
+{
+	if (!token->next)
+		return (print_env(data->env));
+	if (ft_strstr(token->next->value, "="))
+	{
+		if (!handle_env(data, token->next))
+			return (print_env(data->env));
+	}
+	else
+		printf("env: %s: No such file or directory\n", token->next->value);
+	return (1);
 }

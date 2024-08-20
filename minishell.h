@@ -106,7 +106,7 @@ void	env_replace(t_env *env, char *name, char *line);
 t_env	*find_env(t_env *env, char *key);
 
 /*	tokens handling	*/
-int token_split(t_data *data);
+int		token_split(t_data *data);
 void	tokens_type_define(t_data *data);
 void	process_token(t_data *data, char *line);
 int		is_cmd(char *line, int i);
@@ -146,7 +146,7 @@ void	delete_replace(t_env **env, char *key, char *line);
 int		handle_assign(t_data *data, t_token *token);
 
 /*	env command	*/
-int		env_command(t_token *token, t_env *env);
+int		env_command(t_data *data, t_token *token);
 int		print_env(t_env *env);
 
 /*	echo command	*/
