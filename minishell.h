@@ -66,6 +66,7 @@ typedef struct s_sig
 	int		sigint;
 	int		sigquit;
 	int		exit_status;
+	bool	exit_command;
 }	t_sig;
 
 typedef struct s_data

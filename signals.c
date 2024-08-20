@@ -21,11 +21,13 @@ void	sigint_handler(int signum)
 	rl_redisplay();
 	rl_clear_history();
 	g_sig.sigint = 1;
+	g_sig.exit_status = 130;
 }
 
 void	sigquit_handler(int signum)
 {
 	(void)signum;
+	g_sig.exit_status = 131;
 	g_sig.sigquit = 1;
 }
 
