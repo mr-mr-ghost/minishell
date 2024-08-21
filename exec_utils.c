@@ -99,22 +99,17 @@ void	handle_declaration(t_env *secret_env, t_token *token)
 }
 
 // Function to extract commands, check if they're builtin, launch accordingly
-int	process_n_exec(t_data *data, char **envp)
+void	process_n_exec(t_data *data, char **envp)
 {
-	int		status;
 	t_token	*token;
 
 	// TODO: handle multiple commands
 	if (!data->token)
-		return (0);
+		return ;
 	token = data->token;
-	status = -1;
 	if (token->type == CMD && ft_strstr(token->value, "="))
 		handle_declaration(data->secret_env, token);
 	else if (token->type == CMD)
-		status = check_launch_builtins(data, token, envp);
-	if (status == 0 || status == 1)
-		return (0);
+		g_sig.exit_status = check_launch_builtins(data, token, envp);
 //	status = launch_nonbuiltins(cmd, envp);
-	return (status);
 }

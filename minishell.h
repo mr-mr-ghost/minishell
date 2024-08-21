@@ -66,7 +66,6 @@ typedef struct s_sig
 	int		sigint;
 	int		sigquit;
 	int		exit_status;
-	bool	exit_command;
 }	t_sig;
 
 typedef struct s_data
@@ -167,7 +166,7 @@ int		replace_path(t_env *env, char *name, char *path);
 char	*set_back_dir(t_env *env);
 
 /*	execution	*/
-int		process_n_exec(t_data *data, char **envp);
+void process_n_exec(t_data *data, char **envp);
 int		launch_nonbuiltins(char **cmd, char **envp);
 int		check_launch_builtins(t_data *data, t_token *token, char **envp);
 void	child_process(char **cmd, char **envp);
