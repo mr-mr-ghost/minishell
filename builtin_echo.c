@@ -52,7 +52,7 @@ char	*get_echo_value(t_env *env, char *line, int *start)
 	return (env_value);
 }
 
-void	process_dollar(char *line, t_env *env, int *i)
+int	process_dollar(char *line, t_env *env, int *i)
 {
 	char	*env_value;
 
@@ -67,13 +67,16 @@ void	process_dollar(char *line, t_env *env, int *i)
 		env_value = ft_strdup("");
 	else
 		env_value = ft_strdup("$");
+	if (!env_value)
+		return (err_msg("echo", "malloc error", 1));
 	ft_putstr_fd(env_value, 1);
 	free(env_value);
 	if (line[*i] == ' ')
 		(*i)--;
+	return (0);
 }
 
-void	print_echo(char *line, t_env *env)
+int	print_echo(char *line, t_env *env)
 {
 	int		i;
 	bool	quote;
@@ -84,12 +87,16 @@ void	print_echo(char *line, t_env *env)
 	{
 		if (line[i] == '\'')
 			quote = true;
-		else if (!quote && line[i] == '$')
-			process_dollar(line, env, &i);
+		else if (!quote && line[i + 1] && line[i] == '$' && line[i + 1] != ' ')
+		{
+			if (process_dollar(line, env, &i))
+				return (1);
+		}
 		else if (line[i] != '\"')
 			ft_putchar_fd(line[i], 1);
 		i++;
 	}
+	return (0);
 }
 
 int	echo_command(t_token *token, t_env *env)
@@ -111,7 +118,8 @@ int	echo_command(t_token *token, t_env *env)
 		echo_token = echo_token->next;
 		n_flag = 1;
 	}
-	print_echo(echo_token->value, env);
+	if (print_echo(echo_token->value, env))
+		return (1);
 	if (!n_flag)
 		printf("\n");
 	return (0);

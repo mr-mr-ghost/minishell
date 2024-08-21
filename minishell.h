@@ -155,8 +155,8 @@ void	print_env_end(t_env *env, t_token *env_token);
 /*	echo command	*/
 bool	select_valid_env(t_env *env, char *line, int start);
 char	*get_echo_value(t_env *env, char *line, int *start);
-void	print_echo(char *line, t_env *env);
-void	process_dollar(char *line, t_env *env, int *i);
+int print_echo(char *line, t_env *env);
+int process_dollar(char *line, t_env *env, int *i);
 int		echo_command(t_token *token, t_env *env);
 
 /*	unset command	*/
