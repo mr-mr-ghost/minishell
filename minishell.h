@@ -147,7 +147,10 @@ int		handle_assign(t_data *data, t_token *token);
 
 /*	env command	*/
 int		env_command(t_data *data, t_token *token);
-int		print_env(t_env *env);
+int		print_env_arg(t_env *env, t_token *env_token);
+int		env_err_msg(char *arg, char *msg, int status);
+int		check_env_input(t_token *env_token);
+void	print_env_end(t_env *env, t_token *env_token);
 
 /*	echo command	*/
 bool	select_valid_env(t_env *env, char *line, int start);

@@ -10,6 +10,8 @@ TODO: Parsing
 
 TODO: Fix misc. errors
 
+TODO: parse commands in exec (A=2 is valid, but @=1/2=4 is not)
+
 LINKS *************************************************
 
 https://m4nnb3ll.medium.com/minishell-building-a-mini-bash-a-42-project-b55a10598218
