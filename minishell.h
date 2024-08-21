@@ -162,6 +162,10 @@ int		del_env(t_env **env, char *key);
 
 /*	cd command	*/
 int		cd_command(t_data *data, t_token *token);
+char	*determine_path(t_env *env, t_token *token);
+int		change_env_path(t_data *data, char *old_pwd);
+int		replace_path(t_env *env, char *name, char *path);
+char	*set_back_dir(t_env *env);
 
 /*	execution	*/
 int		process_n_exec(t_data *data, char **envp);
