@@ -69,6 +69,8 @@ void	process_dollar(char *line, t_env *env, int *i)
 		env_value = ft_strdup("$");
 	ft_putstr_fd(env_value, 1);
 	free(env_value);
+	if (line[*i] == ' ')
+		(*i)--;
 }
 
 void	print_echo(char *line, t_env *env)

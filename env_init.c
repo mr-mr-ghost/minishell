@@ -89,8 +89,10 @@ void	set_shell_lvl(t_env *env)
 		if (!ft_strncmp(env_name, "SHLVL", ft_strlen(env_name)))
 		{
 			free(env->line);
+			free(env->value);
 			lvl_str = ft_itoa(lvl);
 			env->line = ft_strjoin("SHLVL=", lvl_str);
+			env->value = ft_strdup(lvl_str);
 			free(lvl_str);
 			return ;
 		}
