@@ -83,6 +83,8 @@ void	free_env(t_env *env);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*remove_quotes(char *line);
 char	*ft_strstr(const char *big, const char *little);
+bool	check_char(char *line);
+int		err_msg(char *location, char *msg, int code);
 
 /*	environment initialisation	*/
 int		init_env(t_data *data, char **envp);

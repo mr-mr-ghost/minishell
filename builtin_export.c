@@ -70,19 +70,39 @@ int	handle_assign(t_data *data, t_token *token)
 	return (0);
 }
 
-int	export_command(t_data *data, t_token *token)
+int	process_export(t_data *data, t_token *export_token)
 {
-	t_token	*export_token;
+	int	exit_status;
 
-	if (!token->next || token->next->type != ARG)
-		return (single_export(data->env));
-	export_token = token->next;
+	exit_status = 0;
+	if (!check_char(export_token->value))
+	{
+		printf("minishell: export: `%s': not a valid identifier\n",
+			export_token->value);
+		return (1);
+	}
 	if (valid_env_name(data->secret_env, export_token->value))
-		return (handle_assign(data, export_token));
+		exit_status = handle_assign(data, export_token);
 	else
 	{
 		env_add_back(&data->secret_env, export_token->value);
 		env_add_back(&data->env, export_token->value);
 	}
-	return (0);
+	return (exit_status);
+}
+
+int	export_command(t_data *data, t_token *token)
+{
+	t_token	*export_token;
+	int		exit_status;
+
+	if (!token->next || token->next->type != ARG)
+		return (single_export(data->env));
+	export_token = token->next;
+	while (export_token && export_token->type == ARG)
+	{
+		exit_status = process_export(data, export_token);
+		export_token = export_token->next;
+	}
+	return (exit_status);
 }

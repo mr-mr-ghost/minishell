@@ -98,3 +98,23 @@ char	*ft_strstr(const char *big, const char *little)
 	}
 	return (NULL);
 }
+
+bool	check_char(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalpha(str[i]) && str[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+int err_msg(char *location, char *msg, int code)
+{
+	printf("minishell: %s: %s\n", location, msg);
+	return (code);
+}

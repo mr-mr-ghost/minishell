@@ -94,7 +94,7 @@ void	handle_declaration(t_env *secret_env, t_token *token)
 		del_env(&secret_env, token->value);
 		env_add_back(&secret_env, token->value);
 	}
-	else
+	else if (check_char(token->value))
 		env_add_back(&secret_env, token->value);
 }
 

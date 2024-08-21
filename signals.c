@@ -27,7 +27,6 @@ void	sigint_handler(int signum)
 void	sigquit_handler(int signum)
 {
 	(void)signum;
-	g_sig.exit_status = 131;
 	g_sig.sigquit = 1;
 }
 
