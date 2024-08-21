@@ -35,7 +35,7 @@ char	*shorten_path(char *path)
 		return (NULL);
 	slash_count = 0;
 	i = ft_strlen(path) - 1;
-	while (path[i])
+	while (i >= 0)
 	{
 		if (path[i] == '/')
 		{

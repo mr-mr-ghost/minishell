@@ -48,34 +48,61 @@ int	replace_path(t_env *env, char *name, char *path)
 	return (0);
 }
 
+int	change_env_path(t_data *data, char *old_pwd)
+{
+	char	*new_pwd;
+
+	new_pwd = getcwd(NULL, 0);
+	if (!new_pwd)
+		return (1);
+	replace_path(data->env, "OLDPWD", old_pwd);
+	replace_path(data->env, "PWD", new_pwd);
+	replace_path(data->secret_env, "OLDPWD", old_pwd);
+	replace_path(data->secret_env, "PWD", new_pwd);
+	free(new_pwd);
+	free(old_pwd);
+	return (0);
+}
+
+char	*determine_path(t_env *env, t_token *token)
+{
+	char	*path;
+
+	if (!token || token->type != ARG || !ft_strcmp(token->value, "~"))
+		path = find_env_value(env, "HOME");
+	else if (!ft_strcmp(token->value, "-"))
+		path = find_env_value(env, "OLDPWD");
+	else if (!ft_strcmp(token->value, "."))
+		path = find_env_value(env, "PWD");
+	else if (!ft_strcmp(token->value, ".."))
+		path = set_back_dir(env);
+	else
+		path = ft_strdup(token->value);
+	if (!path)
+		return (NULL);
+	return (path);
+}
+
 int	cd_command(t_data *data, t_token *token)
 {
 	char	*path;
 	char	*old_pwd;
+	int		status;
 	t_token	*cd_token;
 
 	old_pwd = find_env_value(data->env, "PWD");
 	if (!old_pwd)
 		return (1);
 	cd_token = token->next;
-	if (!cd_token)
-		path = find_env_value(data->env, "HOME");
-	else if (!ft_strcmp(cd_token->value, "-"))
-		path = find_env_value(data->env, "OLDPWD");
-	else if (!ft_strcmp(cd_token->value, "."))
-		path = find_env_value(data->env, "PWD");
-	else if (!ft_strcmp(cd_token->value, ".."))
-		path = set_back_dir(data->env);
-	else
-		path = cd_token->value;
-	if (!path)
-		return (1);
-	if (chdir(path) == -1)
+	path = determine_path(data->env, cd_token);
+	status = chdir(path);
+	if (status < 0)
 	{
 		printf("cd: %s: %s\n", path, strerror(errno));
 		return (1);
 	}
-	replace_path(data->env, "OLDPWD", old_pwd);
-	replace_path(data->env, "PWD", getcwd(NULL, 0));
+	free(path);
+	if (change_env_path(data, old_pwd))
+		return (1);
 	return (0);
 }
