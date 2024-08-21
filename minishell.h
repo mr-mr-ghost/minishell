@@ -142,7 +142,6 @@ int		exit_command(t_data *data, t_token *token);
 int		export_command(t_data *data, t_token *token);
 bool	valid_env_name(t_env *env, char *key);
 int		single_export(t_env *env);
-void	delete_replace(t_env **env, char *key, char *line);
 int		handle_assign(t_data *data, t_token *token);
 
 /*	env command	*/

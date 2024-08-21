@@ -42,7 +42,7 @@ int	replace_path(t_env *env, char *name, char *path)
 	tmp = ft_strjoin(name, "=");
 	free(line);
 	line = ft_strjoin(tmp, path);
-	delete_replace(&env, name, line);
+	env_replace(env, name, line);
 	free(tmp);
 	free(line);
 	return (0);

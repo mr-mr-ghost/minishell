@@ -58,7 +58,7 @@ void	env_delone(t_env *env)
 	free(env);
 }
 
-void env_replace(t_env *env, char *name, char *line)
+void	env_replace(t_env *env, char *name, char *line)
 {
 	t_env	*tmp;
 

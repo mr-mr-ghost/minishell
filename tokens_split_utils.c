@@ -68,7 +68,6 @@ void	handle_quotes(t_data *data, char *line, int *i)
 void	handle_echo_chars(t_data *data, char *line, int *i)
 {
 	int		j;
-	char	*new;
 
 	j = *i;
 	if (line[j] == '-' && select_cmp(line, "-n ", j, 3))
@@ -83,9 +82,7 @@ void	handle_echo_chars(t_data *data, char *line, int *i)
 		j++;
 	if (j == *i)
 		return ;
-//	new = token_remove_quotes(ft_substr(line, *i, j - *i));
-	new = ft_substr(line, *i, j - *i);
-	token_add_back(&data->token, token_new(new));
+	token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;

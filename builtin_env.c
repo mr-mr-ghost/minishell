@@ -53,8 +53,8 @@ int	handle_env(t_data *data, t_token *token)
 		env_line = find_env_name(data->env, env_token->value);
 		if (!env_line)
 			return (1);
-		delete_replace(&data->env, env_line, env_token->value);
-		delete_replace(&data->secret_env, env_line, env_token->value);
+		env_replace(data->env, env_line, env_token->value);
+		env_replace(data->secret_env, env_line, env_token->value);
 	}
 	else
 	{
