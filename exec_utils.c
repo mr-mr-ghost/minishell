@@ -89,13 +89,29 @@ int	launch_nonbuiltins(char **cmd, char **envp)
 
 void	handle_declaration(t_env *secret_env, t_token *token)
 {
-	if (valid_env_name(secret_env, token->value))
+	t_token	*tmp;
+	char	*name;
+	char	*value;
+
+	tmp = token;
+	while (tmp && (!tmp->prev || tmp->type == ARG))
 	{
-		del_env(&secret_env, token->value);
-		env_add_back(&secret_env, token->value);
+		value = add_quotes_var(tmp->value);
+		if (!value)
+			return ;
+		if (valid_env_name(secret_env, value))
+		{
+			name = find_env_name(secret_env, value);
+			if (!name)
+				return ;
+			env_replace(secret_env, name, value);
+			free(name);
+		}
+		else if (check_char(value))
+			env_add_back(&secret_env, value);
+		free(value);
+		tmp = tmp->next;
 	}
-	else if (check_char(token->value))
-		env_add_back(&secret_env, token->value);
 }
 
 // Function to extract commands, check if they're builtin, launch accordingly
@@ -107,7 +123,7 @@ void	process_n_exec(t_data *data, char **envp)
 	if (!data->token)
 		return ;
 	token = data->token;
-	if (token->type == CMD && ft_strstr(token->value, "="))
+	if ((!token->prev || token->type == ARG) && ft_strstr(token->value, "="))
 		handle_declaration(data->secret_env, token);
 	else if (token->type == CMD)
 		g_sig.exit_status = check_launch_builtins(data, token, envp);

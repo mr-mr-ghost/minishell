@@ -85,6 +85,7 @@ char	*remove_quotes(char *line);
 char	*ft_strstr(const char *big, const char *little);
 bool	check_char(char *line);
 int		err_msg(char *location, char *msg, int code);
+char	*add_quotes_var(char *line);
 
 /*	environment initialisation	*/
 int		init_env(t_data *data, char **envp);
@@ -99,6 +100,7 @@ int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
 char	*find_env_value(t_env *env, char *key);
 char	*find_env_name(t_env *env, char *key);
+bool	valid_env_name(t_env *env, char *key);
 
 /*	environment list utils	*/
 t_env	*env_new(char *value);
@@ -141,7 +143,7 @@ int		exit_command(t_data *data, t_token *token);
 
 /*	export command	*/
 int		export_command(t_data *data, t_token *token);
-bool	valid_env_name(t_env *env, char *key);
+int		process_export(t_data *data, t_token *export_token);
 int		single_export(t_env *env);
 int		handle_assign(t_data *data, t_token *token);
 

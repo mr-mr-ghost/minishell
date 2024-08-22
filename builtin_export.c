@@ -12,30 +12,17 @@
 
 #include "minishell.h"
 
-bool	valid_env_name(t_env *env, char *key)
-{
-	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-
-	tmp = env;
-	while (tmp)
-	{
-		get_env_name(env_name, tmp->line);
-		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
-			return (true);
-		tmp = tmp->next;
-	}
-	return (false);
-}
-
 int	single_export(t_env *env)
 {
 	t_env	*enviro;
+	char	*env_line;
 
 	enviro = env;
 	while (enviro)
 	{
-		printf("declare -x %s\n", enviro->line);
+		env_line = add_quotes_var(enviro->line);
+		printf("declare -x %s\n", env_line);
+		free(env_line);
 		enviro = enviro->next;
 	}
 	return (0);
@@ -43,36 +30,37 @@ int	single_export(t_env *env)
 
 int	handle_assign(t_data *data, t_token *token)
 {
-	t_token	*export_token;
 	char	*env_line;
 
-	export_token = token;
-	if (!ft_strstr(export_token->value, "="))
+	if (ft_strstr(token->value, "="))
 	{
-		env_line = find_env_line(data->secret_env, export_token->value);
+		env_line = find_env_name(data->env, token->value);
 		if (!env_line)
 			return (1);
-		env_add_back(&data->env, env_line);
+		env_replace(data->secret_env,env_line , token->value);
+		env_replace(data->env, env_line, token->value);
 	}
-	else if (ft_strstr(export_token->value, "="))
+	else
 	{
-		if (valid_env_name(data->env, export_token->value))
+		env_line = find_env_line(data->secret_env, token->value);
+		if (!env_line)
+			return (1);
+		if (valid_env_name(data->env, token->value))
 		{
-			env_line = find_env_name(data->env, export_token->value);
-			if (!env_line)
-				return (1);
-			env_replace(data->env, env_line, export_token->value);
-			env_replace(data->secret_env, env_line, export_token->value);
+			env_replace(data->env, token->value, env_line);
+			env_replace(data->secret_env, token->value, env_line);
 		}
-		else
-			env_add_back(&data->env, export_token->value);
+		else if (valid_env_name(data->secret_env, token->value))
+			env_add_back(&data->env, env_line);
 	}
+	free(env_line);
 	return (0);
 }
 
 int	process_export(t_data *data, t_token *export_token)
 {
-	int	exit_status;
+	int		exit_status;
+	char	*env_line;
 
 	exit_status = 0;
 	if (!check_char(export_token->value))
@@ -85,8 +73,12 @@ int	process_export(t_data *data, t_token *export_token)
 		exit_status = handle_assign(data, export_token);
 	else
 	{
-		env_add_back(&data->secret_env, export_token->value);
-		env_add_back(&data->env, export_token->value);
+		env_line = add_quotes_var(export_token->value);
+		if (!env_line)
+			return (1);
+		env_add_back(&data->secret_env, env_line);
+		env_add_back(&data->env, env_line);
+		free(env_line);
 	}
 	return (exit_status);
 }

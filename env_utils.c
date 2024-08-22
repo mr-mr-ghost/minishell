@@ -89,3 +89,19 @@ char	*get_env_name(char *dest, char *src)
 	dest[i] = '\0';
 	return (dest);
 }
+
+bool	valid_env_name(t_env *env, char *key)
+{
+	t_env	*tmp;
+	char	env_name[BUFF_SIZE];
+
+	tmp = env;
+	while (tmp)
+	{
+		get_env_name(env_name, tmp->line);
+		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
+			return (true);
+		tmp = tmp->next;
+	}
+	return (false);
+}

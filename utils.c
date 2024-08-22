@@ -79,6 +79,30 @@ char	*remove_quotes(char *line)
 	return (new_line);
 }
 
+char *add_quotes_var(char *line)
+{
+	char	*new_line;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	new_line = (char *)malloc(sizeof(char) * (ft_strlen(line) + 3));
+	if (!new_line)
+		return (NULL);
+	while (line[i] && line[i] != '=')
+		new_line[j++] = line[i++];
+	new_line[j++] = line[i++];
+	if (line[i] != '\"')
+		new_line[j++] = '\"';
+	while (line[i])
+		new_line[j++] = line[i++];
+	if (line[i] != '\"' && line[i - 1] != '\"')
+		new_line[j++] = '\"';
+	new_line[j] = '\0';
+	return (new_line);
+}
+
 char	*ft_strstr(const char *big, const char *little)
 {
 	size_t	i;
