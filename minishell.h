@@ -71,7 +71,8 @@ typedef struct s_sig
 typedef struct s_data
 {
 	char	*line;
-	int		exit;
+	bool	loop;
+	int		exit_code;
 	t_env	*env;
 	t_env	*secret_env;
 	t_token	*token;
@@ -157,9 +158,9 @@ void	print_env_end(t_env *env, t_token *env_token);
 /*	echo command	*/
 bool	select_valid_env(t_env *env, char *line, int start);
 char	*get_echo_value(t_env *env, char *line, int *start);
-int print_echo(char *line, t_env *env);
-int process_dollar(char *line, t_env *env, int *i);
-int		echo_command(t_token *token, t_env *env);
+int print_echo(t_data *data, char *line);
+int process_dollar(t_data *data, char *line, int *i);
+int echo_command(t_data *data, t_token *token);
 
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);

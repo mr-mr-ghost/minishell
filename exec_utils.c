@@ -40,7 +40,7 @@ int check_launch_builtins(t_data *data, t_token *token, char **envp)
 	(void)envp;
 	i = -1;
 	if (ft_memcmp(token->value, "echo", ft_strlen("echo") + 1) == 0)
-		i = echo_command(token, data->env);
+		i = echo_command(data, token);
 	else if (ft_memcmp(token->value, "cd", ft_strlen("cd") + 1) == 0)
 		i = cd_command(data, token);
 	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
@@ -126,6 +126,6 @@ void	process_n_exec(t_data *data, char **envp)
 	if ((!token->prev || token->type == ARG) && ft_strstr(token->value, "="))
 		handle_declaration(data->secret_env, token);
 	else if (token->type == CMD)
-		g_sig.exit_status = check_launch_builtins(data, token, envp);
+		data->exit_code = check_launch_builtins(data, token, envp);
 //	status = launch_nonbuiltins(cmd, envp);
 }

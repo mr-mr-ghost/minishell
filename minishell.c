@@ -90,7 +90,8 @@ void	init_data(t_data *data)
 	data->line = NULL;
 	data->token = NULL;
 	data->env = NULL;
-	data->exit = 0;
+	data->exit_code = 0;
+	data->loop = false;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -104,7 +105,7 @@ int	main(int argc, char **argv, char **envp)
 	disable_sigquit();
 	init_data(&data);
 	init_env(&data, envp);
-	while (!data.exit)
+	while (!data.loop)
 	{
 		sig_init();
 		data.line = read_line(data.env);
@@ -114,6 +115,8 @@ int	main(int argc, char **argv, char **envp)
 		if (token_split(&data))
 			break ;
 //		print_tokens(data.token);
+		if (g_sig.exit_status)
+			data.exit_code = g_sig.exit_status;
 		process_n_exec(&data, envp);
 		free_tokens(&data);
 	}
@@ -121,5 +124,5 @@ int	main(int argc, char **argv, char **envp)
 	free_env(data.env);
 	free_env(data.secret_env);
 	ft_printf("exit\n");
-	return (g_sig.exit_status);
+	return (data.exit_code);
 }

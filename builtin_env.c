@@ -30,6 +30,7 @@ int	print_env_arg(t_env *env, t_token *env_token)
 			if (!ft_strncmp(enviro->name, env_token[i].value,
 					ft_strlen(enviro->name)))
 			{
+				free(line);
 				line = remove_quotes(env_token[i].value);
 				if (!line)
 					return (1);

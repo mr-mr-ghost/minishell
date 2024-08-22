@@ -52,18 +52,18 @@ char	*get_echo_value(t_env *env, char *line, int *start)
 	return (env_value);
 }
 
-int	process_dollar(char *line, t_env *env, int *i)
+int process_dollar(t_data *data, char *line, int *i)
 {
 	char	*env_value;
 
 	(*i)++;
 	if (line[*i] == '?')
-		env_value = ft_itoa(g_sig.exit_status);
+		env_value = ft_itoa(data->exit_code);
 	else if (line[*i] == '$')
-		env_value = find_env_value(env, "SYSTEMD_EXEC_PID");
-	else if (select_valid_env(env, line, *i))
-		env_value = get_echo_value(env, line, i);
-	else if (!select_valid_env(env, line, *i) && (line[*i] || line[*i] == ' '))
+		env_value = find_env_value(data->env, "SYSTEMD_EXEC_PID");
+	else if (select_valid_env(data->env, line, *i))
+		env_value = get_echo_value(data->env, line, i);
+	else if (!select_valid_env(data->env, line, *i) && (line[*i] || line[*i] == ' '))
 		env_value = ft_strdup("");
 	else
 		env_value = ft_strdup("$");
@@ -76,7 +76,7 @@ int	process_dollar(char *line, t_env *env, int *i)
 	return (0);
 }
 
-int	print_echo(char *line, t_env *env)
+int print_echo(t_data *data, char *line)
 {
 	int		i;
 	bool	quote;
@@ -89,7 +89,7 @@ int	print_echo(char *line, t_env *env)
 			quote = true;
 		else if (!quote && line[i + 1] && line[i] == '$' && line[i + 1] != ' ')
 		{
-			if (process_dollar(line, env, &i))
+			if (process_dollar(data, line, &i))
 				return (1);
 		}
 		else if (line[i] != '\"')
@@ -99,7 +99,7 @@ int	print_echo(char *line, t_env *env)
 	return (0);
 }
 
-int	echo_command(t_token *token, t_env *env)
+int echo_command(t_data *data, t_token *token)
 {
 	int		n_flag;
 	t_token	*echo_token;
@@ -118,7 +118,7 @@ int	echo_command(t_token *token, t_env *env)
 		echo_token = echo_token->next;
 		n_flag = 1;
 	}
-	if (print_echo(echo_token->value, env))
+	if (print_echo(data, echo_token->value))
 		return (1);
 	if (!n_flag)
 		printf("\n");
