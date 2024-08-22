@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	del_env(t_env **env, char *key)
+void	del_env(t_env **env, char *key)
 {
 	t_env	*tmp;
 	t_env	*prev;
@@ -28,21 +28,45 @@ int	del_env(t_env **env, char *key)
 			else
 				*env = tmp->next;
 			env_delone(tmp);
-			return (0);
+			return ;
 		}
 		prev = tmp;
 		tmp = tmp->next;
 	}
-	return (1);
+}
+
+int	unset_env(t_data *data, t_token *token)
+{
+	char	*env_name;
+
+	if (!token->value)
+		return (1);
+	if (ft_strchr(token->value, '='))
+		return (0);
+	env_name = find_env_name(data->env, token->value);
+	if (!env_name)
+		return (1);
+	else
+	{
+		del_env(&data->env, env_name);
+		del_env(&data->secret_env, env_name);
+	}
+	free(env_name);
+	return (0);
 }
 
 int	unset_command(t_data *data, t_token *token)
 {
-	int	status;
+	int		status;
+	t_token	*unset_token;
 
 	if (!token->next)
-		return (1);
-	status = del_env(&data->env, token->next->value);
-	del_env(&data->secret_env, token->next->value);
+		return (0);
+	unset_token = token->next;
+	while (unset_token && unset_token->type == ARG)
+	{
+		status = unset_env(data, unset_token);
+		unset_token = unset_token->next;
+	}
 	return (status);
 }

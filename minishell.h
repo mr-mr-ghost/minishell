@@ -163,7 +163,7 @@ int		echo_command(t_token *token, t_env *env);
 
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);
-int		del_env(t_env **env, char *key);
+void del_env(t_env **env, char *key);
 
 /*	cd command	*/
 int		cd_command(t_data *data, t_token *token);
