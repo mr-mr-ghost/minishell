@@ -57,7 +57,7 @@ char	*generate_prompt(t_env *env)
 	char	*prompt;
 	char	*env_path;
 
-	line = ft_strdup("\033[1;32mMinishell:\033[0m ~");
+	line = ft_strdup("\033[1;34mMinishell:\033[0m \033[1;32m~");
 	env_path = find_env_value(env, "PWD");
 	env_path = shorten_path(env_path);
 	if (env_path)
@@ -65,11 +65,11 @@ char	*generate_prompt(t_env *env)
 		tmp = ft_strjoin(line, env_path);
 		free(line);
 		free(env_path);
-		prompt = ft_strjoin(tmp, "> ");
+		prompt = ft_strjoin(tmp, "\033[0m> ");
 		free(tmp);
 	}
 	else
-		prompt = ft_strjoin(line, "> ");
+		prompt = ft_strjoin(line, "\033[0m> ");
 	return (prompt);
 }
 

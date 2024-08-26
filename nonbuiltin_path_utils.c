@@ -81,5 +81,6 @@ char	*find_bin(t_env *env, char *cmd)
 		}
 		i++;
 	}
+	free_array(bin);
 	return (NULL);
 }
