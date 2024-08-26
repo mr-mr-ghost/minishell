@@ -57,7 +57,7 @@ char	*generate_prompt(t_env *env)
 	char	*prompt;
 	char	*env_path;
 
-	line = ft_strdup("Minishell: ~");
+	line = ft_strdup("\033[1;32mMinishell:\033[0m ~");
 	env_path = find_env_value(env, "PWD");
 	env_path = shorten_path(env_path);
 	if (env_path)

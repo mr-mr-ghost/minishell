@@ -41,7 +41,6 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt, char *path)
 	char	**cmda;
 	int		exit_code;
 
-//	printf("Inside child process with PID: %d\n", getpid());
 	enva = form_enva(data->env);
 	if (!enva)
 		exit(EXIT_FAILURE);
