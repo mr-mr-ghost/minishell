@@ -60,7 +60,7 @@ int	check_env_input(t_token *env_token)
 	while (env_token && env_token[i].type == ARG)
 	{
 		if (!ft_strchr(env_token[i].value, '='))
-			return (env_err_msg(env_token[i].value,
+			return (err_msg("env", env_token[i].value,
 					"No such file or directory", 127));
 		i++;
 	}

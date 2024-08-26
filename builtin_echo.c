@@ -69,7 +69,7 @@ int	process_dollar(t_data *data, char *line, int *i)
 	else
 		env_value = ft_strdup("$");
 	if (!env_value)
-		return (err_msg("echo", "malloc error", 1));
+		return (err_msg("echo", NULL, "malloc error", 1));
 	ft_putstr_fd(env_value, 1);
 	free(env_value);
 	if (line[*i] == ' ')

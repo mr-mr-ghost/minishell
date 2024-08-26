@@ -59,8 +59,13 @@ bool	check_char(char *str)
 	return (true);
 }
 
-int	err_msg(char *location, char *msg, int code)
+int	err_msg(char *location, char *arg, char *msg, int code)
 {
-	printf("minishell: %s: %s\n", location, msg);
+	if (!location && !arg)
+		printf("minishell: %s\n", msg);
+	else if (!arg)
+		printf("minishell: %s: %s\n", location, msg);
+	else
+		printf("minishell: %s: '%s': %s\n", location, arg, msg);
 	return (code);
 }

@@ -87,7 +87,7 @@ int	launch_nonbuiltins(char **cmd, char **envp)
 	return (0);
 }
 
-void	handle_declaration(t_env *secret_env, t_token *token)
+int	handle_declaration(t_env *secret_env, t_token *token)
 {
 	t_token	*tmp;
 	char	*name;
@@ -98,12 +98,12 @@ void	handle_declaration(t_env *secret_env, t_token *token)
 	{
 		value = add_quotes_var(tmp->value);
 		if (!value)
-			return ;
+			return (1);
 		if (valid_env_name(secret_env, value))
 		{
 			name = find_env_name(secret_env, value);
 			if (!name)
-				return ;
+				return (1);
 			env_replace(secret_env, name, value);
 			free(name);
 		}
@@ -112,6 +112,7 @@ void	handle_declaration(t_env *secret_env, t_token *token)
 		free(value);
 		tmp = tmp->next;
 	}
+	return (0);
 }
 
 // Function to extract commands, check if they're builtin, launch accordingly
@@ -124,8 +125,10 @@ void	process_n_exec(t_data *data, char **envp)
 		return ;
 	token = data->token;
 	if ((!token->prev || token->type == ARG) && ft_strstr(token->value, "="))
-		handle_declaration(data->secret_env, token);
+		data->exit_code = handle_declaration(data->secret_env, token);
 	else if (token->type == CMD)
 		data->exit_code = check_launch_builtins(data, token, envp);
+	else
+		data->exit_code = err_msg(NULL, NULL, "command not found", 127);
 //	status = launch_nonbuiltins(cmd, envp);
 }

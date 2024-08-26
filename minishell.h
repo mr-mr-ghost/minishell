@@ -82,7 +82,7 @@ typedef struct s_data
 void	free_tokens(t_data *data);
 void	free_env(t_env *env);
 bool	check_char(char *line);
-int		err_msg(char *location, char *msg, int code);
+int		err_msg(char *location, char *arg, char *msg, int code);
 
 /*	libft utils	*/
 int		ft_strcmp(const char *s1, const char *s2);
