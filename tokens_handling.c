@@ -14,19 +14,26 @@
 
 int	is_cmd(char *line, int i)
 {
-	if (select_cmp(line, "echo ", i, 5))
+	if (select_cmp(line, "echo", i, 4)
+		&& ft_strchr("><|;\"\' \0", line[i + 4]))
 		return (4);
-	else if (select_cmp(line, "cd ", i, 3))
+	else if (select_cmp(line, "cd", i, 2)
+		&& ft_strchr("><|;\"\' \0", line[i + 2]))
 		return (2);
-	else if (select_cmp(line, "pwd", i, 3))
+	else if (select_cmp(line, "pwd", i, 3)
+		&& ft_strchr("><|;\"\' \0", line[i + 3]))
 		return (3);
-	else if (select_cmp(line, "export ", i, 7))
+	else if (select_cmp(line, "export", i, 6)
+		&& ft_strchr("><|;\"\' \0", line[i + 6]))
 		return (6);
-	else if (select_cmp(line, "unset ", i, 6))
+	else if (select_cmp(line, "unset", i, 5)
+		&& ft_strchr("><|;\"\' \0", line[i + 5]))
 		return (5);
-	else if (select_cmp(line, "env ", i, 4))
+	else if (select_cmp(line, "env", i, 3)
+		&& ft_strchr("><|;\"\' \0", line[i + 3]))
 		return (3);
-	else if (select_cmp(line, "exit ", i, 5))
+	else if (select_cmp(line, "exit", i, 4)
+		&& ft_strchr("><|;\"\' \0", line[i + 4]))
 		return (4);
 	return (0);
 }

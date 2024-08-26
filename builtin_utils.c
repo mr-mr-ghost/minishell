@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-int	env_err_msg(char *arg, char *msg, int status)
-{
-	printf("minishell: env: %s: %s\n", arg, msg);
-	return (status);
-}
-
 bool	valid_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;

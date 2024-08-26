@@ -89,25 +89,3 @@ bool	select_quotes_check(char *line, int i)
 		j++;
 	return (line[j] == line[i]);
 }
-
-char	*token_remove_quotes(char *str)
-{
-	int		i;
-	int		j;
-	char	*new;
-
-	i = 0;
-	j = 0;
-	new = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!new)
-		return (NULL);
-	while (str[i])
-	{
-		if (str[i] != '\'' && str[i] != '\"')
-			new[j++] = str[i];
-		i++;
-	}
-	new[j] = '\0';
-	free(str);
-	return (new);
-}

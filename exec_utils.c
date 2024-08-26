@@ -31,60 +31,26 @@ void	free_cmd(char **cmd)
 // Returns -1, if command not builtin
 // Returns 1, if builtin command executed successfully
 // Returns 0, if builtin command execution failed
-int check_launch_builtins(t_data *data, t_token *token, char **envp)
+int	check_launch_builtins(t_data *data, t_token *token)
 {
 	int	i;
 
-	// if (!handle_redirection(cmd)) // TODO: redirection in builtins
-	//	return (-1);
-	(void)envp;
-	i = -1;
-	if (ft_memcmp(token->value, "echo", ft_strlen("echo") + 1) == 0)
+	i = 127;
+	if (!ft_memcmp(token->value, "echo", ft_strlen("echo") + 1))
 		i = echo_command(data, token);
-	else if (ft_memcmp(token->value, "cd", ft_strlen("cd") + 1) == 0)
+	else if (!ft_memcmp(token->value, "cd", ft_strlen("cd") + 1))
 		i = cd_command(data, token);
-	else if (ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1) == 0)
+	else if (!ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1))
 		i = pwd_command();
-	else if (ft_memcmp(token->value, "export", ft_strlen("export") + 1) == 0)
+	else if (!ft_memcmp(token->value, "export", ft_strlen("export") + 1))
 		i = export_command(data, token);
-	else if (ft_memcmp(token->value, "unset", ft_strlen("unset") + 1) == 0)
+	else if (!ft_memcmp(token->value, "unset", ft_strlen("unset") + 1))
 		i = unset_command(data, token);
-	else if (ft_memcmp(token->value, "env", ft_strlen("env") + 1) == 0)
+	else if (!ft_memcmp(token->value, "env", ft_strlen("env") + 1))
 		i = env_command(data, token);
-	else if (ft_memcmp(token->value, "exit", ft_strlen("exit") + 1) == 0)
+	else if (!ft_memcmp(token->value, "exit", ft_strlen("exit") + 1))
 		i = exit_command(data, token);
 	return (i);
-}
-
-void	child_process(char **cmd, char **envp)
-{
-	//if (!handle_redirection(cmd))		// TOFIX: not working after merge
-	//	exit(EXIT_FAILURE);
-	if (execve(cmd[0], cmd, envp) == -1)
-	{
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
-	exit(EXIT_SUCCESS);
-}
-
-// Function to execute non builtin command in a child process
-int	launch_nonbuiltins(char **cmd, char **envp)
-{
-	pid_t	pid;
-	int		child_status;
-
-	pid = fork();
-	if (pid == 0)
-		child_process(cmd, envp);
-	else if (pid < 0)
-		perror("fork");
-	else
-	{
-		if (waitpid(pid, &child_status, WUNTRACED) == -1)
-			perror("waitpid");
-	}
-	return (0);
 }
 
 int	handle_declaration(t_env *secret_env, t_token *token)
@@ -113,22 +79,4 @@ int	handle_declaration(t_env *secret_env, t_token *token)
 		tmp = tmp->next;
 	}
 	return (0);
-}
-
-// Function to extract commands, check if they're builtin, launch accordingly
-void	process_n_exec(t_data *data, char **envp)
-{
-	t_token	*token;
-
-	// TODO: handle multiple commands
-	if (!data->token)
-		return ;
-	token = data->token;
-	if ((!token->prev || token->type == ARG) && ft_strstr(token->value, "="))
-		data->exit_code = handle_declaration(data->secret_env, token);
-	else if (token->type == CMD)
-		data->exit_code = check_launch_builtins(data, token, envp);
-	else
-		data->exit_code = err_msg(NULL, NULL, "command not found", 127);
-//	status = launch_nonbuiltins(cmd, envp);
 }

@@ -128,7 +128,6 @@ t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 bool	select_cmp(char *line, char *cmp, int start, int len);
 bool	select_quotes_check(char *line, int i);
-char	*token_remove_quotes(char *str);
 bool	quotes_check(char *line);
 
 /*	signals	*/
@@ -173,20 +172,39 @@ int		replace_path(t_env *env, char *name, char *path);
 char	*set_back_dir(t_env *env);
 
 /*	builtins utils	*/
-int		env_err_msg(char *arg, char *msg, int status);
 bool	valid_env_name(t_env *env, char *key);
 char	*add_quotes_var(char *line);
 char	*remove_quotes(char *line);
 
+/*	non-builtins handling	*/
+int		launch_nonbuiltins(t_data *data, t_token *cmd, t_token *redirt);
+
+/*	non-builtins utils	*/
+char	*find_bin(t_env *env, char *cmd);
+char	**bin_path(t_env *env);
+char	*check_dir(char *bin, char *cmd);
+char	*join_path(char *path, char *cmd);
+
+/*	non-builtins processes	*/
+void	child_process(t_data *data, t_token *cmdt, t_token *redirt, char *path);
+int		check_error(char *path);
+
 /*	execution	*/
-void	process_n_exec(t_data *data, char **envp);
-int		launch_nonbuiltins(char **cmd, char **envp);
-int		check_launch_builtins(t_data *data, t_token *token, char **envp);
-void	child_process(char **cmd, char **envp);
+void	process_n_exec(t_data *data);
+
+/*	execution utils	*/
+int		handle_declaration(t_env *secret_env, t_token *token);
+int		check_launch_builtins(t_data *data, t_token *token);
 void	free_cmd(char **cmd);
 
+/*	execution array utils	*/
+char	**form_enva(t_env *env);
+char	**form_cmd(t_token *cmd, int size);
+int		count_args(t_token *cmd, int type);
+void	free_array(char **array);
+
 /*	redirections	*/
-int		handle_redirection(char **cmd);
+int		handle_redirection(t_token *fname, int type);
 void	delete_array_element(char **array, int index);
 
 /*	global	*/

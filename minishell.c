@@ -129,7 +129,7 @@ int	main(int argc, char **argv, char **envp)
 //		print_tokens(data.token);
 		if (g_sig.exit_status)
 			data.exit_code = g_sig.exit_status;
-		process_n_exec(&data, envp);
+		process_n_exec(&data);
 		free_tokens(&data);
 	}
 	rl_clear_history();

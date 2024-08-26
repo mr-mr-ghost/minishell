@@ -65,6 +65,8 @@ int	err_msg(char *location, char *arg, char *msg, int code)
 		printf("minishell: %s\n", msg);
 	else if (!arg)
 		printf("minishell: %s: %s\n", location, msg);
+	else if (!location)
+		printf("minishell: '%s': %s\n", arg, msg);
 	else
 		printf("minishell: %s: '%s': %s\n", location, arg, msg);
 	return (code);
