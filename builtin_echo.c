@@ -52,7 +52,7 @@ char	*get_echo_value(t_env *env, char *line, int *start)
 	return (env_value);
 }
 
-int process_dollar(t_data *data, char *line, int *i)
+int	process_dollar(t_data *data, char *line, int *i)
 {
 	char	*env_value;
 
@@ -63,7 +63,8 @@ int process_dollar(t_data *data, char *line, int *i)
 		env_value = find_env_value(data->env, "SYSTEMD_EXEC_PID");
 	else if (select_valid_env(data->env, line, *i))
 		env_value = get_echo_value(data->env, line, i);
-	else if (!select_valid_env(data->env, line, *i) && (line[*i] || line[*i] == ' '))
+	else if (!select_valid_env(data->env, line, *i)
+		&& (line[*i] || line[*i] == ' '))
 		env_value = ft_strdup("");
 	else
 		env_value = ft_strdup("$");
@@ -76,7 +77,7 @@ int process_dollar(t_data *data, char *line, int *i)
 	return (0);
 }
 
-int print_echo(t_data *data, char *line)
+int	print_echo(t_data *data, char *line)
 {
 	int		i;
 	bool	quote;
@@ -99,7 +100,7 @@ int print_echo(t_data *data, char *line)
 	return (0);
 }
 
-int echo_command(t_data *data, t_token *token)
+int	echo_command(t_data *data, t_token *token)
 {
 	int		n_flag;
 	t_token	*echo_token;

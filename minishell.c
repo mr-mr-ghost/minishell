@@ -50,11 +50,11 @@ char	*shorten_path(char *path)
 	return (line);
 }
 
-char	*read_line(t_env *env)
+char	*generate_prompt(t_env *env)
 {
 	char	*line;
-	char	*prompt;
 	char	*tmp;
+	char	*prompt;
 	char	*env_path;
 
 	line = ft_strdup("Minishell: ~");
@@ -69,7 +69,19 @@ char	*read_line(t_env *env)
 		free(tmp);
 	}
 	else
-		prompt = ft_strdup("Minishell> ");
+		prompt = ft_strjoin(line, "> ");
+	return (prompt);
+}
+
+char	*read_line(t_env *env)
+{
+	char	*line;
+	char	*prompt;
+	char	*tmp;
+
+	prompt = generate_prompt(env);
+	if (!prompt)
+		return (NULL);
 	line = readline(prompt);
 	free(prompt);
 	if (!line)

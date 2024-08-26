@@ -37,7 +37,7 @@ int	handle_assign(t_data *data, t_token *token)
 		env_line = find_env_name(data->env, token->value);
 		if (!env_line)
 			return (1);
-		env_replace(data->secret_env,env_line , token->value);
+		env_replace(data->secret_env, env_line, token->value);
 		env_replace(data->env, env_line, token->value);
 	}
 	else

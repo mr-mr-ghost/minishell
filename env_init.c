@@ -19,7 +19,7 @@ int	init_env(t_data *data, char **envp)
 	if (!data->env || !data->secret_env)
 	{
 		perror("Environment allocation failed\n");
-		return(1);
+		return (1);
 	}
 	return (0);
 }

@@ -81,12 +81,12 @@ typedef struct s_data
 /*	utils	*/
 void	free_tokens(t_data *data);
 void	free_env(t_env *env);
-int		ft_strcmp(const char *s1, const char *s2);
-char	*remove_quotes(char *line);
-char	*ft_strstr(const char *big, const char *little);
 bool	check_char(char *line);
 int		err_msg(char *location, char *msg, int code);
-char	*add_quotes_var(char *line);
+
+/*	libft utils	*/
+int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strstr(const char *big, const char *little);
 
 /*	environment initialisation	*/
 int		init_env(t_data *data, char **envp);
@@ -101,7 +101,6 @@ int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, char *src);
 char	*find_env_value(t_env *env, char *key);
 char	*find_env_name(t_env *env, char *key);
-bool	valid_env_name(t_env *env, char *key);
 
 /*	environment list utils	*/
 t_env	*env_new(char *value);
@@ -151,20 +150,20 @@ int		handle_assign(t_data *data, t_token *token);
 /*	env command	*/
 int		env_command(t_data *data, t_token *token);
 int		print_env_arg(t_env *env, t_token *env_token);
-int		env_err_msg(char *arg, char *msg, int status);
 int		check_env_input(t_token *env_token);
 void	print_env_end(t_env *env, t_token *env_token);
+int		process_env_token(t_env *env, t_token *env_token);
 
 /*	echo command	*/
 bool	select_valid_env(t_env *env, char *line, int start);
 char	*get_echo_value(t_env *env, char *line, int *start);
-int print_echo(t_data *data, char *line);
-int process_dollar(t_data *data, char *line, int *i);
-int echo_command(t_data *data, t_token *token);
+int		print_echo(t_data *data, char *line);
+int		process_dollar(t_data *data, char *line, int *i);
+int		echo_command(t_data *data, t_token *token);
 
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);
-void del_env(t_env **env, char *key);
+void	del_env(t_env **env, char *key);
 
 /*	cd command	*/
 int		cd_command(t_data *data, t_token *token);
@@ -173,8 +172,14 @@ int		change_env_path(t_data *data, char *old_pwd);
 int		replace_path(t_env *env, char *name, char *path);
 char	*set_back_dir(t_env *env);
 
+/*	builtins utils	*/
+int		env_err_msg(char *arg, char *msg, int status);
+bool	valid_env_name(t_env *env, char *key);
+char	*add_quotes_var(char *line);
+char	*remove_quotes(char *line);
+
 /*	execution	*/
-void process_n_exec(t_data *data, char **envp);
+void	process_n_exec(t_data *data, char **envp);
 int		launch_nonbuiltins(char **cmd, char **envp);
 int		check_launch_builtins(t_data *data, t_token *token, char **envp);
 void	child_process(char **cmd, char **envp);
