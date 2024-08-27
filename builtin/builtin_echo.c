@@ -48,6 +48,7 @@ char	*get_echo_value(t_env *env, char *line, int *start)
 	tmp = find_env_value(env, env_name);
 	free(env_name);
 	env_value = remove_quotes(tmp);
+	free(tmp);
 	*start = i;
 	return (env_value);
 }
@@ -95,7 +96,8 @@ int	print_echo(t_data *data, char *line)
 		}
 		else if (line[i] != '\"')
 			ft_putchar_fd(line[i], 1);
-		i++;
+		if (line[i] != '\0')
+			i++;
 	}
 	return (0);
 }
