@@ -88,7 +88,7 @@ int	print_echo(t_data *data, char *line)
 	{
 		if (line[i] == '\'')
 			quote = true;
-		else if (!quote && line[i + 1] && line[i] == '$' && line[i + 1] != ' ')
+		else if (!quote && line[i] == '$' && line[i + 1] && line[i + 1] != ' ')
 		{
 			if (process_dollar(data, line, &i))
 				return (1);

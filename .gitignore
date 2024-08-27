@@ -4,6 +4,8 @@ minishell
 *.swp
 *.o
 *.a
+*.supp
+readline.supp
 build/obj
 build/
 libft/libft.a

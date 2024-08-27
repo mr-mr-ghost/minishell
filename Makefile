@@ -22,8 +22,6 @@ EXECUTION = execution/
 NONBUILTIN = nonbuiltin/
 REDIR = redirection/
 
-PATHS = $(BUILD_DIR) $(OBJ_DIR)
-
 OFILES = $(addprefix $(OBJ_DIR), $(notdir $(patsubst %.c, %.o, $(CFILES))))
 
 CC = cc
@@ -86,9 +84,9 @@ $(NAME): $(OFILES)
 	@echo "${YELLOW}[LIBFT]${RESET}		${GREEN}Compiling library${RESET} libft.a"
 	@$(MAKE) -s -C ./libft
 	@$(CC) $(CFLAGS) $(OFILES) $(LIBRARY) -o $(NAME)
-	@echo "${YELLOW}[COMPLETED]${RESET}	${GREEN}Created executable${RESET} $(NAME) ${GREEN}using libraries${RESET} $(LIBRARY)"
+	@echo "${YELLOW}[COMPLETED]${RESET}	${GREEN}Created executable${RESET} $(NAME) ${GREEN}using libraries${RESET} $(notdir $(LIBRARY))"
 
-all: $(PATHS) $(NAME)
+all: $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)

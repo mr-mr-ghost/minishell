@@ -2,15 +2,11 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens
 
-TODO: Write Commands
-
 TODO: Piping/flags/etc...
 
 TODO: Parsing
 
 TODO: Fix misc. errors
-
-TODO: parse commands in exec (A=2 is valid, but @=1/2=4 is not)
 
 LINKS *************************************************
 

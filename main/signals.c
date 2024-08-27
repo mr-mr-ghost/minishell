@@ -22,6 +22,7 @@ void	signal_manager(void)
 	tcsetattr(0, TCSANOW, &term);
 	act.sa_handler = signal_handler;
 	act.sa_flags = 0;
+	sigemptyset(&act.sa_mask);
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGQUIT, &act, NULL);
 }

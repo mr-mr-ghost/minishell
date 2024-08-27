@@ -17,7 +17,6 @@ t_sig	g_sig;
 void	exit_shell(t_data *data)
 {
 	rl_clear_history();
-	free_tokens(data);
 	free_env(data->env);
 	free_env(data->secret_env);
 	ft_putendl_fd("exit", 1);
