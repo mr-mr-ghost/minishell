@@ -38,6 +38,14 @@ int	is_cmd(char *line, int i)
 	return (0);
 }
 
+void	handle_edge_case(t_data *data, char *line, int *i, int edge)
+{
+	if (edge == 1)
+		handle_echo_chars(data, line, i);
+	else if (edge == 2)
+		handle_export_chars(data, line, i);
+}
+
 void	process_token(t_data *data, char *line)
 {
 	int		edge;
@@ -52,18 +60,14 @@ void	process_token(t_data *data, char *line)
 		else if (is_cmd(line, i))
 			edge = handle_cmd(data, line, &i);
 		else if (edge)
-		{
-			if (edge == 1)
-				handle_echo_chars(data, line, &i);
-			else if (edge == 2)
-				handle_export_chars(data, line, &i);
-		}
+			handle_edge_case(data, line, &i, edge);
 		else if (ft_strchr("><|;", line[i]))
 		{
 			handle_special_chars(data, line, &i);
 			edge = 0;
 		}
-		else if ((line[i] == '\"' || line[i] == '\'') && select_quotes_check(line, i))
+		else if ((line[i] == '\"' || line[i] == '\'')
+			&& select_quotes_check(line, i))
 			handle_quotes(data, line, &i);
 		else
 			handle_normal_chars(data, line, &i);

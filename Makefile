@@ -1,13 +1,14 @@
 NAME = minishell
 
-CFILES = minishell.c utils.c libft_utils.c \
+CFILES = minishell.c prompt.c utils.c libft_utils.c \
 		env_init.c env_utils.c env_list_utils.c \
 		tokens_handling.c tokens_utils.c tokens_split_utils.c \
-		signals.c execution.c exec_utils.c exec_arr_utils.c \
-		builtin_utils.c builtin_pwd.c builtin_export.c \
-		builtin_env.c builtin_echo.c builtin_unset.c \
-		builtin_cd.c builtin_exit.c redirection_utils.c \
-		nonbuiltin_handling.c nonbuiltin_path_utils.c nonbuiltin_processes.c
+		tokens_split_special.c signals.c execution.c \
+		exec_utils.c exec_arr_utils.c builtin_utils.c \
+		builtin_pwd.c builtin_export.c builtin_env.c \
+		builtin_echo.c builtin_unset.c builtin_cd.c \
+		builtin_exit.c redirection_utils.c nonbuiltin_handling.c \
+		nonbuiltin_path_utils.c nonbuiltin_processes.c
 
 OBJ_DIR = obj
 

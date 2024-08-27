@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-// delete array element at index and shift the rest of the array
+/* delete array element at index and shift the rest of the array*/
 void	delete_array_element(char **array, int index)
 {
 	int	i;
@@ -26,16 +26,16 @@ void	delete_array_element(char **array, int index)
 	}
 }
 
-// TODO: <<
-// example of << delimiter: "cat <<'X' > t.txt		contentbla X"
-// TODO: >>
-// handle input/output redirection  (> and <)
+/* TODO: <<*/
+/* example of << delimiter: "cat <<'X' > t.txt		contentbla X"*/
+/* TODO: >>*/
+/* handle input/output redirection  (> and <)*/
 int	handle_redirection(t_token *fname, int type)
 {
 	int	fd;
 
-	//printf("type: %d, file name: %s\n", type, fname->value);
-	// TODO: handle different file permissions (with access() probably)
+/*	printf("type: %d, file name: %s\n", type, fname->value);*/
+/*	 TODO: handle different file permissions (with access() probably)*/
 	if (type == TRUNC)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (type == APPEND)

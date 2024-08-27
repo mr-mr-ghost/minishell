@@ -78,6 +78,11 @@ typedef struct s_data
 	t_token	*token;
 }	t_data;
 
+/*	prompt	*/
+char	*read_line(t_env *env);
+char	*generate_prompt(t_env *env);
+char	*shorten_path(char *path);
+
 /*	utils	*/
 void	free_tokens(t_data *data);
 void	free_env(t_env *env);
@@ -107,12 +112,12 @@ t_env	*env_new(char *value);
 void	env_add_back(t_env **env, char *value);
 void	env_delone(t_env *env);
 void	env_replace(t_env *env, char *name, char *line);
-t_env	*find_env(t_env *env, char *key);
 
 /*	tokens handling	*/
 int		token_split(t_data *data);
 void	tokens_type_define(t_data *data);
 void	process_token(t_data *data, char *line);
+void	handle_edge_case(t_data *data, char *line, int *i, int edge);
 int		is_cmd(char *line, int i);
 
 /*	tokens split utils	*/
@@ -133,8 +138,9 @@ bool	quotes_check(char *line);
 /*	signals	*/
 void	sigint_handler(int signum);
 void	sigquit_handler(int signum);
-void	disable_sigquit(void);
 void	sig_init(void);
+void	signal_handler(int signum);
+void	signal_manager(void);
 
 /*	builtins	*/
 int		pwd_command(void);

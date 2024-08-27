@@ -27,10 +27,10 @@ void	free_cmd(char **cmd)
 	free(cmd);
 }
 
-// Function to check if the command is builtin and then launch it
-// Returns -1, if command not builtin
-// Returns 1, if builtin command executed successfully
-// Returns 0, if builtin command execution failed
+/* Function to check if the command is builtin and then launch it*/
+/* Returns -1, if command not builtin*/
+/* Returns 1, if builtin command executed successfully*/
+/* Returns 0, if builtin command execution failed*/
 int	check_launch_builtins(t_data *data, t_token *token)
 {
 	int	i;

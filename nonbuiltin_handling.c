@@ -23,7 +23,7 @@ void	bin_error(t_data *data, char *cmd)
 	exit(exit_status);
 }
 
-// Function to execute non builtin command in a child process
+/*	Function to execute non builtin command in a child process	*/
 int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	pid_t	pid;
@@ -45,19 +45,9 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 	}
 	else
 	{
-		//printf("Inside parent process with PID: %d\n", getpid());
-		result = waitpid(pid, &status, 0); // WNOHANG no wait, res 0
+		result = waitpid(pid, &status, 0);
 		if (result == -1)
 			perror("waitpid");
-		/*else
-		{
-			if (WIFEXITED(status))
-				printf("child exited with status %d\n", WEXITSTATUS(status));
-			else if (WIFSIGNALED(status))
-				printf("child terminated by signal %d\n", WTERMSIG(status));
-			else if (WIFSTOPPED(status))
-				printf("child stopped by signal %d\n", WSTOPSIG(status));
-		}*/
 	}
 	free(bin);
 	return (WEXITSTATUS(status));

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-// Function to extract commands, check if they're builtin, launch accordingly
+/* Function to extract commands, check if they're builtin, launch accordingly*/
 void	process_n_exec(t_data *data)
 {
 	t_token	*token;

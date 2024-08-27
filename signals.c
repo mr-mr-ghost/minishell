@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+void	signal_manager(void)
+{
+	struct sigaction	act;
+	struct termios		term;
+
+	tcgetattr(0, &term);
+	term.c_cc[VQUIT] = _POSIX_VDISABLE;
+	tcsetattr(0, TCSANOW, &term);
+	act.sa_handler = signal_handler;
+	act.sa_flags = 0;
+	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGQUIT, &act, NULL);
+}
+
+void	signal_handler(int signum)
+{
+	if (signum == SIGINT)
+		sigint_handler(signum);
+	else if (signum == SIGQUIT)
+		sigquit_handler(signum);
+}
+
 void	sigint_handler(int signum)
 {
 	(void)signum;
@@ -28,15 +50,6 @@ void	sigquit_handler(int signum)
 {
 	(void)signum;
 	g_sig.sigquit = 1;
-}
-
-void	disable_sigquit(void)
-{
-	struct termios	term;
-
-	tcgetattr(0, &term);
-	term.c_cc[VQUIT] = _POSIX_VDISABLE;
-	tcsetattr(0, TCSANOW, &term);
 }
 
 void	sig_init(void)

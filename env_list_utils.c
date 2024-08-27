@@ -81,17 +81,3 @@ void	env_replace(t_env *env, char *name, char *line)
 		tmp = tmp->next;
 	}
 }
-
-t_env	*find_env(t_env *env, char *key)
-{
-	t_env	*tmp;
-
-	tmp = env;
-	while (tmp)
-	{
-		if (!ft_strncmp(tmp->name, key, ft_strlen(tmp->name)))
-			return (tmp);
-		tmp = tmp->next;
-	}
-	return (NULL);
-}

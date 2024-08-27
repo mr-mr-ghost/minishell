@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-// frees the command array
+/* frees the command array*/
 void	free_array(char **array)
 {
 	int	i;
@@ -29,7 +29,7 @@ void	free_array(char **array)
 	array = NULL;
 }
 
-// counts tokens up until given type is met
+/* counts tokens up until given type is met*/
 int	count_args(t_token *token, int maxtype)
 {
 	t_token	*tmp;
@@ -47,7 +47,7 @@ int	count_args(t_token *token, int maxtype)
 	return (count);
 }
 
-// forms a string array of 1 command
+/* forms a string array of 1 command*/
 char	**form_cmd(t_token *token, int len)
 {
 	char	**cmd;
@@ -69,7 +69,7 @@ char	**form_cmd(t_token *token, int len)
 	return (cmd);
 }
 
-// forms a string array of minishell environment variables
+/* forms a string array of minishell environment variables*/
 char	**form_enva(t_env *env)
 {
 	char	**array;
