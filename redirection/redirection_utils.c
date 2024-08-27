@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /* delete array element at index and shift the rest of the array*/
 void	delete_array_element(char **array, int index)

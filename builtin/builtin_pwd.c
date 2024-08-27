@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 // pwd_command: prints the working directory
 // any amount of strs - prints pwd and returns 1

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /* Function to extract commands, check if they're builtin, launch accordingly*/
 void	process_n_exec(t_data *data)

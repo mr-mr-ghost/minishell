@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /* env_command: prints all the environment variables			*/
 /* if 1 str - prints env vars, returns 1						*/

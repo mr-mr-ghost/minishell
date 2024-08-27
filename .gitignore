@@ -4,7 +4,8 @@ minishell
 *.swp
 *.o
 *.a
-obj
+build/obj
+build/
 libft/libft.a
 libft/obj
 a.out

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /* exit_command: frees data and exits the program						*/
 /* if 1 str - returns status 0 to exit command by ending main loop		*/

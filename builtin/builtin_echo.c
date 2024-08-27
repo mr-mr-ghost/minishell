@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /* echo_command: prints all the subsequent string							  */
 /* if 1 str - prints new line, returns 1									  */
