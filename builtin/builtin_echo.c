@@ -94,7 +94,7 @@ int	print_echo(t_data *data, char *line)
 			if (process_dollar(data, line, &i))
 				return (1);
 		}
-		else if (line[i] != '\"')
+		else if (line[i] && line[i] != '\"')
 			ft_putchar_fd(line[i], 1);
 		if (line[i] != '\0')
 			i++;
