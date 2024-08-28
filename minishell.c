@@ -50,7 +50,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		if (token_split(&data))
-			break ;
+			continue ;
 		if (g_sig.exit_status)
 			data.exit_code = g_sig.exit_status;
 		process_n_exec(&data);

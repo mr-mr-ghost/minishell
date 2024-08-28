@@ -59,7 +59,7 @@ void	process_token(t_data *data, char *line)
 			i++;
 		else if (is_cmd(line, i))
 			edge = handle_cmd(data, line, &i);
-		else if (edge)
+		else if (edge && !ft_strchr("><|;", line[i]))
 			handle_edge_case(data, line, &i, edge);
 		else if (ft_strchr("><|;", line[i]))
 		{
@@ -87,8 +87,9 @@ int	token_split(t_data *data)
 		return (1);
 	if (quotes_check(line))
 	{
+		err_msg(NULL, line, "Unclosed quotes", 1);
 		free(line);
-		ft_putendl_fd("ERROR: Unclosed quotes", 2);
+		free(data->line);
 		return (1);
 	}
 	process_token(data, line);

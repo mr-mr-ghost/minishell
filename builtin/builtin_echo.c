@@ -16,40 +16,20 @@
 /* if 1 str - prints new line, returns 1									  */
 /* if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1		  */
 /* if more strs - prints all strings, adds new line if str2 = "-n", returns 1 */
-bool	select_valid_env(t_env *env, char *line, int start)
-{
-	char	*env_name;
-
-	env_name = find_env_name(env, line + start);
-	if (!env_name)
-		return (false);
-	if (valid_env_name(env, env_name))
-	{
-		free(env_name);
-		return (true);
-	}
-	free(env_name);
-	return (false);
-}
-
 char	*get_echo_value(t_env *env, char *line, int *start)
 {
 	char	*env_name;
 	char	*env_value;
 	char	*tmp;
-	int		i;
 
-	i = *start;
-	while (line[i] && line[i] != ' ' && line[i] != '$')
-		i++;
-	env_name = ft_substr(line, *start, i - *start);
+	env_name = find_env_name(env, line + *start);
 	if (!env_name)
 		return (NULL);
+	*start += ft_strlen(env_name);
 	tmp = find_env_value(env, env_name);
 	free(env_name);
 	env_value = remove_quotes(tmp);
 	free(tmp);
-	*start = i;
 	return (env_value);
 }
 
@@ -70,31 +50,45 @@ int	process_dollar(t_data *data, char *line, int *i)
 	else
 		env_value = ft_strdup("$");
 	if (!env_value)
-		return (err_msg("echo", NULL, "malloc error", 1));
+		return (err_msg("echo", NULL, "Memory allocation failure", 1));
 	ft_putstr_fd(env_value, 1);
 	free(env_value);
-	if (line[*i] == ' ')
-		(*i)--;
+	(*i)--;
 	return (0);
 }
 
 int	print_echo(t_data *data, char *line)
 {
 	int		i;
+	char	tmp;
 	bool	quote;
 
 	i = 0;
 	quote = false;
+	tmp = 0;
 	while (line[i])
 	{
-		if (line[i] == '\'')
-			quote = true;
+		if (line[i] == '\'' || line[i] == '\"')
+		{
+			if (!tmp && !quotes_check(line + i))
+			{
+				tmp = line[i];
+				if (line[i] == '\'')
+					quote = true;
+			}
+			else if (quote && line[i] == '\'')
+				quote = false;
+			else if (line[i] != tmp)
+				ft_putchar_fd(line[i], 1);
+			else if (line[i] == tmp)
+				tmp = 0;
+		}
 		else if (!quote && line[i] == '$' && line[i + 1] && line[i + 1] != ' ')
 		{
 			if (process_dollar(data, line, &i))
 				return (1);
 		}
-		else if (line[i] && line[i] != '\"')
+		else if (line[i])
 			ft_putchar_fd(line[i], 1);
 		if (line[i] != '\0')
 			i++;
