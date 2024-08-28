@@ -12,17 +12,22 @@
 
 #include "../minishell.h"
 
-void	handle_export_chars(t_data *data, char *line, int *i)
+int	handle_export_chars(t_data *data, char *line, int *i)
 {
 	int		j;
+	t_token	*new;
 
 	j = *i + 1;
 	while (line[j] && !ft_strchr("><|; ", line[j]))
 		j++;
-	token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+	new = token_new(ft_substr(line, *i, j - *i));
+	if (!new || !new->value)
+		return (1);
+	token_add_back(&data->token, new);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
+	return (0);
 }
 
 void	handle_echo_quotes(char *line, int *i)
@@ -37,19 +42,34 @@ void	handle_echo_quotes(char *line, int *i)
 	*i = j;
 }
 
-void	handle_echo_chars(t_data *data, char *line, int *i)
+int	handle_echo_option(t_data *data, char *line, int *i)
 {
 	int		j;
+	t_token	*new;
 
 	j = *i;
 	if (line[j] == '-' && select_cmp(line, "-n ", j, 3))
 	{
-		token_add_back(&data->token, token_new(ft_substr(line, j, 2)));
+		new = token_new(ft_substr(line, j, 2));
+		if (!new || !new->value)
+			return (1);
+		token_add_back(&data->token, new);
 		j += 2;
 		while (line[j] && line[j] == ' ')
 			j++;
 		*i = j;
 	}
+	return (0);
+}
+
+int	handle_echo_chars(t_data *data, char *line, int *i)
+{
+	int		j;
+	t_token	*new;
+
+	j = *i;
+	if (handle_echo_option(data, line, i))
+		return (1);
 	while (line[j] && !ft_strchr("><|;", line[j]))
 	{
 		if (line[j] == '\"' || line[j] == '\'')
@@ -58,22 +78,30 @@ void	handle_echo_chars(t_data *data, char *line, int *i)
 			j++;
 	}
 	if (j == *i)
-		return ;
-	token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+		return (0);
+	new = token_new(ft_substr(line, *i, j - *i));
+	if (!new || !new->value)
+		return (1);
+	token_add_back(&data->token, new);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
+	return (0);
 }
 
 int	handle_cmd(t_data *data, char *line, int *i)
 {
-	int	j;
+	int		j;
+	t_token	*new;
 
 	j = *i + is_cmd(line, *i);
+	new = token_new(ft_substr(line, *i, j - *i));
+	if (!new || !new->value)
+		return (3);
 	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
+		data->token = new;
 	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+		token_add_back(&data->token, new);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;

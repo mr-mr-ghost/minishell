@@ -116,27 +116,32 @@ void	env_replace(t_env *env, char *name, char *line);
 /*	tokens handling	*/
 int		token_split(t_data *data);
 void	tokens_type_define(t_data *data);
-void	process_token(t_data *data, char *line);
-void	handle_edge_case(t_data *data, char *line, int *i, int edge);
-int		is_cmd(char *line, int i);
+int		process_token(t_data *data, char *line);
+int		handle_edge_case(t_data *data, char *line, int *i, int edge);
+int		process_char(t_data *data, char *line, int *i, int *edge);
 
 /*	tokens split utils	*/
-void	handle_special_chars(t_data *data, char *line, int *i);
-void	handle_quotes(t_data *data, char *line, int *i);
-void	handle_normal_chars(t_data *data, char *line, int *i);
+int		handle_special_chars(t_data *data, char *line, int *i);
+int		handle_quotes(t_data *data, char *line, int *i);
+int		handle_normal_chars(t_data *data, char *line, int *i);
 
 /*	tokens split special	*/
-void	handle_echo_chars(t_data *data, char *line, int *i);
+int		handle_echo_chars(t_data *data, char *line, int *i);
 void	handle_echo_quotes(char *line, int *i);
-void	handle_export_chars(t_data *data, char *line, int *i);
+int		handle_export_chars(t_data *data, char *line, int *i);
 int		handle_cmd(t_data *data, char *line, int *i);
+int		handle_echo_option(t_data *data, char *line, int *i);
 
-/*	tokens utils	*/
+/*	tokens list utils	*/
 t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
+
+/*	tokens utils	*/
 bool	select_cmp(char *line, char *cmp, int start, int len);
 bool	select_quotes_check(char *line, int i);
 bool	quotes_check(char *line);
+int		is_cmd(char *line, int i);
+int		token_err(t_data *data, char *arg, char *msg, int code);
 
 /*	signals	*/
 void	sigint_handler(int signum);
@@ -145,8 +150,10 @@ void	sig_init(void);
 void	signal_handler(int signum);
 void	signal_manager(void);
 
-/*	builtins	*/
+/*	pwd command	*/
 int		pwd_command(void);
+
+/*	exit command	*/
 int		exit_command(t_data *data, t_token *token);
 
 /*	export command	*/

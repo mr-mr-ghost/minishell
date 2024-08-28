@@ -31,66 +31,54 @@
 	return (0);
 }*/
 
-int	is_cmd(char *line, int i)
+int	handle_edge_case(t_data *data, char *line, int *i, int edge)
 {
-	if (select_cmp(line, "echo", i, 4)
-		&& ft_strchr("><|;\"\' \0", line[i + 4]))
-		return (4);
-	else if (select_cmp(line, "cd", i, 2)
-		&& ft_strchr("><|;\"\' \0", line[i + 2]))
-		return (2);
-	else if (select_cmp(line, "pwd", i, 3)
-		&& ft_strchr("><|;\"\' \0", line[i + 3]))
-		return (3);
-	else if (select_cmp(line, "export", i, 6)
-		&& ft_strchr("><|;\"\' \0", line[i + 6]))
-		return (6);
-	else if (select_cmp(line, "unset", i, 5)
-		&& ft_strchr("><|;\"\' \0", line[i + 5]))
-		return (5);
-	else if (select_cmp(line, "env", i, 3)
-		&& ft_strchr("><|;\"\' \0", line[i + 3]))
-		return (3);
-	else if (select_cmp(line, "exit", i, 4)
-		&& ft_strchr("><|;\"\' \0", line[i + 4]))
-		return (4);
+	if (edge == 1)
+		return (handle_echo_chars(data, line, i));
+	else if (edge == 2)
+		handle_export_chars(data, line, i);
 	return (0);
 }
 
-void	handle_edge_case(t_data *data, char *line, int *i, int edge)
+int	process_char(t_data *data, char *line, int *i, int *edge)
 {
-	if (edge == 1)
-		handle_echo_chars(data, line, i);
-	else if (edge == 2)
-		handle_export_chars(data, line, i);
+	int	ret;
+
+	ret = 0;
+	if (line[*i] == ' ')
+		(*i)++;
+	else if (is_cmd(line, *i))
+		*edge = handle_cmd(data, line, i);
+	else if ((*edge && *edge != 3) && !ft_strchr("><|;", line[*i]))
+		ret = handle_edge_case(data, line, i, *edge);
+	else if (ft_strchr("><|;", line[*i]))
+	{
+		ret = handle_special_chars(data, line, i);
+		*edge = 0;
+	}
+	else if ((line[*i] == '\"' || line[*i] == '\'')
+		&& select_quotes_check(line, *i))
+		ret = handle_quotes(data, line, i);
+	else
+		ret = handle_normal_chars(data, line, i);
+	return (ret);
 }
 
-void	process_token(t_data *data, char *line)
+int	process_token(t_data *data, char *line)
 {
-	int		edge;
-	int		i;
+	int	edge;
+	int	ret;
+	int	i;
 
-	i = 0;
 	edge = 0;
+	i = 0;
 	while (line[i])
 	{
-		if (line[i] == ' ')
-			i++;
-		else if (is_cmd(line, i))
-			edge = handle_cmd(data, line, &i);
-		else if (edge && !ft_strchr("><|;", line[i]))
-			handle_edge_case(data, line, &i, edge);
-		else if (ft_strchr("><|;", line[i]))
-		{
-			handle_special_chars(data, line, &i);
-			edge = 0;
-		}
-		else if ((line[i] == '\"' || line[i] == '\'')
-			&& select_quotes_check(line, i))
-			handle_quotes(data, line, &i);
-		else
-			handle_normal_chars(data, line, &i);
+		ret = process_char(data, line, &i, &edge);
+		if (ret || edge == 3)
+			return (1);
 	}
+	return (0);
 }
 
 int	token_split(t_data *data)
@@ -105,13 +93,12 @@ int	token_split(t_data *data)
 	if (!line)
 		return (1);
 	if (quotes_check(line))
+		return (token_err(data, line, "Unclosed quotes", 1));
+	if (process_token(data, line))
 	{
-		err_msg(NULL, line, "Unclosed quotes", 1);
 		free(line);
-		free(data->line);
-		return (1);
+		return (token_err(data, NULL, "Memory allocation failure", 1));
 	}
-	process_token(data, line);
 	free(line);
 	tokens_type_define(data);
 	return (0);

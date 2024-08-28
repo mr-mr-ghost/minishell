@@ -12,62 +12,75 @@
 
 #include "../minishell.h"
 
-void	handle_special_chars(t_data *data, char *line, int *i)
+int	handle_special_chars(t_data *data, char *line, int *i)
 {
-	int	j;
+	int		j;
+	t_token	*new;
 
 	j = *i + 1;
 	if ((line[*i] == '<' && line[*i + 1] == '<')
 		|| (line[*i] == '>' && line[*i + 1] == '>'))
 		j++;
+	new = token_new(ft_substr(line, *i, j - *i));
+	if (!new || !new->value)
+		return (1);
 	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
+		data->token = new;
 	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+		token_add_back(&data->token, new);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
+	return (0);
 }
 
-void	handle_quotes(t_data *data, char *line, int *i)
+int	handle_quotes(t_data *data, char *line, int *i)
 {
-	int	j;
+	int		j;
+	t_token	*new;
 
 	j = *i + 1;
 	while (line[j] && (line[j] != line[*i]))
 		j++;
 	if (line[j] == line[*i])
 		j++;
+	new = token_new(ft_substr(line, *i, j - *i));
+	if (!new || !new->value)
+		return (1);
 	if (*i == 0)
-		data->token = token_new(ft_substr(line, *i, j - *i));
+		data->token = new;
 	else
-		token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
+		token_add_back(&data->token, new);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
+	return (0);
 }
 
-void	handle_normal_chars(t_data *data, char *line, int *i)
+int	handle_normal_chars(t_data *data, char *line, int *i)
 {
 	int		j;
-	char	*new;
+	t_token	*new;
 
 	j = *i + 1;
 	while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
 		j++;
 	if (j == *i)
-		return ;
-	if (line[j] == '"')
+		return (0);
+	if (line[j] == '\"')
 	{
 		handle_export_chars(data, line, i);
-		return ;
+		return (0);
 	}
-	new = ft_substr(line, *i, j - *i);
+	new = token_new(ft_substr(line, *i, j - *i));
+	if (!new || !new->value)
+		return (1);
 	if (*i == 0)
-		data->token = token_new(new);
+		data->token = new;
 	else
-		token_add_back(&data->token, token_new(new));
+		token_add_back(&data->token, new);
 	while (line[j] && line[j] == ' ')
 		j++;
 	*i = j;
+	return (0);
 }
