@@ -57,32 +57,35 @@ int	process_dollar(t_data *data, char *line, int *i)
 	return (0);
 }
 
+void	process_quotes(char *line, int *i, bool *quote)
+{
+	static char	tmp = 0;
+
+	if (!tmp && !quotes_check(line + *i))
+	{
+		tmp = line[*i];
+		if (line[*i] == '\'')
+			*quote = true;
+	}
+	else if (*quote && line[*i] == '\'')
+		*quote = false;
+	else if (line[*i] != tmp)
+		ft_putchar_fd(line[*i], 1);
+	else if (line[*i] == tmp)
+		tmp = 0;
+}
+
 int	print_echo(t_data *data, char *line)
 {
 	int		i;
-	char	tmp;
 	bool	quote;
 
 	i = 0;
 	quote = false;
-	tmp = 0;
 	while (line[i])
 	{
 		if (line[i] == '\'' || line[i] == '\"')
-		{
-			if (!tmp && !quotes_check(line + i))
-			{
-				tmp = line[i];
-				if (line[i] == '\'')
-					quote = true;
-			}
-			else if (quote && line[i] == '\'')
-				quote = false;
-			else if (line[i] != tmp)
-				ft_putchar_fd(line[i], 1);
-			else if (line[i] == tmp)
-				tmp = 0;
-		}
+			process_quotes(line, &i, &quote);
 		else if (!quote && line[i] == '$' && line[i + 1] && line[i + 1] != ' ')
 		{
 			if (process_dollar(data, line, &i))
