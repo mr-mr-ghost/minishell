@@ -78,6 +78,7 @@ int	token_split(t_data *data)
 {
 	char	*line;
 
+	add_history(data->line);
 	if (!data->line)
 		line = ft_strdup("");
 	else

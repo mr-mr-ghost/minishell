@@ -65,6 +65,11 @@ char	*add_quotes_var(char *line)
 		return (NULL);
 	while (line[i] && line[i] != '=')
 		new_line[j++] = line[i++];
+	if (line[i] == '\0')
+	{
+		new_line[j] = '\0';
+		return (new_line);
+	}
 	new_line[j++] = line[i++];
 	if (line[i] != '\"')
 		new_line[j++] = '\"';

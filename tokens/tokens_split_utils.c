@@ -17,7 +17,8 @@ void	handle_special_chars(t_data *data, char *line, int *i)
 	int	j;
 
 	j = *i + 1;
-	if (line[*i + 1] == '<' || line[*i + 1] == '>')
+	if ((line[*i] == '<' && line[*i + 1] == '<')
+		|| (line[*i] == '>' && line[*i + 1] == '>'))
 		j++;
 	if (*i == 0)
 		data->token = token_new(ft_substr(line, *i, j - *i));

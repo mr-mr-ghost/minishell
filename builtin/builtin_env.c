@@ -69,19 +69,22 @@ int	check_env_input(t_token *env_token)
 
 void	print_env_end(t_env *env, t_token *env_token)
 {
-	int		i;
+	t_token	*tmp;
 	char	*line;
 
-	i = 0;
-	while (env_token && env_token[i].type == ARG)
+	tmp = env_token;
+	while (tmp && tmp->type == ARG)
 	{
-		if (!valid_env_name(env, env_token[i].value))
+		if (!valid_env_name(env, tmp->value))
 		{
-			line = remove_quotes(env_token[i].value);
-			printf("%s\n", line);
-			free(line);
+			line = remove_quotes(tmp->value);
+			if (line)
+			{
+				ft_putendl_fd(line, 1);
+				free(line);
+			}
 		}
-		i++;
+		tmp = tmp->next;
 	}
 }
 

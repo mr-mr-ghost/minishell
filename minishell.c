@@ -19,7 +19,6 @@ void	exit_shell(t_data *data)
 	rl_clear_history();
 	free_env(data->env);
 	free_env(data->secret_env);
-	ft_putendl_fd("exit", 1);
 }
 
 void	init_data(t_data *data)
@@ -45,8 +44,10 @@ int	main(int argc, char **argv, char **envp)
 		sig_init();
 		data.line = read_line(data.env);
 		if (!data.line)
+		{
+			ft_putendl_fd("exit", 1);
 			break ;
-		add_history(data.line);
+		}
 		if (token_split(&data))
 			break ;
 		if (g_sig.exit_status)
