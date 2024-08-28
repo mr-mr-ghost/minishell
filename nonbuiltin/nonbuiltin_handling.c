@@ -29,7 +29,6 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 	pid_t	pid;
 	char	*bin;
 	int		status;
-	int		result;
 
 	bin = NULL;
 	status = 0;
@@ -45,10 +44,11 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 	}
 	else
 	{
-		result = waitpid(pid, &status, 0);
-		if (result == -1)
+		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
 	}
 	free(bin);
+	if (g_sig.sigint || g_sig.sigquit)
+		return (g_sig.exit_status);
 	return (WEXITSTATUS(status));
 }

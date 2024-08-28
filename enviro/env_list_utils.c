@@ -80,4 +80,6 @@ void	env_replace(t_env *env, char *name, char *line)
 		}
 		tmp = tmp->next;
 	}
+	if (tmp)
+		env_add_back(&env, line);
 }

@@ -26,6 +26,7 @@ void	init_data(t_data *data)
 	data->line = NULL;
 	data->token = NULL;
 	data->env = NULL;
+	data->secret_env = NULL;
 	data->exit_code = 0;
 	data->loop = false;
 }

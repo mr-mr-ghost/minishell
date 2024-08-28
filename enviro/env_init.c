@@ -54,6 +54,8 @@ char	*set_env_value(char *line)
 		i++;
 	if (new_line[i] == '=')
 		i++;
+	else
+		return (ft_strdup(""));
 	j = 0;
 	while (new_line[i])
 		env_value[j++] = new_line[i++];
