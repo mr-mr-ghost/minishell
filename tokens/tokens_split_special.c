@@ -25,6 +25,18 @@ void	handle_export_chars(t_data *data, char *line, int *i)
 	*i = j;
 }
 
+void	handle_echo_quotes(char *line, int *i)
+{
+	int		j;
+
+	j = *i + 1;
+	while (line[j] && line[j] != line[*i])
+		j++;
+	if (line[j] == line[*i])
+		j++;
+	*i = j;
+}
+
 void	handle_echo_chars(t_data *data, char *line, int *i)
 {
 	int		j;
@@ -39,7 +51,12 @@ void	handle_echo_chars(t_data *data, char *line, int *i)
 		*i = j;
 	}
 	while (line[j] && !ft_strchr("><|;", line[j]))
-		j++;
+	{
+		if (line[j] == '\"' || line[j] == '\'')
+			handle_echo_quotes(line, &j);
+		else
+			j++;
+	}
 	if (j == *i)
 		return ;
 	token_add_back(&data->token, token_new(ft_substr(line, *i, j - *i)));
