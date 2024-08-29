@@ -84,7 +84,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 		if (redirt->type == HEREDOC)
 		{
 			printf("TODO: heredoc\n");
-			return (status = 0);
+			return (status);
 		}
 		if (is_cmd(cmdt->value, 0))
 		{
@@ -94,7 +94,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 		status = launch_nonbuiltins(data, cmdt, redirt);
 		return (status);
 	}
-	return (status = 0);
+	return (status);
 }
 
 void	process_n_exec(t_data *data)
@@ -104,10 +104,10 @@ void	process_n_exec(t_data *data)
 
 	if (!data->token)
 		return ;
-	if (data->token->type == CMD
-		&& ft_strnstr(data->token->value, "=", ft_strlen(data->token->value)))
+	if ((!data->token->prev || data->token->type == CMD)
+		&& ft_strstr(data->token->value, "="))
 	{
-		env_add_back(&data->secret_env, data->token->value);
+		data->exit_code = handle_declaration(data->secret_env, data->token);
 		return ;
 	}
 	count = count_args(data->token, PIPE);
@@ -117,10 +117,9 @@ void	process_n_exec(t_data *data)
 	else if (nextt->type == PIPE && nextt->next) // disables cmd | nothing
 		data->exit_code = call_pipe(data, data->token);
 	else if (nextt->type == END)
-	{
-		ft_putstr_fd("semicolon is not implemented\n", 2);
-		return ;
-	}
+		data->exit_code = err_msg(NULL, nextt->value,
+			"Semicolon not implemented", 1);
 	else
-		ft_putstr_fd("unrecognized token type\n", 2);
+		data->exit_code = err_msg(NULL, data->token->value,
+			"command not found", 127);
 }

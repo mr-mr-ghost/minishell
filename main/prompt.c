@@ -45,7 +45,7 @@ char	*generate_prompt(t_env *env)
 	char	*prompt;
 	char	*env_path;
 
-	line = ft_strdup("\033[1;34mMinishell:\033[0m \033[1;32m~");
+	line = ft_strdup("Minishell: ~");
 	env_path = find_env_value(env, "PWD");
 	env_path = shorten_path(env_path);
 	if (env_path)
@@ -53,11 +53,11 @@ char	*generate_prompt(t_env *env)
 		tmp = ft_strjoin(line, env_path);
 		free(line);
 		free(env_path);
-		prompt = ft_strjoin(tmp, "\033[0m> ");
+		prompt = ft_strjoin(tmp, "> ");
 		free(tmp);
 	}
 	else
-		prompt = ft_strjoin(line, "\033[0m> ");
+		prompt = ft_strjoin(line, "> ");
 	return (prompt);
 }
 
@@ -65,24 +65,20 @@ char	*read_line(t_env *env)
 {
 	char	*line;
 	char	*prompt;
-	char	*tmp;
+	char	*new_line;
 
-//	prompt = generate_prompt(env);
-//	if (!prompt)
-//		return (NULL);
-//	line = readline(prompt);
-//	free(prompt);
-	(void)env;
-	(void)prompt;
-	line = readline("Minishell> ");
+	prompt = generate_prompt(env);
+	if (!prompt)
+		return (NULL);
+	line = readline(prompt);
+	free(prompt);
 	if (!line)
 	{
 		g_sig.exit_status = 130;
 		return (NULL);
 	}
-	tmp = line;
-	line = ft_strdup(line);
-	free(tmp);
+	new_line = ft_strdup(line);
+	free(line);
 	if (!line)
 		return (NULL);
 	return (line);

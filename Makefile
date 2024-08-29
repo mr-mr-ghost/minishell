@@ -3,12 +3,12 @@ NAME = minishell
 CFILES = minishell.c main/prompt.c main/utils.c main/libft_utils.c \
 		enviro/env_init.c enviro/env_utils.c enviro/env_list_utils.c \
 		tokens/tokens_handling.c tokens/tokens_utils.c tokens/tokens_split_utils.c \
-		tokens/tokens_split_special.c tokens/tokens_list_utils.c main/signals.c execution/execution.c \
-		execution/exec_utils.c execution/exec_arr_utils.c builtin/builtin_utils.c \
-		builtin/builtin_pwd.c builtin/builtin_export.c builtin/builtin_env.c \
-		builtin/builtin_echo.c builtin/builtin_unset.c builtin/builtin_cd.c \
-		builtin/builtin_exit.c redirection/redirection_utils.c nonbuiltin/nonbuiltin_handling.c \
-		nonbuiltin/nonbuiltin_path_utils.c nonbuiltin/nonbuiltin_processes.c pipes_utils.c \
+		tokens/tokens_split_special.c tokens/tokens_list_utils.c main/signals.c \
+		execution/execution.c execution/exec_utils.c execution/exec_arr_utils.c \
+		builtin/builtin_utils.c builtin/builtin_pwd.c builtin/builtin_export.c \
+		builtin/builtin_env.c builtin/builtin_echo.c builtin/builtin_unset.c \
+		builtin/builtin_cd.c builtin/builtin_exit.c redirection/redirection_utils.c \
+		redirection/pipes_utils.c nonbuiltin/nonbuiltin_handling.c \
 
 OBJ_DIR = build/obj/
 

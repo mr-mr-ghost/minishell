@@ -37,8 +37,8 @@
 # define TRUNC 3
 # define APPEND 4
 # define INPUT 5
-# define PIPE 6
-# define HEREDOC 7
+# define HEREDOC 6
+# define PIPE 7
 # define END 8
 
 # define MAX_ARGS 42
@@ -137,7 +137,7 @@ t_token	*token_new(char *value);
 void	token_add_back(t_token **token, t_token *new);
 
 /*	tokens utils	*/
-bool	select_cmp(char *line, char *cmp, int start, int len);
+bool	select_cmp(const char *line, const char *cmp, int start, int len);
 bool	select_quotes_check(char *line, int i);
 bool	quotes_check(char *line);
 int		is_cmd(char *line, int i);

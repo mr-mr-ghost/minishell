@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 // example: /bin/echo "Hello World!" | /bin/tr 'a-z' 'A-Z' | /bin/tr '!' '?'
 // example: /bin/ls -l | /usr/bin/grep '.c' | /bin/wc -l
