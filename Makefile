@@ -8,7 +8,7 @@ CFILES = minishell.c main/prompt.c main/utils.c main/libft_utils.c \
 		builtin/builtin_pwd.c builtin/builtin_export.c builtin/builtin_env.c \
 		builtin/builtin_echo.c builtin/builtin_unset.c builtin/builtin_cd.c \
 		builtin/builtin_exit.c redirection/redirection_utils.c nonbuiltin/nonbuiltin_handling.c \
-		nonbuiltin/nonbuiltin_path_utils.c nonbuiltin/nonbuiltin_processes.c
+		nonbuiltin/nonbuiltin_path_utils.c nonbuiltin/nonbuiltin_processes.c pipes_utils.c \
 
 OBJ_DIR = build/obj/
 
