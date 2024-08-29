@@ -53,7 +53,8 @@ int	process_dollar(t_data *data, char *line, int *i)
 		return (err_msg("echo", NULL, "Memory allocation failure", 1));
 	ft_putstr_fd(env_value, 1);
 	free(env_value);
-	(*i)--;
+	if (line[*i] == '\0')
+		(*i)--;
 	return (0);
 }
 

@@ -79,7 +79,7 @@ char	*read_line(t_env *env)
 	}
 	new_line = ft_strdup(line);
 	free(line);
-	if (!line)
+	if (!new_line)
 		return (NULL);
-	return (line);
+	return (new_line);
 }
