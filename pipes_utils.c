@@ -49,7 +49,10 @@ int	execute_cmd(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 			free_tokens(data);
 			exit(EXIT_SUCCESS);
 		}
-		exit(EXIT_SUCCESS);
+		free_tokens(data);
+		free_env(data->env);
+		free_env(data->secret_env);
+		exit(EXIT_FAILURE);
 	}
 	return (1);
 }
