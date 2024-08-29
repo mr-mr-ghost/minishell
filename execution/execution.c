@@ -73,7 +73,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	if (!redirt)
 	{
 		status = check_launch_builtins(data, cmdt);
-		if (status == -1)
+		if (status == 127)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}

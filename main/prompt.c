@@ -67,11 +67,14 @@ char	*read_line(t_env *env)
 	char	*prompt;
 	char	*tmp;
 
-	prompt = generate_prompt(env);
-	if (!prompt)
-		return (NULL);
-	line = readline(prompt);
-	free(prompt);
+//	prompt = generate_prompt(env);
+//	if (!prompt)
+//		return (NULL);
+//	line = readline(prompt);
+//	free(prompt);
+	(void)env;
+	(void)prompt;
+	line = readline("Minishell> ");
 	if (!line)
 	{
 		g_sig.exit_status = 130;

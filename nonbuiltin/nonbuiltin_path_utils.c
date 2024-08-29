@@ -67,6 +67,8 @@ char	*find_bin(t_env *env, char *cmd)
 	char	**bin;
 	char	*path;
 
+	if (ft_strchr(cmd, '/'))
+        return (ft_strdup(cmd));
 	i = 0;
 	bin = bin_path(env);
 	if (!bin)

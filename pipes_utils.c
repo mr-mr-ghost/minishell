@@ -41,7 +41,7 @@ int	execute_cmd(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 			close(output_fd[1]);
 		}
 		launch_single_anycmd(data, cmdt);
-		if (is_builtin(cmdt->value) == 1)
+		if (is_cmd(cmdt->value, 0))
 		{
 			rl_clear_history();
 			free_env(data->env);
