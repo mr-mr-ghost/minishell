@@ -16,7 +16,6 @@ void	bin_error(t_data *data, char *cmd)
 {
 	int	exit_status;
 
-	exit_status = 0;
 	exit_status = check_error(cmd);
 	free_tokens(data);
 	free_env(data->env);
