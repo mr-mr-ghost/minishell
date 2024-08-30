@@ -77,6 +77,8 @@ int	handle_echo_chars(t_data *data, char *line, int *i)
 		else
 			j++;
 	}
+	while (line[j - 1] && line[j - 1] == ' ')
+		j--;
 	if (j == *i)
 		return (0);
 	new = token_new(ft_substr(line, *i, j - *i));
