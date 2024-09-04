@@ -20,7 +20,7 @@ int	env_command(t_data *data, t_token *token)
 	char	*line;
 
 	if (token->next && token->next->type == ARG)
-		return (err_msg("env", data->token->next->value, "Invalid input", 1));
+		return (err_msg("env", data->token->next->value, "Invalid input", 2));
 	enviro = data->env;
 	while (enviro)
 	{

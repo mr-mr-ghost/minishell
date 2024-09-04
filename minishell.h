@@ -152,6 +152,7 @@ void	sig_child_handler(int signum);
 int		pwd_command(void);
 
 /*	exit command	*/
+int		validate_exit(char *arg);
 int		exit_command(t_data *data, t_token *token);
 
 /*	export command	*/

@@ -64,11 +64,8 @@ int	process_export(t_data *data, t_token *export_token)
 
 	exit_status = 0;
 	if (!check_char(export_token->value))
-	{
-		printf("minishell: export: `%s': not a valid identifier\n",
-			export_token->value);
-		return (1);
-	}
+		return (err_msg("export", export_token->value,"not a valid identifier",
+			1));
 	if (valid_env_name(data->secret_env, export_token->value))
 		exit_status = handle_assign(data, export_token);
 	else

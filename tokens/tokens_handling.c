@@ -76,7 +76,7 @@ int	token_split(t_data *data)
 	if (!line)
 		return (1);
 	if (quotes_check(line))
-		return (token_err(data, line, "Unclosed quotes", 127));
+		return (token_err(data, line, "Unclosed quotes", 2));
 	if (process_token(data, line))
 	{
 		free(line);

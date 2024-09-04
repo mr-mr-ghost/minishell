@@ -16,13 +16,6 @@
 /* if 1 str - returns status 0 to exit command by ending main loop		*/
 /* if 2 strs - checks if str2 is nbr and exits program with STDERR=nbr	*/
 /* if more strs - prints invalid command in STDERR, returns 1			*/
-int	err_exit(char *msg, int code)
-{
-	ft_putendl_fd("exit", 1);
-	printf("minishell: exit: %s\n", msg);
-	return (code);
-}
-
 int	validate_exit(char *arg)
 {
 	size_t	i;
@@ -33,8 +26,8 @@ int	validate_exit(char *arg)
 	while (arg[i] && ft_isdigit(arg[i]))
 		i++;
 	if (arg[i] != '\0')
-		return (err_exit("numeric argument required", 2));
-	return (ft_atoi(arg));
+		return (err_msg("exit", NULL, "numeric argument required", 2));
+	return (ft_atoi(arg) % 256);
 }
 
 int	exit_command(t_data *data, t_token *token)
@@ -54,5 +47,6 @@ int	exit_command(t_data *data, t_token *token)
 		data->end = true;
 		return (exit_status);
 	}
-	return (err_exit("too many arguments", 1));
+	ft_putendl_fd("exit", 1);
+	return (err_msg("exit", NULL, "too many arguments", 1));
 }

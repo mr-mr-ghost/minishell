@@ -21,10 +21,7 @@ int	pwd_command(void)
 
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-	{
-		perror("getcwd in pwd_command()");
-		return (1);
-	}
+		return (err_msg("pwd", NULL, strerror(errno), 1));
 	printf("%s\n", pwd);
 	free(pwd);
 	return (0);
