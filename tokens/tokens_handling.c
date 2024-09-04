@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include "../minishell.h"
 
 int	handle_edge_case(t_data *data, char *line, int *i, int edge)
 {
@@ -75,7 +76,7 @@ int	token_split(t_data *data)
 	if (!line)
 		return (1);
 	if (quotes_check(line))
-		return (token_err(data, line, "Unclosed quotes", 1));
+		return (token_err(data, line, "Unclosed quotes", 127));
 	if (process_token(data, line))
 	{
 		free(line);

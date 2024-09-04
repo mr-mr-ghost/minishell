@@ -47,6 +47,6 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 		waitpid(pid, &status, 0);
 	free(bin);
 	if (g_sig.sigint)
-		return (g_sig.exit_status);
+		return (130);
 	return (WEXITSTATUS(status));
 }

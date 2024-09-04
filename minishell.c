@@ -16,6 +16,7 @@ t_sig	g_sig;
 
 void	exit_shell(t_data *data)
 {
+	ft_putendl_fd("exit", 1);
 	rl_clear_history();
 	free_env(data->env);
 	free_env(data->secret_env);
@@ -28,7 +29,7 @@ void	init_data(t_data *data)
 	data->env = NULL;
 	data->secret_env = NULL;
 	data->exit_code = 0;
-	data->loop = false;
+	data->end = false;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -40,19 +41,18 @@ int	main(int argc, char **argv, char **envp)
 	signal_manager();
 	init_data(&data);
 	init_env(&data, envp);
-	while (!data.loop)
+	while (!data.end)
 	{
 		sig_init();
 		data.line = read_line(data.env);
 		if (!data.line)
-		{
-			ft_putendl_fd("exit", 1);
 			break ;
-		}
 		if (token_split(&data))
 			continue ;
-		if (g_sig.exit_status)
-			data.exit_code = g_sig.exit_status;
+		if (g_sig.sigint)
+			data.exit_code = 130;
+		else if (!data.token)
+			data.exit_code = 0;
 		process_n_exec(&data);
 		free_tokens(&data);
 	}

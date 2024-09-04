@@ -44,16 +44,14 @@ int	exit_command(t_data *data, t_token *token)
 
 	if (!token->next || token->next->type != ARG)
 	{
-		data->loop = true;
-		ft_putendl_fd("exit", 1);
+		data->end = true;
 		return (0);
 	}
 	exit_token = token->next;
 	if (!exit_token->next)
 	{
 		exit_status = validate_exit(exit_token->value);
-		data->loop = true;
-		ft_putendl_fd("exit", 1);
+		data->end = true;
 		return (exit_status);
 	}
 	return (err_exit("too many arguments", 1));

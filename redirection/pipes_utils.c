@@ -100,6 +100,6 @@ int	call_pipe(t_data *data, t_token *currentt)
 	while (wait(NULL) > 0) // Wait for all child processes
 		;
 	if (g_sig.sigint)
-		return (g_sig.exit_status);
+		return (130);
 	return (0);
 }

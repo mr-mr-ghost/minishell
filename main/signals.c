@@ -31,7 +31,6 @@ void	signal_manager(void)
 void	sig_child_handler(int signum)
 {
 	(void)signum;
-	g_sig.exit_status = 130;
 	exit(130);
 }
 
@@ -44,12 +43,10 @@ void	sigint_handler(int signum)
 	if (!g_sig.in_cmd)
 		rl_redisplay();
 	g_sig.sigint = 1;
-	g_sig.exit_status = 130;
 }
 
 void	sig_init(void)
 {
 	g_sig.in_cmd = false;
 	g_sig.sigint = 0;
-	g_sig.exit_status = 0;
 }

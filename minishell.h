@@ -65,13 +65,12 @@ typedef struct s_sig
 {
 	bool	in_cmd;
 	int		sigint;
-	int		exit_status;
 }	t_sig;
 
 typedef struct s_data
 {
 	char	*line;
-	bool	loop;
+	bool	end;
 	int		exit_code;
 	t_env	*env;
 	t_env	*secret_env;

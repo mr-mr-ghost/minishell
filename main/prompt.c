@@ -73,10 +73,7 @@ char	*read_line(t_env *env)
 	line = readline(prompt);
 	free(prompt);
 	if (!line)
-	{
-		g_sig.exit_status = 130;
 		return (NULL);
-	}
 	new_line = ft_strdup(line);
 	free(line);
 	if (!new_line)

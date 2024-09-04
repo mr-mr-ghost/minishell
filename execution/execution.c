@@ -103,7 +103,7 @@ void	process_n_exec(t_data *data)
 	t_token	*nextt;
 
 	if (!data->token)
-		return ;
+		return;
 	if ((!data->token->prev || data->token->type == CMD)
 		&& ft_strstr(data->token->value, "="))
 	{
