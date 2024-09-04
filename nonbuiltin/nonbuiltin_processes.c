@@ -41,6 +41,7 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt, char *path)
 	char	**cmda;
 	int		exit_code;
 
+	signal(SIGINT, sig_child_handler);
 	enva = form_enva(data->env);
 	if (!enva)
 		exit(EXIT_FAILURE);

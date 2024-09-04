@@ -20,19 +20,19 @@ void	signal_manager(void)
 	tcgetattr(0, &term);
 	term.c_cc[VQUIT] = _POSIX_VDISABLE;
 	tcsetattr(0, TCSANOW, &term);
-	act.sa_handler = signal_handler;
-	act.sa_flags = 0;
+	act.sa_handler = sigint_handler;
+	act.sa_flags = SA_RESTART;
 	sigemptyset(&act.sa_mask);
+	sigaddset(&act.sa_mask, SIGINT);
 	sigaction(SIGINT, &act, NULL);
-	sigaction(SIGQUIT, &act, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void	signal_handler(int signum)
+void	sig_child_handler(int signum)
 {
-	if (signum == SIGINT)
-		sigint_handler(signum);
-	else if (signum == SIGQUIT)
-		sigquit_handler(signum);
+	(void)signum;
+	g_sig.exit_status = 130;
+	exit(130);
 }
 
 void	sigint_handler(int signum)
@@ -41,21 +41,15 @@ void	sigint_handler(int signum)
 	ft_putstr_fd("\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
-	rl_clear_history();
+	if (!g_sig.in_cmd)
+		rl_redisplay();
 	g_sig.sigint = 1;
 	g_sig.exit_status = 130;
 }
 
-void	sigquit_handler(int signum)
-{
-	(void)signum;
-	g_sig.sigquit = 1;
-}
-
 void	sig_init(void)
 {
+	g_sig.in_cmd = false;
 	g_sig.sigint = 0;
-	g_sig.sigquit = 0;
 	g_sig.exit_status = 0;
 }

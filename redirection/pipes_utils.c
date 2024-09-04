@@ -40,6 +40,7 @@ int	execute_cmd(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 			close(output_fd[0]);
 			close(output_fd[1]);
 		}
+		signal(SIGINT, sig_child_handler);
 		launch_single_anycmd(data, cmdt);
 		rl_clear_history();
 		free_tokens(data);
@@ -57,6 +58,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		prev_pipefd[2];
 	pid_t	pid;
 
+	g_sig.in_cmd = true;
 	while (currentt)
 	{
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));
@@ -97,5 +99,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 	close(prev_pipefd[1]);
 	while (wait(NULL) > 0) // Wait for all child processes
 		;
+	if (g_sig.sigint)
+		return (g_sig.exit_status);
 	return (0);
 }

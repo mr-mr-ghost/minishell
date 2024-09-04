@@ -63,8 +63,8 @@ typedef struct s_token
 
 typedef struct s_sig
 {
+	bool	in_cmd;
 	int		sigint;
-	int		sigquit;
 	int		exit_status;
 }	t_sig;
 
@@ -145,10 +145,9 @@ int		token_err(t_data *data, char *arg, char *msg, int code);
 
 /*	signals	*/
 void	sigint_handler(int signum);
-void	sigquit_handler(int signum);
 void	sig_init(void);
-void	signal_handler(int signum);
 void	signal_manager(void);
+void	sig_child_handler(int signum);
 
 /*	pwd command	*/
 int		pwd_command(void);
