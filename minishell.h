@@ -165,7 +165,6 @@ int		handle_assign(t_data *data, t_token *token);
 int		env_command(t_data *data, t_token *token);
 
 /*	echo command	*/
-char	*get_echo_value(t_env *env, char *line, int *start);
 int		print_echo(t_data *data, char *line);
 int		process_dollar(t_data *data, char *line, int *i);
 int		echo_command(t_data *data, t_token *token);
@@ -187,6 +186,7 @@ bool	valid_env_name(t_env *env, char *key);
 char	*add_quotes_var(char *line);
 char	*remove_quotes(char *line);
 bool	select_valid_env(t_env *env, char *line, int start);
+char	*get_dollar_value(t_env *env, char *line, int *start);
 
 /*	non-builtins handling	*/
 int		launch_nonbuiltins(t_data *data, t_token *cmd, t_token *redirt);

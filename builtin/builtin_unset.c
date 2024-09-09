@@ -45,7 +45,7 @@ int	unset_env(t_data *data, t_token *token)
 		return (0);
 	env_name = find_env_name(data->env, token->value);
 	if (!env_name)
-		return (1);
+		return (0);
 	else
 	{
 		del_env(&data->env, env_name);
