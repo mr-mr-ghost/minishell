@@ -15,8 +15,41 @@
 // example: /bin/echo "Hello World!" | /bin/tr 'a-z' 'A-Z' | /bin/tr '!' '?'
 // example: /bin/ls -l | /usr/bin/grep '.c' | /bin/wc -l
 // example: /bin/echo "Hello World!" | /bin/tr 'H' 'h' | /bin/tr 'e' 'E' | /bin/tr 'l' 'L' | /bin/tr 'o' 'O'
+int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
+{
+	t_token	*redirt;
+	int		status;
 
-int	execute_cmd(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
+	status = 0;
+	redirt = return_redirt(cmdt);
+	if (!redirt)
+	{
+		status = check_launch_builtins(data, cmdt);
+		if (status == 127)
+			child_process(data, cmdt, NULL);
+		return (status);
+	}
+	else if (!redirt->next) // redirect sign without next string
+		ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
+	else
+	{
+		if (redirt->type == HEREDOC)
+		{
+			printf("TODO: heredoc\n");
+			return (status = 0);
+		}
+		if (is_cmd(cmdt->value, 0))
+		{
+			status = redirection_wrap_builtins(data, cmdt, redirt);
+			return (status);
+		}
+		child_process(data, cmdt, redirt);
+		return (status);
+	}
+	return (status = 0);
+}
+
+int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 {
 	pid_t	pid;
 
@@ -41,7 +74,7 @@ int	execute_cmd(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 			close(output_fd[1]);
 		}
 		signal(SIGINT, sig_child_handler);
-		launch_single_anycmd(data, cmdt);
+		launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
 		free_tokens(data);
 		free_env(data->env);
@@ -76,11 +109,11 @@ int	call_pipe(t_data *data, t_token *currentt)
 			break ;
 		}
 		if (currentt->prev == NULL)
-			pid = execute_cmd(data, currentt, NULL, pipefd);
+			pid = pipe_fork(data, currentt, NULL, pipefd);
 		else if (nextt)
-			pid = execute_cmd(data, currentt, prev_pipefd, pipefd);
+			pid = pipe_fork(data, currentt, prev_pipefd, pipefd);
 		else
-			pid = execute_cmd(data, currentt, prev_pipefd, NULL);
+			pid = pipe_fork(data, currentt, prev_pipefd, NULL);
 		if (currentt->prev != NULL)
 		{	// Close the previous pipe in the parent
 			close(prev_pipefd[0]);

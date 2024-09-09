@@ -14,7 +14,7 @@ CFILES = ft_atoi.c ft_bzero.c ft_calloc.c \
 		ft_strtrim.c ft_substr.c ft_tolower.c \
 		ft_toupper.c ft_printf.c ft_putaddress.c \
 		ft_putchar.c ft_puthexa.c ft_putnbr.c \
-		ft_putstr.c ft_putunsigned.c
+		ft_putstr.c ft_putunsigned.c get_next_line.c \
 
 OBJ_DIR = obj
 

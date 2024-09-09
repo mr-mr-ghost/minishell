@@ -12,17 +12,6 @@
 
 #include "../minishell.h"
 
-void	bin_error(t_data *data, char *cmd)
-{
-	int	exit_status;
-
-	exit_status = check_error(cmd);
-	free_tokens(data);
-	free_env(data->env);
-	free_env(data->secret_env);
-	exit(exit_status);
-}
-
 /*	Function to execute non builtin command in a child process	*/
 int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 {
@@ -37,12 +26,7 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 	if (pid < 0)
 		perror("fork");
 	else if (pid == 0)
-	{
-		bin = find_bin(data->env, cmdt->value);
-		if (!bin)
-			bin_error(data, cmdt->value);
-		child_process(data, cmdt, redirt, bin);
-	}
+		child_process(data, cmdt, redirt);
 	else
 		waitpid(pid, &status, 0);
 	free(bin);

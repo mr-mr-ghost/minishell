@@ -13,24 +13,6 @@
 #include "../minishell.h"
 
 /* Function to extract commands, check if they're builtin, launch accordingly*/
-/*void	process_n_exec(t_data *data)
-{
-	t_token	*token;
-
-	if (!data->token)
-		return ;
-	token = data->token;
-	if ((!token->prev || token->type == ARG) && ft_strstr(token->value, "="))
-		data->exit_code = handle_declaration(data->secret_env, token);
-	else if (token->type == CMD && is_cmd(token->value, 0))
-		data->exit_code = check_launch_builtins(data, token);
-	else if (token->type == CMD)
-		data->exit_code = launch_nonbuiltins(data, token, NULL);
-	else
-		data->exit_code = err_msg(NULL, data->token->value,
-				"command not found", 127);
-}*/
-
 t_token *get_nth_token(t_token *token, int n)
 {
 	t_token	*tmp;
@@ -83,7 +65,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	{
 		if (redirt->type == HEREDOC)
 		{
-			printf("TODO: heredoc\n");
+			handle_heredoc(data, cmdt, redirt);
 			return (status);
 		}
 		if (is_cmd(cmdt->value, 0))

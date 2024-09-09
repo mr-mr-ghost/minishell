@@ -198,8 +198,9 @@ char	*check_dir(char *bin, char *cmd);
 char	*join_path(char *path, char *cmd);
 
 /*	non-builtins processes	*/
-void	child_process(t_data *data, t_token *cmdt, t_token *redirt, char *path);
+void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
 int		check_error(char *path);
+void	bin_error(t_data *data, char *cmd);
 
 /*	execution	*/
 void	process_n_exec(t_data *data);
@@ -217,13 +218,18 @@ void	free_array(char **array);
 
 /*	redirections	*/
 int		handle_redirection(t_token *fname, int type);
-void	delete_array_element(char **array, int index);
-int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
-int	call_pipe(t_data *data, t_token *currentt);
-int	execute_cmd(t_data *data, t_token *cmdt, int *input_fd, int *output_fd);
-t_token *get_nth_token(t_token *token, int n);
+int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
+void	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
+
+
+t_token	*get_nth_token(t_token *token, int n);
 t_token	*return_redirt(t_token *cmdt);
-int	launch_single_anycmd(t_data *data, t_token *cmdt);
+int		launch_single_anycmd(t_data *data, t_token *cmdt);
+
+/*	pipes	*/
+int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
+int		pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd);
+int		call_pipe(t_data *data, t_token *currentt);
 
 /*	global	*/
 extern t_sig	g_sig;

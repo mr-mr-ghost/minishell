@@ -35,32 +35,53 @@ int	check_error(char *path)
 	return (exit_code);
 }
 
-void	child_process(t_data *data, t_token *cmdt, t_token *redirt, char *path)
+void	bin_error(t_data *data, char *cmd)
+{
+	int	exit_status;
+
+	exit_status = check_error(cmd);
+	free_tokens(data);
+	free_env(data->env);
+	free_env(data->secret_env);
+	exit(exit_status);
+}
+
+void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
+{
+	if (bin)
+		free(bin);
+	if (enva)
+		free(enva);
+	if (cmda)
+		free(cmda);
+	rl_clear_history();
+	free_tokens(data);
+	free_env(data->env);
+	free_env(data->secret_env);
+	exit(EXIT_FAILURE);
+}
+
+void child_process(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	char	**enva;
 	char	**cmda;
-	int		exit_code;
+	char	*bin;
 
+	bin = NULL;
+	enva = NULL;
+	cmda = NULL;
 	signal(SIGINT, sig_child_handler);
+	bin = find_bin(data->env, cmdt->value);
+	if (!bin)
+		bin_error(data, cmdt->value);
 	enva = form_enva(data->env);
 	if (!enva)
-		exit(EXIT_FAILURE);
+		child_cleanexit(data, bin, enva, cmda);
 	cmda = form_cmd(cmdt, count_args(cmdt, TRUNC));
 	if (!cmda)
-	{
-		free(enva);
-		exit(EXIT_FAILURE);
-	}
+		child_cleanexit(data, bin, enva, cmda);
 	if (redirt && handle_redirection(redirt->next, redirt->type) == -1)
-	{
-		free(cmda);
-		free(enva);
-		exit(EXIT_FAILURE);
-	}
-	execve(path, cmda, enva);
-	exit_code = check_error(path);
-	free(cmda);
-	free(enva);
-	free_tokens(data);
-	exit(exit_code);
+		child_cleanexit(data, bin, enva, cmda);
+	execve(bin, cmda, enva);
+	child_cleanexit(data, bin, enva, cmda);
 }
