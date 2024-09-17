@@ -63,9 +63,11 @@ int	unset_command(t_data *data, t_token *token)
 	if (!token->next)
 		return (0);
 	unset_token = token->next;
-	while (unset_token && unset_token->type == ARG)
+	status = 0;
+	while (unset_token && unset_token->type <= ARG)
 	{
-		status = unset_env(data, unset_token);
+		if (unset_token->type == ARG)
+			status = unset_env(data, unset_token);
 		unset_token = unset_token->next;
 	}
 	return (status);

@@ -68,11 +68,11 @@ char	*determine_path(t_env *env, t_token *token)
 {
 	char	*path;
 
-	if (!token || token->type != ARG || !ft_strcmp(token->value, "~"))
+	if (!token || token->type >= TRUNC || !ft_strcmp(token->value, "~"))
 		path = find_env_value(env, "HOME");
 	else if (!ft_strcmp(token->value, "-"))
 		path = find_env_value(env, "OLDPWD");
-	else if (!ft_strcmp(token->value, "."))
+	else if (!token->type || !ft_strcmp(token->value, "."))
 		path = find_env_value(env, "PWD");
 	else if (!ft_strcmp(token->value, ".."))
 		path = set_back_dir(env);

@@ -49,6 +49,8 @@ bool	check_char(char *str)
 {
 	int	i;
 
+	if (!str || !str[0])
+		return (false);
 	i = 0;
 	while (str[i] && str[i] != '=')
 	{
@@ -69,8 +71,9 @@ int	err_msg(char *location, char *arg, char *msg, int code)
 	}
 	if (arg)
 	{
+		ft_putstr_fd("'", 2);
 		ft_putstr_fd(arg, 2);
-		ft_putstr_fd(": ", 2);
+		ft_putstr_fd("': ", 2);
 	}
 	ft_putstr_fd(msg, 2);
 	ft_putchar_fd('\n', 2);

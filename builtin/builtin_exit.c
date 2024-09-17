@@ -26,7 +26,7 @@ int	validate_exit(char *arg)
 	while (arg[i] && ft_isdigit(arg[i]))
 		i++;
 	if (arg[i] != '\0')
-		return (err_msg("exit", NULL, "numeric argument required", 2));
+		return (err_msg("exit", arg, "numeric argument required", 2));
 	return (ft_atoi(arg) % 256);
 }
 
@@ -35,7 +35,7 @@ int	exit_command(t_data *data, t_token *token)
 	int		exit_status;
 	t_token	*exit_token;
 
-	if (!token->next || token->next->type != ARG)
+	if (!token->next || token->next->type >= TRUNC)
 	{
 		data->end = true;
 		return (0);

@@ -200,6 +200,7 @@ void	process_n_exec(t_data *data);
 
 /*	execution utils	*/
 int		handle_declaration(t_env *secret_env, t_token *token);
+char	*check_declaration(t_token *token);
 int		check_launch_builtins(t_data *data, t_token *token);
 void	free_cmd(char **cmd);
 

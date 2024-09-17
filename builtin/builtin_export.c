@@ -85,10 +85,10 @@ int	export_command(t_data *data, t_token *token)
 	t_token	*export_token;
 	int		exit_status;
 
-	if (!token->next || token->next->type != ARG)
+	if (!token->next || token->next->type >= TRUNC)
 		return (single_export(data->env));
 	export_token = token->next;
-	while (export_token && export_token->type == ARG)
+	while (export_token && export_token->type <= ARG)
 	{
 		exit_status = process_export(data, export_token);
 		export_token = export_token->next;

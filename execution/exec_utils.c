@@ -53,12 +53,29 @@ int	check_launch_builtins(t_data *data, t_token *token)
 	return (i);
 }
 
+char	*check_declaration(t_token *token)
+{
+	t_token	*tmp;
+
+	tmp = token;
+	while (tmp && (!tmp->prev || tmp->type == ARG))
+	{
+		if (!ft_strchr(tmp->value, '='))
+			return (tmp->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 int	handle_declaration(t_env *secret_env, t_token *token)
 {
 	t_token	*tmp;
 	char	*name;
 	char	*value;
 
+	value = check_declaration(token);
+	if (value)
+		return (err_msg(NULL, value, "Command not found", 127));
 	tmp = token;
 	while (tmp && (!tmp->prev || tmp->type == ARG))
 	{
