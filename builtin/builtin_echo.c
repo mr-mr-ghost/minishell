@@ -16,74 +16,19 @@
 /* if 1 str - prints new line, returns 1									  */
 /* if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1		  */
 /* if more strs - prints all strings, adds new line if str2 = "-n", returns 1 */
-int	process_dollar(t_data *data, char *line, int *i)
+void	print_echo(t_token *echo_token)
 {
-	char	*env_value;
-
-	(*i)++;
-	if (line[*i] == '?')
-		env_value = ft_itoa(data->exit_code);
-	else if (line[*i] == '$')
-		env_value = find_env_value(data->env, "SYSTEMD_EXEC_PID");
-	else if (select_valid_env(data->env, line, *i))
-		env_value = get_dollar_value(data->env, line, i);
-	else if (!select_valid_env(data->env, line, *i)
-		&& (line[*i] || line[*i] == ' '))
-		env_value = ft_strdup("");
-	else
-		env_value = ft_strdup("$");
-	if (!env_value)
-		return (err_msg("echo", NULL, "Memory allocation failure", 1));
-	ft_putstr_fd(env_value, 1);
-	free(env_value);
-	if (line[*i] == '\0')
-		(*i)--;
-	return (0);
-}
-
-void	process_quotes(char *line, int *i, bool *quote)
-{
-	static char	tmp = 0;
-
-	if (!tmp && !quotes_check(line + *i))
+	while (echo_token && echo_token->type <= ARG)
 	{
-		tmp = line[*i];
-		if (line[*i] == '\'')
-			*quote = true;
+		if (echo_token->type == ARG)
+			printf("%s", echo_token->value);
+		echo_token = echo_token->next;
+		if (echo_token && echo_token->type <= ARG)
+			printf(" ");
 	}
-	else if (*quote && line[*i] == '\'')
-		*quote = false;
-	else if (line[*i] != tmp)
-		ft_putchar_fd(line[*i], 1);
-	else if (line[*i] == tmp)
-		tmp = 0;
 }
 
-int	print_echo(t_data *data, char *line)
-{
-	int		i;
-	bool	quote;
-
-	i = 0;
-	quote = false;
-	while (line[i])
-	{
-		if (line[i] == '\'' || line[i] == '\"')
-			process_quotes(line, &i, &quote);
-		else if (!quote && line[i] == '$' && line[i + 1] && line[i + 1] != ' ')
-		{
-			if (process_dollar(data, line, &i))
-				return (1);
-		}
-		else if (line[i])
-			ft_putchar_fd(line[i], 1);
-		if (line[i] != '\0')
-			i++;
-	}
-	return (0);
-}
-
-int	echo_command(t_data *data, t_token *token)
+int	echo_command(t_token *token)
 {
 	int		n_flag;
 	t_token	*echo_token;
@@ -102,8 +47,7 @@ int	echo_command(t_data *data, t_token *token)
 		echo_token = echo_token->next;
 		n_flag = 1;
 	}
-	if (print_echo(data, echo_token->value))
-		return (1);
+	print_echo(echo_token);
 	if (!n_flag)
 		printf("\n");
 	return (0);

@@ -52,42 +52,6 @@ bool	quotes_check(char *line)
 	return (quote);
 }
 
-bool	select_quotes_check(char *line, int i)
-{
-	int	j;
-
-	j = i + 1;
-	while (line[j] && (line[j] != line[i]))
-		j++;
-	return (line[j] == line[i]);
-}
-
-/*int	is_cmd(char *line, int i)
-{
-	if (select_cmp(line, "echo", i, 4)
-		&& ft_strchr("><|;\"\' \0", line[i + 4]))
-		return (4);
-	else if (select_cmp(line, "cd", i, 2)
-		&& ft_strchr("><|;\"\' \0", line[i + 2]))
-		return (2);
-	else if (select_cmp(line, "pwd", i, 3)
-		&& ft_strchr("><|;\"\' \0", line[i + 3]))
-		return (3);
-	else if (select_cmp(line, "export", i, 6)
-		&& ft_strchr("><|;\"\' \0", line[i + 6]))
-		return (6);
-	else if (select_cmp(line, "unset", i, 5)
-		&& ft_strchr("><|;\"\' \0", line[i + 5]))
-		return (5);
-	else if (select_cmp(line, "env", i, 3)
-		&& ft_strchr("><|;\"\' \0", line[i + 3]))
-		return (3);
-	else if (select_cmp(line, "exit", i, 4)
-		&& ft_strchr("><|;\"\' \0", line[i + 4]))
-		return (4);
-	return (0);
-}*/
-
 int	is_cmd(char *line, int i)
 {
 	const char	*cmds[] = {"echo", "cd", "pwd",
@@ -111,13 +75,12 @@ int	token_err(t_data *data, char *arg, char *msg, int code)
 {
 	if (arg)
 	{
-		printf("minishell: '%s': %s\n", arg, msg);
+		err_msg(NULL, arg, msg, code);
 		free(arg);
-		free(data->line);
 	}
 	else
 	{
-		printf("minishell: %s\n", msg);
+		err_msg(NULL, NULL, msg, code);
 		free_tokens(data);
 	}
 	data->exit_code = code;

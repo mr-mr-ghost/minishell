@@ -115,21 +115,18 @@ void	env_replace(t_env *env, char *name, char *line);
 /*	tokens handling	*/
 int		token_split(t_data *data);
 void	tokens_type_define(t_data *data);
-int		process_token(t_data *data, char *line);
-int		handle_edge_case(t_data *data, char *line, int *i, int edge);
-int		process_char(t_data *data, char *line, int *i, int *edge);
+int		process_token(t_data *data);
 
 /*	tokens split utils	*/
 int		handle_special_chars(t_data *data, char *line, int *i);
-int		handle_quotes(t_data *data, char *line, int *i);
-int		handle_normal_chars(t_data *data, char *line, int *i);
+void	handle_quotes(t_data *data, char *buffer, int *i, int *k);
+int		handle_normal_chars(t_data *data, int *i);
+int		handle_cmd(t_data *data, char *line, int *i);
 
 /*	tokens split special	*/
-int		handle_echo_chars(t_data *data, char *line, int *i);
-void	handle_echo_quotes(char *line, int *i);
-int		handle_export_chars(t_data *data, char *line, int *i);
-int		handle_cmd(t_data *data, char *line, int *i);
-int		handle_echo_option(t_data *data, char *line, int *i);
+char	*process_dollar(t_data *data, char *line, int *i);
+void	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
+char	*get_dollar_value(t_env *env, char *line, int *start);
 
 /*	tokens list utils	*/
 t_token	*token_new(char *value);
@@ -137,7 +134,6 @@ void	token_add_back(t_token **token, t_token *new);
 
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);
-bool	select_quotes_check(char *line, int i);
 bool	quotes_check(char *line);
 int		is_cmd(char *line, int i);
 int		token_err(t_data *data, char *arg, char *msg, int code);
@@ -165,10 +161,8 @@ int		handle_assign(t_data *data, t_token *token);
 int		env_command(t_data *data, t_token *token);
 
 /*	echo command	*/
-int		print_echo(t_data *data, char *line);
-int		process_dollar(t_data *data, char *line, int *i);
-int		echo_command(t_data *data, t_token *token);
-void	process_quotes(char *line, int *i, bool *quote);
+void	print_echo(t_token *echo_token);
+int		echo_command(t_token *token);
 
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);
@@ -186,7 +180,6 @@ bool	valid_env_name(t_env *env, char *key);
 char	*add_quotes_var(char *line);
 char	*remove_quotes(char *line);
 bool	select_valid_env(t_env *env, char *line, int start);
-char	*get_dollar_value(t_env *env, char *line, int *start);
 
 /*	non-builtins handling	*/
 int		launch_nonbuiltins(t_data *data, t_token *cmd, t_token *redirt);
@@ -220,7 +213,6 @@ void	free_array(char **array);
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 void	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
-
 
 t_token	*get_nth_token(t_token *token, int n);
 t_token	*return_redirt(t_token *cmdt);

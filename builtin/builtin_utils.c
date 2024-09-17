@@ -96,20 +96,3 @@ bool	select_valid_env(t_env *env, char *line, int start)
 	free(env_name);
 	return (false);
 }
-
-char	*get_dollar_value(t_env *env, char *line, int *start)
-{
-	char	*env_name;
-	char	*env_value;
-	char	*tmp;
-
-	env_name = find_env_name(env, line + *start);
-	if (!env_name)
-		return (NULL);
-	*start += ft_strlen(env_name);
-	tmp = find_env_value(env, env_name);
-	free(env_name);
-	env_value = remove_quotes(tmp);
-	free(tmp);
-	return (env_value);
-}

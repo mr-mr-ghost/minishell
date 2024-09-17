@@ -61,7 +61,7 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 	exit(EXIT_FAILURE);
 }
 
-void child_process(t_data *data, t_token *cmdt, t_token *redirt)
+void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	char	**enva;
 	char	**cmda;

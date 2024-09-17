@@ -65,12 +65,12 @@ int	process_export(t_data *data, t_token *export_token)
 	exit_status = 0;
 	if (!check_char(export_token->value))
 		return (err_msg("export", export_token->value,
-			"not a valid identifier", 1));
+				"not a valid identifier", 1));
 	if (valid_env_name(data->secret_env, export_token->value))
 		exit_status = handle_assign(data, export_token);
 	else
 	{
-		env_line = add_quotes_var(export_token->value);
+		env_line = ft_strdup(export_token->value);
 		if (!env_line)
 			return (1);
 		env_add_back(&data->secret_env, env_line);

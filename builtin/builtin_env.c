@@ -19,12 +19,12 @@ int	env_command(t_data *data, t_token *token)
 	t_env	*enviro;
 	char	*line;
 
-	if (token->next && token->next->type == ARG)
+	if (token->next && token->next->type <= ARG)
 		return (err_msg("env", data->token->next->value, "Invalid input", 2));
 	enviro = data->env;
 	while (enviro)
 	{
-		line = remove_quotes(enviro->line);
+		line = ft_strdup(enviro->line);
 		if (!line)
 			return (1);
 		ft_putendl_fd(line, 1);

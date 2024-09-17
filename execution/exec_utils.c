@@ -37,7 +37,7 @@ int	check_launch_builtins(t_data *data, t_token *token)
 
 	i = 127;
 	if (!ft_memcmp(token->value, "echo", ft_strlen("echo") + 1))
-		i = echo_command(data, token);
+		i = echo_command(token);
 	else if (!ft_memcmp(token->value, "cd", ft_strlen("cd") + 1))
 		i = cd_command(data, token);
 	else if (!ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1))
@@ -62,7 +62,7 @@ int	handle_declaration(t_env *secret_env, t_token *token)
 	tmp = token;
 	while (tmp && (!tmp->prev || tmp->type == ARG))
 	{
-		value = add_quotes_var(tmp->value);
+		value = ft_strdup(tmp->value);
 		if (!value)
 			return (1);
 		if (valid_env_name(secret_env, value))

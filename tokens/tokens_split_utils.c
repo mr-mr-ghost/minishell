@@ -24,63 +24,67 @@ int	handle_special_chars(t_data *data, char *line, int *i)
 	new = token_new(ft_substr(line, *i, j - *i));
 	if (!new || !new->value)
 		return (1);
-	if (*i == 0)
-		data->token = new;
-	else
-		token_add_back(&data->token, new);
-	while (line[j] && line[j] == ' ')
-		j++;
+	token_add_back(&data->token, new);
 	*i = j;
 	return (0);
 }
 
-int	handle_quotes(t_data *data, char *line, int *i)
+void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 {
 	int		j;
-	t_token	*new;
 
 	j = *i + 1;
-	while (line[j] && (line[j] != line[*i]))
-		j++;
-	if (line[j] == line[*i])
-		j++;
-	new = token_new(ft_substr(line, *i, j - *i));
-	if (!new || !new->value)
-		return (1);
-	if (*i == 0)
-		data->token = new;
-	else
-		token_add_back(&data->token, new);
-	while (line[j] && line[j] == ' ')
-		j++;
-	*i = j;
-	return (0);
-}
-
-int	handle_normal_chars(t_data *data, char *line, int *i)
-{
-	int		j;
-	t_token	*new;
-
-	j = *i + 1;
-	while (line[j] && !ft_strchr("><|;\"\' ", line[j]))
-		j++;
-	if (j == *i)
-		return (0);
-	if (line[j] == '\"')
+	while (data->line[j] && data->line[j] != data->line[*i])
 	{
-		handle_export_chars(data, line, i);
-		return (0);
+		if (data->line[*i] == '\"' && data->line[j] == '$' && data->line[j + 1]
+			&& data->line[j + 1] != ' ')
+			add_dollar_value(data, buffer, &j, k);
+		else
+			buffer[(*k)++] = data->line[j++];
 	}
+	if (data->line[j] == data->line[*i])
+		j++;
+	*i = j;
+}
+
+int	handle_cmd(t_data *data, char *line, int *i)
+{
+	int		j;
+	t_token	*new;
+
+	j = *i + is_cmd(line, *i);
 	new = token_new(ft_substr(line, *i, j - *i));
 	if (!new || !new->value)
 		return (1);
-	if (*i == 0)
-		data->token = new;
-	else
-		token_add_back(&data->token, new);
-	while (line[j] && line[j] == ' ')
-		j++;
+	token_add_back(&data->token, new);
+	*i = j;
+	return (0);
+}
+
+int	handle_normal_chars(t_data *data, int *i)
+{
+	char	buffer[BUFF_SIZE];
+	int		j;
+	int		k;
+	t_token	*new;
+
+	j = *i;
+	k = 0;
+	while (data->line[j] && !ft_strchr("><|; ", data->line[j]) && k < BUFF_SIZE)
+	{
+		if (data->line[j] == '\"' || data->line[j] == '\'')
+			handle_quotes(data, buffer, &j, &k);
+		else if (data->line[j] == '$' && data->line[j + 1]
+			&& data->line[j + 1] != ' ')
+			add_dollar_value(data, buffer, &j, &k);
+		else
+			buffer[k++] = data->line[j++];
+	}
+	buffer[k] = '\0';
+	new = token_new(ft_strdup(buffer));
+	if (!new || !new->value)
+		return (1);
+	token_add_back(&data->token, new);
 	*i = j;
 	return (0);
 }
