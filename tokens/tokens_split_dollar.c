@@ -16,31 +16,13 @@ char	*get_dollar_value(t_env *env, char *line, int *start)
 {
 	char	*env_name;
 	char	*env_value;
-	char	*tmp;
 
 	env_name = find_env_name(env, line + *start);
 	if (!env_name)
 		return (NULL);
 	*start += ft_strlen(env_name);
-	tmp = find_env_value(env, env_name);
-	free(env_name);
-	env_value = ft_strdup(tmp);
-	free(tmp);
+	env_value = find_env_value(env, env_name);
 	return (env_value);
-}
-
-void	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
-{
-	char	*env_value;
-	int		i;
-
-	env_value = process_dollar(data, data->line, j);
-	if (!env_value)
-		return ;
-	i = 0;
-	while (env_value[i])
-		buffer[(*k)++] = env_value[i++];
-	free(env_value);
 }
 
 char	*process_dollar(t_data *data, char *line, int *i)
@@ -70,4 +52,21 @@ char	*process_dollar(t_data *data, char *line, int *i)
 	else
 		env_value = ft_strdup("$");
 	return (env_value);
+}
+
+void	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
+{
+	char	*env_value;
+	int		i;
+
+	env_value = process_dollar(data, data->line, j);
+	if (!env_value)
+		return ;
+	i = 0;
+	while (env_value[i])
+		buffer[(*k)++] = env_value[i++];
+	free(env_value);
+	if ((*k) == 0)
+		while (data->line[*j] && data->line[*j] == ' ')
+			(*j)++;
 }

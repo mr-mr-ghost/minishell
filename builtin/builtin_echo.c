@@ -21,31 +21,31 @@ void	print_echo(t_token *echo_token)
 	while (echo_token && echo_token->type <= ARG)
 	{
 		if (echo_token->type == ARG)
-			printf("%s", echo_token->value);
+			ft_putstr_fd(echo_token->value, 1);
 		echo_token = echo_token->next;
 		if (echo_token && echo_token->type <= ARG)
-			printf(" ");
+			ft_putchar_fd(' ', 1);
 	}
 }
 
 int	echo_command(t_token *token)
 {
-	int		n_flag;
+	bool	n_flag;
 	t_token	*echo_token;
 
-	if (!token->next || token->next->type != ARG)
+	if (!token->next || token->next->type >= TRUNC)
 	{
 		printf("\n");
 		return (0);
 	}
 	echo_token = token->next;
-	n_flag = 0;
+	n_flag = false;
 	if (!ft_memcmp(echo_token->value, "-n", 3))
 	{
 		if (!echo_token->next || echo_token->next->type != ARG)
 			return (0);
 		echo_token = echo_token->next;
-		n_flag = 1;
+		n_flag = true;
 	}
 	print_echo(echo_token);
 	if (!n_flag)

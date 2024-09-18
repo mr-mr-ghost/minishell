@@ -64,27 +64,25 @@ int	handle_cmd(t_data *data, char *line, int *i)
 int	handle_normal_chars(t_data *data, int *i)
 {
 	char	buffer[BUFF_SIZE];
-	int		j;
 	int		k;
 	t_token	*new;
 
-	j = *i;
 	k = 0;
-	while (data->line[j] && !ft_strchr("><|; ", data->line[j]) && k < BUFF_SIZE)
+	while (data->line[*i] && !ft_strchr("><|; ", data->line[*i])
+		&& k < BUFF_SIZE)
 	{
-		if (data->line[j] == '\"' || data->line[j] == '\'')
-			handle_quotes(data, buffer, &j, &k);
-		else if (data->line[j] == '$' && data->line[j + 1]
-			&& data->line[j + 1] != ' ')
-			add_dollar_value(data, buffer, &j, &k);
+		if (data->line[*i] == '\"' || data->line[*i] == '\'')
+			handle_quotes(data, buffer, i, &k);
+		else if (data->line[*i] == '$' && data->line[(*i) + 1]
+			&& data->line[(*i) + 1] != ' ')
+			add_dollar_value(data, buffer, i, &k);
 		else
-			buffer[k++] = data->line[j++];
+			buffer[k++] = data->line[(*i)++];
 	}
 	buffer[k] = '\0';
 	new = token_new(ft_strdup(buffer));
 	if (!new || !new->value)
 		return (1);
 	token_add_back(&data->token, new);
-	*i = j;
 	return (0);
 }
