@@ -48,7 +48,7 @@ char	*generate_prompt(t_env *env)
 	if (env_path)
 	{
 		tmp = ft_strjoin("\001\033[1;34m\002Minishell:\001\033[0m\002 ~",
-			env_path);
+				env_path);
 		free(env_path);
 		prompt = ft_strjoin(tmp, "> ");
 		free(tmp);
