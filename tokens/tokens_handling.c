@@ -56,17 +56,17 @@ void	tokens_type_define(t_data *data)
 	{
 		if (!tmp->value || !ft_strcmp(tmp->value, ""))
 			tmp->type = EMPTY;
-		else if (!ft_strcmp(tmp->value, ";"))
+		else if (!ft_strcmp(tmp->value, ";") && !tmp->false_div)
 			tmp->type = END;
-		else if (!ft_strcmp(tmp->value, ">"))
+		else if (!ft_strcmp(tmp->value, ">") && !tmp->false_div)
 			tmp->type = TRUNC;
-		else if (!ft_strcmp(tmp->value, ">>"))
+		else if (!ft_strcmp(tmp->value, ">>") && !tmp->false_div)
 			tmp->type = APPEND;
-		else if (!ft_strcmp(tmp->value, "<<"))
+		else if (!ft_strcmp(tmp->value, "<<") && !tmp->false_div)
 			tmp->type = HEREDOC;
-		else if (!ft_strcmp(tmp->value, "<"))
+		else if (!ft_strcmp(tmp->value, "<") && !tmp->false_div)
 			tmp->type = INPUT;
-		else if (!ft_strcmp(tmp->value, "|"))
+		else if (!ft_strcmp(tmp->value, "|") && !tmp->false_div)
 			tmp->type = PIPE;
 		else if (!tmp->prev || tmp->prev->type >= TRUNC)
 			tmp->type = CMD;

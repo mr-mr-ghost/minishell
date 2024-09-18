@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-t_token	*token_new(char *value)
+t_token	*token_new(char *value, bool div)
 {
 	t_token	*new;
 
@@ -24,6 +24,7 @@ t_token	*token_new(char *value)
 	else
 		new->value = value;
 	new->type = 0;
+	new->false_div = div;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

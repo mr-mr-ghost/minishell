@@ -21,7 +21,7 @@ int	handle_special_chars(t_data *data, char *line, int *i)
 	if ((line[*i] == '<' && line[*i + 1] == '<')
 		|| (line[*i] == '>' && line[*i + 1] == '>'))
 		j++;
-	new = token_new(ft_substr(line, *i, j - *i));
+	new = token_new(ft_substr(line, *i, j - *i), false);
 	if (!new || !new->value)
 		return (1);
 	token_add_back(&data->token, new);
@@ -29,11 +29,13 @@ int	handle_special_chars(t_data *data, char *line, int *i)
 	return (0);
 }
 
-void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
+bool	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 {
 	int		j;
+	bool	div;
 
 	j = *i + 1;
+	div = false;
 	while (data->line[j] && data->line[j] != data->line[*i])
 	{
 		if (data->line[*i] == '\"' && data->line[j] == '$' && data->line[j + 1]
@@ -41,7 +43,7 @@ void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 			add_dollar_value(data, buffer, &j, k);
 		else if (ft_strchr("><|;", data->line[j]))
 		{
-			buffer[(*k)++] = '\\';
+			div = true;
 			buffer[(*k)++] = data->line[j++];
 			if ((data->line[j - 1] == '>' && data->line[j] == '>')
 				|| (data->line[j - 1] == '<' && data->line[j] == '<'))
@@ -53,6 +55,7 @@ void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 	if (data->line[j] == data->line[*i])
 		j++;
 	*i = j;
+	return (div);
 }
 
 int	handle_cmd(t_data *data, char *line, int *i)
@@ -61,7 +64,7 @@ int	handle_cmd(t_data *data, char *line, int *i)
 	t_token	*new;
 
 	j = *i + is_cmd(line, *i);
-	new = token_new(ft_substr(line, *i, j - *i));
+	new = token_new(ft_substr(line, *i, j - *i), false);
 	if (!new || !new->value)
 		return (1);
 	token_add_back(&data->token, new);
@@ -73,14 +76,16 @@ int	handle_normal_chars(t_data *data, int *i)
 {
 	char	buffer[BUFF_SIZE];
 	int		k;
+	bool	div;
 	t_token	*new;
 
 	k = 0;
+	div = false;
 	while (data->line[*i] && !ft_strchr("><|; ", data->line[*i])
 		&& k < BUFF_SIZE)
 	{
 		if (data->line[*i] == '\"' || data->line[*i] == '\'')
-			handle_quotes(data, buffer, i, &k);
+			div = handle_quotes(data, buffer, i, &k);
 		else if (data->line[*i] == '$' && data->line[(*i) + 1]
 			&& data->line[(*i) + 1] != ' ')
 			add_dollar_value(data, buffer, i, &k);
@@ -88,7 +93,7 @@ int	handle_normal_chars(t_data *data, int *i)
 			buffer[k++] = data->line[(*i)++];
 	}
 	buffer[k] = '\0';
-	new = token_new(ft_strdup(buffer));
+	new = token_new(ft_strdup(buffer), div);
 	if (!new || !new->value)
 		return (1);
 	token_add_back(&data->token, new);

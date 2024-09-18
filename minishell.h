@@ -57,6 +57,7 @@ typedef struct s_token
 {
 	int				type;
 	char			*value;
+	bool			false_div;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -119,7 +120,7 @@ int		process_token(t_data *data);
 
 /*	tokens split utils	*/
 int		handle_special_chars(t_data *data, char *line, int *i);
-void	handle_quotes(t_data *data, char *buffer, int *i, int *k);
+bool handle_quotes(t_data *data, char *buffer, int *i, int *k);
 int		handle_normal_chars(t_data *data, int *i);
 int		handle_cmd(t_data *data, char *line, int *i);
 
@@ -129,7 +130,7 @@ void	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
 char	*get_dollar_value(t_env *env, char *line, int *start);
 
 /*	tokens list utils	*/
-t_token	*token_new(char *value);
+t_token *token_new(char *value, bool div);
 void	token_add_back(t_token **token, t_token *new);
 
 /*	tokens utils	*/
