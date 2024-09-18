@@ -57,7 +57,7 @@ typedef struct s_token
 {
 	int				type;
 	char			*value;
-	bool			false_div;
+	bool			div;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -120,7 +120,7 @@ int		process_token(t_data *data);
 
 /*	tokens split utils	*/
 int		handle_special_chars(t_data *data, char *line, int *i);
-bool	handle_quotes(t_data *data, char *buffer, int *i, int *k);
+void	handle_quotes(t_data *data, char *buffer, int *i, int *k);
 int		handle_normal_chars(t_data *data, int *i);
 int		handle_cmd(t_data *data, char *line, int *i);
 

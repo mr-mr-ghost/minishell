@@ -24,7 +24,7 @@ t_token	*token_new(char *value, bool div)
 	else
 		new->value = value;
 	new->type = 0;
-	new->false_div = div;
+	new->div = div;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
