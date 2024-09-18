@@ -2,11 +2,13 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens
 
-TODO: Piping/flags/etc...
+TODO: Fix misc. errors (probably in echo)
 
-TODO: Parsing
+TODO: maybe some errors in env/export/etc...
 
-TODO: Fix misc. errors
+TODO: Fix signal error in heredoc
+
+TODO: heredoc probably needs a look at
 
 LINKS *************************************************
 
@@ -18,4 +20,4 @@ https://medium.com/@muxanz/how-the-shell-works-internally-when-entering-a-comman
 
 VALGRIND READLINE SUPPRESSION **************************
 
-valgrind --suppressions=readline.supp ./minishell
+valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell

@@ -18,10 +18,22 @@
 /* if more strs - prints all strings, adds new line if str2 = "-n", returns 1 */
 void	print_echo(t_token *echo_token)
 {
+	int	i;
+
 	while (echo_token && echo_token->type <= ARG)
 	{
 		if (echo_token->type == ARG)
-			ft_putstr_fd(echo_token->value, 1);
+		{
+			i = 0;
+			while (echo_token->value[i])
+			{
+				if (echo_token->value[i] == '\\' && echo_token->value[i + 1]
+					&& ft_strchr("><|;", echo_token->value[i + 1]))
+					i++;
+				ft_putchar_fd(echo_token->value[i], 1);
+				i++;
+			}
+		}
 		echo_token = echo_token->next;
 		if (echo_token && echo_token->type <= ARG)
 			ft_putchar_fd(' ', 1);

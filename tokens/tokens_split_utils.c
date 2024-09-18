@@ -39,6 +39,14 @@ void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 		if (data->line[*i] == '\"' && data->line[j] == '$' && data->line[j + 1]
 			&& data->line[j + 1] != ' ')
 			add_dollar_value(data, buffer, &j, k);
+		else if (ft_strchr("><|;", data->line[j]))
+		{
+			buffer[(*k)++] = '\\';
+			buffer[(*k)++] = data->line[j++];
+			if ((data->line[j - 1] == '>' && data->line[j] == '>')
+				|| (data->line[j - 1] == '<' && data->line[j] == '<'))
+				buffer[(*k)++] = data->line[j++];
+		}
 		else
 			buffer[(*k)++] = data->line[j++];
 	}
