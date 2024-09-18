@@ -40,24 +40,21 @@ char	*shorten_path(char *path)
 
 char	*generate_prompt(t_env *env)
 {
-	char	*line;
 	char	*tmp;
 	char	*prompt;
 	char	*env_path;
 
-	line = ft_strdup("Minishell: ~");
-	env_path = find_env_value(env, "PWD");
-	env_path = shorten_path(env_path);
+	env_path = shorten_path(find_env_value(env, "PWD"));
 	if (env_path)
 	{
-		tmp = ft_strjoin(line, env_path);
-		free(line);
+		tmp = ft_strjoin("\001\033[1;34m\002Minishell:\001\033[0m\002 ~",
+			env_path);
 		free(env_path);
 		prompt = ft_strjoin(tmp, "> ");
 		free(tmp);
 	}
 	else
-		prompt = ft_strjoin(line, "> ");
+		prompt = ft_strdup("\001\033[1;34m\002Minishell:\001\033[0m\002 ~> ");
 	return (prompt);
 }
 
