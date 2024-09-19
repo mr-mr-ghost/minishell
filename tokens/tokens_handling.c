@@ -23,8 +23,6 @@ int	process_token(t_data *data)
 	{
 		if (data->line[i] == ' ')
 			i++;
-		else if (is_cmd(data->line, i))
-			ret = handle_cmd(data, data->line, &i);
 		else if (ft_strchr("><|;", data->line[i]))
 			ret = handle_special_chars(data, data->line, &i);
 		else

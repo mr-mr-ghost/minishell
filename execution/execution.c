@@ -87,7 +87,7 @@ void	process_n_exec(t_data *data)
 	if (!data->token)
 		return;
 	if ((!data->token->prev || data->token->type == CMD)
-		&& ft_strstr(data->token->value, "="))
+		&& ft_strchr(data->token->value, '='))
 	{
 		data->exit_code = handle_declaration(data->secret_env, data->token);
 		return ;

@@ -91,7 +91,6 @@ int		err_msg(char *location, char *arg, char *msg, int code);
 
 /*	libft utils	*/
 int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strstr(const char *big, const char *little);
 
 /*	environment initialisation	*/
 int		init_env(t_data *data, char **envp);
@@ -122,7 +121,6 @@ int		process_token(t_data *data);
 int		handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *buffer, int *i, int *k);
 int		handle_normal_chars(t_data *data, int *i);
-int		handle_cmd(t_data *data, char *line, int *i);
 
 /*	tokens split special	*/
 char	*process_dollar(t_data *data, char *line, int *i);
@@ -136,7 +134,6 @@ void	token_add_back(t_token **token, t_token *new);
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);
 bool	quotes_check(char *line);
-int		is_cmd(char *line, int i);
 int		token_err(t_data *data, char *arg, char *msg, int code);
 
 /*	signals	*/
@@ -179,7 +176,6 @@ char	*set_back_dir(t_env *env);
 /*	builtins utils	*/
 bool	valid_env_name(t_env *env, char *key);
 char	*add_quotes_var(char *line);
-char	*remove_quotes(char *line);
 bool	select_valid_env(t_env *env, char *line, int start);
 
 /*	non-builtins handling	*/
@@ -203,6 +199,7 @@ void	process_n_exec(t_data *data);
 int		handle_declaration(t_env *secret_env, t_token *token);
 char	*check_declaration(t_token *token);
 int		check_launch_builtins(t_data *data, t_token *token);
+int		is_cmd(char *line, int i);
 void	free_cmd(char **cmd);
 
 /*	execution array utils	*/

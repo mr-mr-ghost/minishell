@@ -21,6 +21,8 @@ int	single_export(t_env *env)
 	while (enviro)
 	{
 		env_line = add_quotes_var(enviro->line);
+		if (!env_line)
+			return (err_msg("export", NULL, strerror(errno), 1));
 		printf("declare -x %s\n", env_line);
 		free(env_line);
 		enviro = enviro->next;
@@ -32,7 +34,7 @@ int	handle_assign(t_data *data, t_token *token)
 {
 	char	*env_line;
 
-	if (ft_strstr(token->value, "="))
+	if (ft_strchr(token->value, '='))
 	{
 		env_line = find_env_name(data->env, token->value);
 		if (!env_line)

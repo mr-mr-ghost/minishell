@@ -1,6 +1,6 @@
 TODOS *************************************************
 
-TODO: Fix misc. errors in tokens
+TODO: Fix misc. errors in tokens (if there are any)
 
 TODO: Fix misc. errors (probably in echo)
 

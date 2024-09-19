@@ -30,28 +30,6 @@ bool	valid_env_name(t_env *env, char *key)
 	return (false);
 }
 
-char	*remove_quotes(char *line)
-{
-	int		i;
-	int		j;
-	char	*new_line;
-
-	i = 0;
-	j = 0;
-	new_line = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));
-	if (!new_line)
-		return (NULL);
-	while (line[i])
-	{
-		if (line[i] == '\'' || line[i] == '\"')
-			i++;
-		else
-			new_line[j++] = line[i++];
-	}
-	new_line[j] = '\0';
-	return (new_line);
-}
-
 char	*add_quotes_var(char *line)
 {
 	char	*new_line;
@@ -60,7 +38,7 @@ char	*add_quotes_var(char *line)
 
 	i = 0;
 	j = 0;
-	new_line = (char *)malloc(sizeof(char) * (ft_strlen(line) + 3));
+	new_line = malloc(ft_strlen(line) + 3);
 	if (!new_line)
 		return (NULL);
 	while (line[i] && line[i] != '=')

@@ -42,7 +42,7 @@ int	echo_command(t_token *token)
 	n_flag = false;
 	if (!ft_memcmp(echo_token->value, "-n", 3))
 	{
-		if (!echo_token->next || echo_token->next->type != ARG)
+		if (!echo_token->next || echo_token->next->type >= TRUNC)
 			return (0);
 		echo_token = echo_token->next;
 		n_flag = true;

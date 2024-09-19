@@ -52,25 +52,6 @@ bool	quotes_check(char *line)
 	return (quote);
 }
 
-int	is_cmd(char *line, int i)
-{
-	const char	*cmds[] = {"echo", "cd", "pwd",
-		"export", "unset", "env", "exit"};
-	const int	lengths[] = {4, 2, 3, 6, 5, 3, 4};
-	const int	num_cmds = sizeof(cmds) / sizeof(cmds[0]);
-	int			j;
-
-	j = 0;
-	while (j < num_cmds)
-	{
-		if (select_cmp(line, cmds[j], i, lengths[j])
-			&& ft_strchr("><|;\"\' \0", line[i + lengths[j]]))
-			return (lengths[j]);
-		j++;
-	}
-	return (0);
-}
-
 int	token_err(t_data *data, char *arg, char *msg, int code)
 {
 	if (arg)

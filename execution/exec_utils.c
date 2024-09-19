@@ -27,6 +27,25 @@ void	free_cmd(char **cmd)
 	free(cmd);
 }
 
+int	is_cmd(char *line, int i)
+{
+	const char	*cmds[] = {"echo", "cd", "pwd",
+							 "export", "unset", "env", "exit"};
+	const int	lengths[] = {4, 2, 3, 6, 5, 3, 4};
+	const int	num_cmds = sizeof(cmds) / sizeof(cmds[0]);
+	int			j;
+
+	j = 0;
+	while (j < num_cmds)
+	{
+		if (select_cmp(line, cmds[j], i, lengths[j])
+			&& ft_strchr("><|;\"\' \0", line[i + lengths[j]]))
+			return (lengths[j]);
+		j++;
+	}
+	return (0);
+}
+
 /* Function to check if the command is builtin and then launch it*/
 /* Returns -1, if command not builtin*/
 /* Returns 1, if builtin command executed successfully*/

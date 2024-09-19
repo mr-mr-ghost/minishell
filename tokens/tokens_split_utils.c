@@ -47,20 +47,6 @@ void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 	*i = j;
 }
 
-int	handle_cmd(t_data *data, char *line, int *i)
-{
-	int		j;
-	t_token	*new;
-
-	j = *i + is_cmd(line, *i);
-	new = token_new(ft_substr(line, *i, j - *i), false);
-	if (!new || !new->value)
-		return (1);
-	token_add_back(&data->token, new);
-	*i = j;
-	return (0);
-}
-
 int	handle_normal_chars(t_data *data, int *i)
 {
 	char	buffer[BUFF_SIZE];
