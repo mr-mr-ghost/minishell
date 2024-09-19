@@ -102,7 +102,7 @@ char	*set_env_value(char *line);
 /*	environment utils	*/
 char	*find_env_line(t_env *env, char *key);
 int		find_env_lvl(char *lvl);
-char	*get_env_name(char *dest, char *src);
+char	*get_env_name(char *dest, const char *src);
 char	*find_env_value(t_env *env, char *key);
 char	*find_env_name(t_env *env, char *key);
 

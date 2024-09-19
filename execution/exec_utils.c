@@ -69,6 +69,8 @@ int	check_launch_builtins(t_data *data, t_token *token)
 		i = env_command(data, token);
 	else if (!ft_memcmp(token->value, "exit", ft_strlen("exit") + 1))
 		i = exit_command(data, token);
+	else if (ft_strchr(token->value, '='))
+		i = handle_declaration(data->secret_env, token);
 	return (i);
 }
 
@@ -94,7 +96,7 @@ int	handle_declaration(t_env *secret_env, t_token *token)
 
 	value = check_declaration(token);
 	if (value)
-		return (err_msg(NULL, value, "Command not found", 127));
+		return (err_msg(NULL, value, "Command not found", 300));
 	tmp = token;
 	while (tmp && (!tmp->prev || tmp->type == ARG))
 	{

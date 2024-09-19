@@ -25,7 +25,9 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	if (!redirt)
 	{
 		status = check_launch_builtins(data, cmdt);
-		if (status == 127)
+		if (status == 300)
+			return (127);
+		else if (status == 127)
 			child_process(data, cmdt, NULL);
 		return (status);
 	}

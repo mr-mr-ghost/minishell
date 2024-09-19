@@ -21,7 +21,7 @@ char	*find_env_line(t_env *env, char *key)
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
+		if (!ft_strcmp(env_name, key))
 			return (ft_strdup(tmp->line));
 		tmp = tmp->next;
 	}
@@ -37,7 +37,7 @@ char	*find_env_name(t_env *env, char *key)
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
+		if (!ft_strcmp(env_name, key))
 			return (ft_strdup(env_name));
 		tmp = tmp->next;
 	}
@@ -53,7 +53,7 @@ char	*find_env_value(t_env *env, char *key)
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
+		if (!ft_strcmp(env_name, key))
 			return (ft_strdup(tmp->value));
 		tmp = tmp->next;
 	}
@@ -76,7 +76,7 @@ int	find_env_lvl(char *env_value)
 	return (i);
 }
 
-char	*get_env_name(char *dest, char *src)
+char	*get_env_name(char *dest, const char *src)
 {
 	int	i;
 

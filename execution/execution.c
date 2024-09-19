@@ -55,7 +55,9 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	if (!redirt)
 	{
 		status = check_launch_builtins(data, cmdt);
-		if (status == 127)
+		if (status == 300)
+			return (127);
+		else if (status == 127)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}
@@ -86,12 +88,6 @@ void	process_n_exec(t_data *data)
 
 	if (!data->token)
 		return;
-	if ((!data->token->prev || data->token->type == CMD)
-		&& ft_strchr(data->token->value, '='))
-	{
-		data->exit_code = handle_declaration(data->secret_env, data->token);
-		return ;
-	}
 	count = count_args(data->token, PIPE);
 	nextt = get_nth_token(data->token, count);
 	if (!nextt) // no PIPE OR END

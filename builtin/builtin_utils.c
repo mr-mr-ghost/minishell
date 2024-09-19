@@ -23,7 +23,7 @@ bool	valid_env_name(t_env *env, char *key)
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strncmp(env_name, key, ft_strlen(env_name)))
+		if (!ft_strcmp(env_name, key))
 			return (true);
 		tmp = tmp->next;
 	}
