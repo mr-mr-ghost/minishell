@@ -50,36 +50,29 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	t_token	*redirt;
 	int		status;
 
-	status = 0;
 	redirt = return_redirt(cmdt);
 	if (!redirt)
 	{
 		status = check_launch_builtins(data, cmdt);
-		if (status == 300)
-			return (127);
-		else if (status == 127)
+		if (status == -1)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}
 	else if (!redirt->next) /* redirect sign without next string*/
 		return (err_msg(NULL, NULL,
-				"syntax error near unexpected token `newline'",2));
+				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		if (redirt->type == HEREDOC)
 		{
 			handle_heredoc(data, cmdt, redirt);
-			return (status);
+			return (0);
 		}
-		if (is_cmd(cmdt->value, 0))
-		{
-			status = redirection_wrap_builtins(data, cmdt, redirt);
-			return (status);
-		}
-		status = launch_nonbuiltins(data, cmdt, redirt);
-		return (status);
+		if (is_cmd(cmdt->value, 0)
+			|| (redirt->type >= TRUNC && redirt->type <= INPUT))
+			return (redirection_wrap_builtins(data, cmdt, redirt));
+		return (launch_nonbuiltins(data, cmdt, redirt));
 	}
-	return (status);
 }
 
 void	process_n_exec(t_data *data)
@@ -96,8 +89,8 @@ void	process_n_exec(t_data *data)
 	else if (nextt->type == PIPE && nextt->next) /*	disables cmd | nothing*/
 		data->exit_code = call_pipe(data, data->token);
 	else if (nextt->type == END)
-		data->exit_code = err_msg(NULL, nextt->value,
-				"Semicolon not implemented", 1);
+		data->exit_code = err_msg(NULL, NULL,
+				"syntax error near unexpected token `;'", 2);
 	else
 		data->exit_code = err_msg(NULL, data->token->value,
 				"Command not found", 127);

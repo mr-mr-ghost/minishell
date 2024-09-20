@@ -91,6 +91,7 @@ int		err_msg(char *location, char *arg, char *msg, int code);
 
 /*	libft utils	*/
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strstr(const char *big, const char *little);
 
 /*	environment initialisation	*/
 int		init_env(t_data *data, char **envp);

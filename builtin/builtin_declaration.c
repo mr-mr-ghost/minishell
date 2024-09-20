@@ -34,7 +34,7 @@ int	handle_declaration(t_env *secret_env, t_token *token)
 
 	arg = check_declaration(token);
 	if (arg)
-		return (err_msg(NULL, arg, "Command not found", 300));
+		return (err_msg(NULL, arg, "Command not found", 127));
 	tmp = token;
 	while (tmp && tmp->type <= ARG)
 	{

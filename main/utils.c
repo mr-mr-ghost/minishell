@@ -71,7 +71,7 @@ int	err_msg(char *location, char *arg, char *msg, int code)
 	}
 	if (arg)
 	{
-		ft_putstr_fd("'", 2);
+		ft_putstr_fd("`", 2);
 		ft_putstr_fd(arg, 2);
 		ft_putstr_fd("': ", 2);
 	}

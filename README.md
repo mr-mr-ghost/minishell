@@ -2,13 +2,13 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: Fix misc. errors (probably in echo)
-
-TODO: maybe some errors in env/export/etc...
-
-TODO: Fix signal error in heredoc
+TODO: Fix weird ctrl+c error in heredoc
 
 TODO: heredoc probably needs a look at
+
+TODO: probably some memory leaks
+
+TODO: cleanup
 
 LINKS *************************************************
 

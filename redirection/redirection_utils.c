@@ -26,6 +26,15 @@ char	*join_strings(char *s1, char *s2)
 	return (joined);
 }
 
+void	heredoc_error(char *delimiter)
+{
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("minishell: warning: ", 2);
+	ft_putstr_fd("here-document delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(delimiter, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
 char	*get_heredoc(char *delimiter)
 {
 	char	*heredoc;
@@ -44,6 +53,8 @@ char	*get_heredoc(char *delimiter)
 		heredoc = join_strings(heredoc, hereline);
 		hereline = get_next_line(0);
 	}
+	if (!hereline || ft_strncmp(hereline, delimiter, ft_strlen(delimiter)))
+		heredoc_error(delimiter);
 	if (hereline)
 		free(hereline);
 	return (heredoc);
@@ -60,6 +71,8 @@ void	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 	(void)data;
 	secondredir = return_redirt(redirt->next);
 	heredoc = get_heredoc(redirt->next->value);
+	if (!heredoc)
+		return ;
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe failed");
@@ -102,20 +115,17 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 
 	minilib_stdout = dup(STDOUT_FILENO);
 	if (minilib_stdout < 0)
-	{
-		perror("dup");
-		return (1);
-	}
+		return (err_msg(NULL, NULL, strerror(errno), 1));
 	if (handle_redirection(redir->next, redir->type) == -1)
 	{
 		if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
-			perror("dup2");
+			err_msg(NULL, NULL, strerror(errno), 1);
 		close(minilib_stdout);
 		return (1);
 	}
 	status = check_launch_builtins(data, cmdt);
 	if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
-		perror("dup2");
+		err_msg(NULL, NULL, strerror(errno), 1);
 	close(minilib_stdout);
 	return (status);
 }
@@ -135,19 +145,13 @@ int	handle_redirection(t_token *fname, int type)
 	else
 		fd = open(fname->value, O_RDONLY);
 	if (fd < 0)
-	{
-		perror("open");
-		return (-1);
-	}
+		return (err_msg(NULL, fname->value, strerror(errno), -1));
 	if (type == TRUNC || type == APPEND)
 		dupstatus = dup2(fd, STDOUT_FILENO);
 	else
 		dupstatus = dup2(fd, STDIN_FILENO);
 	close(fd);
 	if (dupstatus < 0)
-	{
-		perror("dup2");
-		return (-1);
-	}
+		return (err_msg(NULL, NULL, strerror(errno), -1));
 	return (0);
 }

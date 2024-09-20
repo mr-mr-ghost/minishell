@@ -54,7 +54,7 @@ int	check_launch_builtins(t_data *data, t_token *token)
 {
 	int	i;
 
-	i = 127;
+	i = -1;
 	if (!ft_memcmp(token->value, "echo", ft_strlen("echo") + 1))
 		i = echo_command(token);
 	else if (!ft_memcmp(token->value, "cd", ft_strlen("cd") + 1))
