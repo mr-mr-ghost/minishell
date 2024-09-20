@@ -123,7 +123,9 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 		close(minilib_stdout);
 		return (1);
 	}
-	status = check_launch_builtins(data, cmdt);
+	status = 0;
+	if (cmdt->type == CMD)
+		status = check_launch_builtins(data, cmdt);
 	if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
 		err_msg(NULL, NULL, strerror(errno), 1);
 	close(minilib_stdout);

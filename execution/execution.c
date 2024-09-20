@@ -69,7 +69,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 			return (0);
 		}
 		if (is_cmd(cmdt->value, 0)
-			|| (redirt->type >= TRUNC && redirt->type <= INPUT))
+			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
 			return (redirection_wrap_builtins(data, cmdt, redirt));
 		return (launch_nonbuiltins(data, cmdt, redirt));
 	}
