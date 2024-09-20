@@ -16,12 +16,14 @@ char	*find_env_line(t_env *env, char *key)
 {
 	t_env	*tmp;
 	char	env_name[BUFF_SIZE];
+	char	key_name[BUFF_SIZE];
 
 	tmp = env;
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strcmp(env_name, key))
+		get_env_name(key_name, key);
+		if (!ft_strcmp(env_name, key_name))
 			return (ft_strdup(tmp->line));
 		tmp = tmp->next;
 	}
@@ -32,12 +34,14 @@ char	*find_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;
 	char	env_name[BUFF_SIZE];
+	char	key_name[BUFF_SIZE];
 
 	tmp = env;
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strcmp(env_name, key))
+		get_env_name(key_name, key);
+		if (!ft_strcmp(env_name, key_name))
 			return (ft_strdup(env_name));
 		tmp = tmp->next;
 	}
@@ -48,12 +52,14 @@ char	*find_env_value(t_env *env, char *key)
 {
 	t_env	*tmp;
 	char	env_name[BUFF_SIZE];
+	char	key_name[BUFF_SIZE];
 
 	tmp = env;
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strcmp(env_name, key))
+		get_env_name(key_name, key);
+		if (!ft_strcmp(env_name, key_name))
 			return (ft_strdup(tmp->value));
 		tmp = tmp->next;
 	}

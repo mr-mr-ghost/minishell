@@ -30,7 +30,7 @@ void	free_cmd(char **cmd)
 int	is_cmd(char *line, int i)
 {
 	const char	*cmds[] = {"echo", "cd", "pwd",
-							 "export", "unset", "env", "exit"};
+		"export", "unset", "env", "exit"};
 	const int	lengths[] = {4, 2, 3, 6, 5, 3, 4};
 	const int	num_cmds = sizeof(cmds) / sizeof(cmds[0]);
 	int			j;
@@ -72,49 +72,4 @@ int	check_launch_builtins(t_data *data, t_token *token)
 	else if (ft_strchr(token->value, '='))
 		i = handle_declaration(data->secret_env, token);
 	return (i);
-}
-
-char	*check_declaration(t_token *token)
-{
-	t_token	*tmp;
-
-	tmp = token;
-	while (tmp && (!tmp->prev || tmp->type == ARG))
-	{
-		if (!ft_strchr(tmp->value, '='))
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-int	handle_declaration(t_env *secret_env, t_token *token)
-{
-	t_token	*tmp;
-	char	*name;
-	char	*value;
-
-	value = check_declaration(token);
-	if (value)
-		return (err_msg(NULL, value, "Command not found", 300));
-	tmp = token;
-	while (tmp && (!tmp->prev || tmp->type == ARG))
-	{
-		value = ft_strdup(tmp->value);
-		if (!value)
-			return (1);
-		if (valid_env_name(secret_env, value))
-		{
-			name = find_env_name(secret_env, value);
-			if (!name)
-				return (1);
-			env_replace(secret_env, name, value);
-			free(name);
-		}
-		else if (check_char(value))
-			env_add_back(&secret_env, value);
-		free(value);
-		tmp = tmp->next;
-	}
-	return (0);
 }

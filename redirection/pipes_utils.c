@@ -51,6 +51,13 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	return (status = 0);
 }
 
+void	close_fd(int *fd, int dst)
+{
+	dup2(fd[dst], dst);
+	close(fd[0]);
+	close(fd[1]);
+}
+
 int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 {
 	pid_t	pid;
@@ -62,19 +69,11 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 		return (pid);
 	}
 	else if (pid == 0)
-	{	// Child process
-		if (input_fd)
-		{	// Redirect stdin if input_fd is not NULL
-			dup2(input_fd[0], STDIN_FILENO);
-			close(input_fd[0]);
-			close(input_fd[1]);
-		}
-		if (output_fd)
-		{	// Redirect stdout if output_fd is not NULL
-			dup2(output_fd[1], STDOUT_FILENO);
-			close(output_fd[0]);
-			close(output_fd[1]);
-		}
+	{	/* Child process*/
+		if (input_fd) /* Redirect stdin if input_fd is not NULL*/
+			close_fd(input_fd, STDIN_FILENO);
+		if (output_fd) /* Redirect stdout if output_fd is not NULL*/
+			close_fd(output_fd, STDOUT_FILENO);
 		signal(SIGINT, sig_child_handler);
 		launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();

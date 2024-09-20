@@ -19,8 +19,10 @@ char	*shorten_path(char *path)
 	char	*line;
 	int		i;
 
-	if (!path)
+	if (!path || !ft_strcmp(path, "/"))
 		return (NULL);
+	else if (!ft_strchr(path, '/'))
+		return (ft_strdup(path));
 	slash_count = 0;
 	i = ft_strlen(path) - 1;
 	while (i >= 0)
@@ -47,14 +49,18 @@ char	*generate_prompt(t_env *env)
 	env_path = shorten_path(find_env_value(env, "PWD"));
 	if (env_path)
 	{
-		tmp = ft_strjoin("\001\033[1;34m\002Minishell:\001\033[0m\002 ~",
-				env_path);
+		if ((!ft_strchr(env_path, '/') || !ft_strncmp(env_path, "/home", 5)))
+			tmp = ft_strjoin("\001\033[1;34m\002Minishell:\001\033[0m\002 ",
+					env_path);
+		else
+			tmp = ft_strjoin("\001\033[1;34m\002Minishell:\001\033[0m\002 ~",
+					env_path);
 		free(env_path);
 		prompt = ft_strjoin(tmp, "> ");
 		free(tmp);
 	}
 	else
-		prompt = ft_strdup("\001\033[1;34m\002Minishell:\001\033[0m\002 ~> ");
+		prompt = ft_strdup("\001\033[1;34m\002Minishell:\001\033[0m\002 > ");
 	return (prompt);
 }
 

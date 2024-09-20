@@ -12,13 +12,13 @@
 
 #include "../minishell.h"
 
-char	*set_back_dir(t_env *env)
+char	*set_back_dir(void)
 {
 	char	*path;
 	char	*tmp;
 	int		i;
 
-	path = find_env_value(env, "PWD");
+	path = getcwd(NULL, 0);
 	if (!path)
 		return (NULL);
 	i = ft_strlen(path) - 1;
@@ -73,9 +73,9 @@ char	*determine_path(t_env *env, t_token *token)
 	else if (!ft_strcmp(token->value, "-"))
 		path = find_env_value(env, "OLDPWD");
 	else if (!token->type || !ft_strcmp(token->value, "."))
-		path = find_env_value(env, "PWD");
+		path = getcwd(NULL, 0);
 	else if (!ft_strcmp(token->value, ".."))
-		path = set_back_dir(env);
+		path = set_back_dir();
 	else
 		path = ft_strdup(token->value);
 	if (!path)
@@ -90,7 +90,7 @@ int	cd_command(t_data *data, t_token *token)
 	int		status;
 	t_token	*cd_token;
 
-	old_pwd = find_env_value(data->env, "PWD");
+	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
 		return (1);
 	cd_token = token->next;

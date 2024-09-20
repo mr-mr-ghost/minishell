@@ -16,6 +16,7 @@ bool	valid_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;
 	char	env_name[BUFF_SIZE];
+	char	key_name[BUFF_SIZE];
 
 	if (!env || !key)
 		return (false);
@@ -23,7 +24,8 @@ bool	valid_env_name(t_env *env, char *key)
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		if (!ft_strcmp(env_name, key))
+		get_env_name(key_name, key);
+		if (!ft_strcmp(env_name, key_name))
 			return (true);
 		tmp = tmp->next;
 	}

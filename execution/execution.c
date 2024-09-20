@@ -13,7 +13,7 @@
 #include "../minishell.h"
 
 /* Function to extract commands, check if they're builtin, launch accordingly*/
-t_token *get_nth_token(t_token *token, int n)
+t_token	*get_nth_token(t_token *token, int n)
 {
 	t_token	*tmp;
 	int		i;
@@ -61,7 +61,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next) // redirect sign without next string
+	else if (!redirt->next) /* redirect sign without next string*/
 		ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
 	else
 	{
@@ -87,17 +87,17 @@ void	process_n_exec(t_data *data)
 	t_token	*nextt;
 
 	if (!data->token)
-		return;
+		return ;
 	count = count_args(data->token, PIPE);
 	nextt = get_nth_token(data->token, count);
-	if (!nextt) // no PIPE OR END
+	if (!nextt) /* no PIPE OR END*/
 		data->exit_code = launch_single_anycmd(data, data->token);
-	else if (nextt->type == PIPE && nextt->next) // disables cmd | nothing
+	else if (nextt->type == PIPE && nextt->next) /*	disables cmd | nothing*/
 		data->exit_code = call_pipe(data, data->token);
 	else if (nextt->type == END)
 		data->exit_code = err_msg(NULL, nextt->value,
-			"Semicolon not implemented", 1);
+				"Semicolon not implemented", 1);
 	else
 		data->exit_code = err_msg(NULL, data->token->value,
-			"command not found", 127);
+				"Command not found", 127);
 }

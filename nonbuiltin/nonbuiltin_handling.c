@@ -16,10 +16,8 @@
 int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	pid_t	pid;
-	char	*bin;
 	int		status;
 
-	bin = NULL;
 	status = 0;
 	g_sig.in_cmd = true;
 	pid = fork();
@@ -29,7 +27,6 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 		child_process(data, cmdt, redirt);
 	else
 		waitpid(pid, &status, 0);
-	free(bin);
 	if (g_sig.sigint)
 		return (130);
 	return (WEXITSTATUS(status));

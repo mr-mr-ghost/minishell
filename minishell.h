@@ -171,7 +171,11 @@ int		cd_command(t_data *data, t_token *token);
 char	*determine_path(t_env *env, t_token *token);
 int		change_env_path(t_data *data, char *old_pwd);
 int		replace_path(t_env *env, char *name, char *path);
-char	*set_back_dir(t_env *env);
+char	*set_back_dir(void);
+
+/*	declaration handling	*/
+int		handle_declaration(t_env *secret_env, t_token *token);
+char	*check_declaration(t_token *token);
 
 /*	builtins utils	*/
 bool	valid_env_name(t_env *env, char *key);
@@ -196,8 +200,6 @@ void	bin_error(t_data *data, char *cmd);
 void	process_n_exec(t_data *data);
 
 /*	execution utils	*/
-int		handle_declaration(t_env *secret_env, t_token *token);
-char	*check_declaration(t_token *token);
 int		check_launch_builtins(t_data *data, t_token *token);
 int		is_cmd(char *line, int i);
 void	free_cmd(char **cmd);
