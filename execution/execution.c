@@ -62,7 +62,8 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 		return (status);
 	}
 	else if (!redirt->next) /* redirect sign without next string*/
-		ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
+		return (err_msg(NULL, NULL,
+				"syntax error near unexpected token `newline'",2));
 	else
 	{
 		if (redirt->type == HEREDOC)

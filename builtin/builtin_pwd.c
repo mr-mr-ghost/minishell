@@ -22,7 +22,7 @@ int	pwd_command(void)
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		return (err_msg("pwd", NULL, strerror(errno), 1));
-	printf("%s\n", pwd);
+	ft_putendl_fd(pwd, 1);
 	free(pwd);
 	return (0);
 }

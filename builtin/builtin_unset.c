@@ -21,7 +21,7 @@ void	del_env(t_env **env, char *key)
 	prev = NULL;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->name, key, ft_strlen(tmp->name)))
+		if (!ft_strcmp(tmp->name, key))
 		{
 			if (prev)
 				prev->next = tmp->next;
@@ -46,11 +46,8 @@ int	unset_env(t_data *data, t_token *token)
 	env_name = find_env_name(data->env, token->value);
 	if (!env_name)
 		return (0);
-	else
-	{
-		del_env(&data->env, env_name);
-		del_env(&data->secret_env, env_name);
-	}
+	del_env(&data->env, env_name);
+	del_env(&data->secret_env, env_name);
 	free(env_name);
 	return (0);
 }

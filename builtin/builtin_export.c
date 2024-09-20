@@ -22,7 +22,7 @@ int	single_export(t_env *env)
 	{
 		env_line = add_quotes_var(enviro->line);
 		if (!env_line)
-			return (err_msg("export", NULL, strerror(errno), 1));
+			return (err_msg("export", NULL, "Memory allocation failure", 1));
 		printf("declare -x %s\n", env_line);
 		free(env_line);
 		enviro = enviro->next;

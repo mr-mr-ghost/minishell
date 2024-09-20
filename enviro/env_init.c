@@ -17,10 +17,8 @@ int	init_env(t_data *data, char **envp)
 	data->env = create_env_list(data->env, envp);
 	data->secret_env = create_env_list(data->secret_env, envp);
 	if (!data->env || !data->secret_env)
-	{
-		perror("Environment allocation failed\n");
-		return (1);
-	}
+		return (err_msg(NULL, NULL,
+				"Environment memory allocation failure", 1));
 	return (0);
 }
 

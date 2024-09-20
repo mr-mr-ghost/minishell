@@ -97,9 +97,12 @@ int	cd_command(t_data *data, t_token *token)
 	path = determine_path(data->env, cd_token);
 	status = chdir(path);
 	if (status < 0)
-		return (err_msg("cd", path, strerror(errno), 1));
+	{
+		free(old_pwd);
+		status = err_msg("cd", path, strerror(errno), 1);
+	}
 	free(path);
-	if (change_env_path(data, old_pwd))
+	if (status || change_env_path(data, old_pwd))
 		return (1);
 	return (0);
 }

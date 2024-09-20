@@ -17,18 +17,14 @@
 int	env_command(t_data *data, t_token *token)
 {
 	t_env	*enviro;
-	char	*line;
 
 	if (token->next && token->next->type <= ARG)
-		return (err_msg("env", data->token->next->value, "Invalid input", 2));
+		return (err_msg("env", token->next->value,
+				"too many arguments", 2));
 	enviro = data->env;
 	while (enviro)
 	{
-		line = ft_strdup(enviro->line);
-		if (!line)
-			return (1);
-		ft_putendl_fd(line, 1);
-		free(line);
+		ft_putendl_fd(enviro->line, 1);
 		enviro = enviro->next;
 	}
 	return (0);

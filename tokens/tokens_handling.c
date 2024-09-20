@@ -12,6 +12,35 @@
 
 #include "../minishell.h"
 
+void	tokens_type_define(t_data *data)
+{
+	t_token	*tmp;
+
+	tmp = data->token;
+	while (tmp)
+	{
+		if (!tmp->value || !ft_strcmp(tmp->value, ""))
+			tmp->type = EMPTY;
+		else if (tmp->div && !ft_strcmp(tmp->value, ";"))
+			tmp->type = END;
+		else if (tmp->div && !ft_strcmp(tmp->value, ">"))
+			tmp->type = TRUNC;
+		else if (tmp->div && !ft_strcmp(tmp->value, ">>"))
+			tmp->type = APPEND;
+		else if (tmp->div && !ft_strcmp(tmp->value, "<<"))
+			tmp->type = HEREDOC;
+		else if (tmp->div && !ft_strcmp(tmp->value, "<"))
+			tmp->type = INPUT;
+		else if (tmp->div && !ft_strcmp(tmp->value, "|"))
+			tmp->type = PIPE;
+		else if (!tmp->prev || tmp->prev->type >= TRUNC)
+			tmp->type = CMD;
+		else
+			tmp->type = ARG;
+		tmp = tmp->next;
+	}
+}
+
 int	process_token(t_data *data)
 {
 	int	ret;
@@ -43,33 +72,4 @@ int	token_split(t_data *data)
 		return (token_err(data, NULL, "Memory allocation failure", 1));
 	tokens_type_define(data);
 	return (0);
-}
-
-void	tokens_type_define(t_data *data)
-{
-	t_token	*tmp;
-
-	tmp = data->token;
-	while (tmp)
-	{
-		if (!tmp->value || !ft_strcmp(tmp->value, ""))
-			tmp->type = EMPTY;
-		else if (tmp->div && !ft_strcmp(tmp->value, ";"))
-			tmp->type = END;
-		else if (tmp->div && !ft_strcmp(tmp->value, ">"))
-			tmp->type = TRUNC;
-		else if (tmp->div && !ft_strcmp(tmp->value, ">>"))
-			tmp->type = APPEND;
-		else if (tmp->div && !ft_strcmp(tmp->value, "<<"))
-			tmp->type = HEREDOC;
-		else if (tmp->div && !ft_strcmp(tmp->value, "<"))
-			tmp->type = INPUT;
-		else if (tmp->div && !ft_strcmp(tmp->value, "|"))
-			tmp->type = PIPE;
-		else if (!tmp->prev || tmp->prev->type >= TRUNC)
-			tmp->type = CMD;
-		else
-			tmp->type = ARG;
-		tmp = tmp->next;
-	}
 }
