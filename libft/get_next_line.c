@@ -18,6 +18,8 @@ static char	*extract_line(char *line)
 	size_t	i;
 	size_t	line_buffer;
 
+	if (!line)
+		return (NULL);
 	i = 0;
 	line_buffer = ft_strlen(line);
 	while (line[i] != '\n' && line[i] != '\0')
@@ -25,9 +27,13 @@ static char	*extract_line(char *line)
 	if (line[i] == '\n')
 		i++;
 	next_line = ft_substr(line, i, line_buffer);
+	if (!next_line || next_line[0] == '\0')
+	{
+		if (next_line[0] == '\0')
+			free(next_line);
+		next_line = NULL;
+	}
 	free(line);
-	if (!next_line)
-		return (NULL);
 	return (next_line);
 }
 
@@ -37,6 +43,8 @@ static char	*get_line(char *line)
 	size_t	i;
 	char	*cpy;
 
+	if (!line)
+		return (NULL);
 	line_len = 0;
 	while (line[line_len] != '\n' && line[line_len] != '\0')
 		line_len++;
@@ -64,11 +72,13 @@ static char	*read_buffer(int fd, char *store, char *buffer)
 	while (!ft_strchr(store, '\n') && byte_num != 0)
 	{
 		byte_num = read(fd, buffer, BUFFER_SIZE);
-		if (byte_num == -1 || byte_num == 0)
+		if (byte_num < 0)
 		{
 			free(store);
 			return (NULL);
 		}
+		else if (byte_num == 0)
+			return (store);
 		buffer[byte_num] = '\0';
 		tmp = store;
 		store = ft_strjoin(tmp, buffer);
@@ -95,8 +105,12 @@ char	*get_next_line(int fd)
 		store = line;
 	line = read_buffer(fd, store, buffer);
 	free(buffer);
-	if (!line)
-		return (NULL);
+	if (!line || line[0] == '\0')
+	{
+		if (line[0] == '\0')
+			free(line);
+		line = NULL;
+	}
 	one_line = get_line(line);
 	line = extract_line(line);
 	return (one_line);
