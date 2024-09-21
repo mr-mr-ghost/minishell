@@ -15,6 +15,7 @@
 char	*join_strings(char *s1, char *s2)
 {
 	char	*joined;
+
 	if (s1)
 	{
 		joined = ft_strjoin(s1, s2);
@@ -26,15 +27,23 @@ char	*join_strings(char *s1, char *s2)
 	return (joined);
 }
 
-void	heredoc_error(char *delimiter)
+char	*heredoc_error(char *delimiter, char *heredoc)
 {
 	ft_putchar_fd('\n', 1);
 	if (g_sig.sigint)
-		return ;
-	ft_putstr_fd("minishell: warning: ", 2);
-	ft_putstr_fd("here-document delimited by end-of-file (wanted `", 2);
-	ft_putstr_fd(delimiter, 2);
-	ft_putstr_fd("')\n", 2);
+	{
+		if (heredoc)
+			free(heredoc);
+		return (NULL);
+	}
+	else
+	{
+		ft_putstr_fd("minishell: warning: ", 2);
+		ft_putstr_fd("here-document delimited by end-of-file (wanted `", 2);
+		ft_putstr_fd(delimiter, 2);
+		ft_putstr_fd("')\n", 2);
+		return (heredoc);
+	}
 }
 
 void	heredoc_signal(int signum)
@@ -81,8 +90,9 @@ char	*get_heredoc(char *delimiter)
 		heredoc = join_strings(heredoc, hereline);
 		hereline = get_next_line(0);
 	}
-	if (!hereline || ft_strncmp(hereline, delimiter, ft_strlen(delimiter)))
-		heredoc_error(delimiter);
+	if (g_sig.sigint || !hereline
+		|| ft_strncmp(hereline, delimiter, ft_strlen(delimiter)))
+		heredoc = heredoc_error(delimiter, heredoc);
 	if (hereline)
 		free(hereline);
 	sig_init();
