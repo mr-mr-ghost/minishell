@@ -29,10 +29,37 @@ char	*join_strings(char *s1, char *s2)
 void	heredoc_error(char *delimiter)
 {
 	ft_putchar_fd('\n', 1);
+	if (g_sig.sigint)
+		return ;
 	ft_putstr_fd("minishell: warning: ", 2);
 	ft_putstr_fd("here-document delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd(delimiter, 2);
 	ft_putstr_fd("')\n", 2);
+}
+
+void	heredoc_signal(int signum)
+{
+	if (signum == SIGINT)
+	{
+		g_sig.sigint = 1;
+		rl_on_new_line();
+	}
+}
+
+void	heredoc_signal_handler(void)
+{
+	struct sigaction	act;
+	struct termios		term;
+
+	tcgetattr(0, &term);
+	term.c_cc[VQUIT] = _POSIX_VDISABLE;
+	tcsetattr(0, TCSANOW, &term);
+	act.sa_flags = 0;
+	act.sa_handler = heredoc_signal;
+	sigemptyset(&act.sa_mask);
+	sigaddset(&act.sa_mask, SIGINT);
+	sigaction(SIGINT, &act, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 char	*get_heredoc(char *delimiter)
@@ -40,6 +67,7 @@ char	*get_heredoc(char *delimiter)
 	char	*heredoc;
 	char	*hereline;
 
+	heredoc_signal_handler();
 	ft_putstr_fd("> ", 1);
 	heredoc = NULL;
 	hereline = get_next_line(0);
@@ -57,6 +85,7 @@ char	*get_heredoc(char *delimiter)
 		heredoc_error(delimiter);
 	if (hereline)
 		free(hereline);
+	sig_init();
 	return (heredoc);
 }
 

@@ -107,9 +107,9 @@ char	*get_next_line(int fd)
 	free(buffer);
 	if (!line || line[0] == '\0')
 	{
-		if (line[0] == '\0')
+		if (line && line[0] == '\0')
 			free(line);
-		line = NULL;
+		return (NULL);
 	}
 	one_line = get_line(line);
 	line = extract_line(line);

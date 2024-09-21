@@ -19,7 +19,7 @@ char	*check_declaration(t_token *token)
 	tmp = token;
 	while (tmp && tmp->type <= ARG)
 	{
-		if (!ft_strchr(tmp->value, '='))
+		if (!ft_strchr(tmp->value, '=') || !check_char(tmp->value))
 			return (tmp->value);
 		tmp = tmp->next;
 	}

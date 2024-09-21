@@ -2,8 +2,6 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: Fix weird ctrl+c error in heredoc
-
 TODO: heredoc probably needs a look at
 
 TODO: probably some memory leaks
