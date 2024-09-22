@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	signal_manager();
+	signal_manager(sigint_handler, SA_RESTART);
 	init_data(&data);
 	init_env(&data, envp);
 	while (!data.end)

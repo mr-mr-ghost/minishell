@@ -140,8 +140,9 @@ int		token_err(t_data *data, char *arg, char *msg, int code);
 /*	signals	*/
 void	sigint_handler(int signum);
 void	sig_init(void);
-void	signal_manager(void);
+void	signal_manager(void (*handler)(int), int flag);
 void	sig_child_handler(int signum);
+void	heredoc_signal(int signum);
 
 /*	pwd command	*/
 int		pwd_command(void);
@@ -214,7 +215,12 @@ void	free_array(char **array);
 /*	redirections	*/
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
-void	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
+
+/*	heredoc redirect*/
+char	*get_heredoc(char *delimiter);
+char	*heredoc_error(char *delimiter, char *heredoc);
+int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
+char	*join_strings(char *s1, char *s2);
 
 t_token	*get_nth_token(t_token *token, int n);
 t_token	*return_redirt(t_token *cmdt);

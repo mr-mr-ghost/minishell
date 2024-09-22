@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	signal_manager(void)
+void	signal_manager(void (*handler)(int), int flag)
 {
 	struct sigaction	act;
 	struct termios		term;
@@ -20,8 +20,8 @@ void	signal_manager(void)
 	tcgetattr(0, &term);
 	term.c_cc[VQUIT] = _POSIX_VDISABLE;
 	tcsetattr(0, TCSANOW, &term);
-	act.sa_handler = sigint_handler;
-	act.sa_flags = SA_RESTART;
+	act.sa_handler = handler;
+	act.sa_flags = flag;
 	sigemptyset(&act.sa_mask);
 	sigaddset(&act.sa_mask, SIGINT);
 	sigaction(SIGINT, &act, NULL);
@@ -30,19 +30,30 @@ void	signal_manager(void)
 
 void	sig_child_handler(int signum)
 {
-	(void)signum;
-	exit(130);
+	if (signum == SIGINT)
+		exit(130);
 }
 
 void	sigint_handler(int signum)
 {
-	(void)signum;
-	ft_putstr_fd("\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	if (!g_sig.in_cmd)
-		rl_redisplay();
-	g_sig.sigint = 1;
+	if (signum == SIGINT)
+	{
+		ft_putstr_fd("\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		if (!g_sig.in_cmd)
+			rl_redisplay();
+		g_sig.sigint = 1;
+	}
+}
+
+void	heredoc_signal(int signum)
+{
+	if (signum == SIGINT)
+	{
+		g_sig.sigint = 1;
+		rl_on_new_line();
+	}
 }
 
 void	sig_init(void)

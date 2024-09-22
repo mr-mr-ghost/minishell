@@ -2,7 +2,7 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: heredoc probably needs a look at
+TODO: Dollar sign in heredoc
 
 TODO: probably some memory leaks
 

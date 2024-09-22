@@ -22,7 +22,7 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 	g_sig.in_cmd = true;
 	pid = fork();
 	if (pid < 0)
-		perror("fork");
+		return (err_msg(NULL, NULL, strerror(errno), 1));
 	else if (pid == 0)
 		child_process(data, cmdt, redirt);
 	else

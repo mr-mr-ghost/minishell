@@ -20,7 +20,6 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	t_token	*redirt;
 	int		status;
 
-	status = 0;
 	redirt = return_redirt(cmdt);
 	if (!redirt)
 	{
@@ -29,8 +28,9 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			child_process(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next) // redirect sign without next string
-		ft_putstr_fd("syntax error near unexpected token `newline'\n", 2);
+	else if (!redirt->next) /* redirect sign without next string*/
+		return (err_msg(NULL, NULL,
+						"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		if (redirt->type == HEREDOC)
@@ -38,15 +38,12 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			printf("TODO: heredoc\n");
 			return (status = 0);
 		}
-		if (is_cmd(cmdt->value, 0))
-		{
-			status = redirection_wrap_builtins(data, cmdt, redirt);
-			return (status);
-		}
+		if (is_cmd(cmdt->value, 0)
+			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
+			return (redirection_wrap_builtins(data, cmdt, redirt));
 		child_process(data, cmdt, redirt);
-		return (status);
+		return (0);
 	}
-	return (status = 0);
 }
 
 void	close_fd(int *fd, int dst)
@@ -72,7 +69,6 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 			close_fd(input_fd, STDIN_FILENO);
 		if (output_fd) /* Redirect stdout if output_fd is not NULL*/
 			close_fd(output_fd, STDOUT_FILENO);
-		signal(SIGINT, sig_child_handler);
 		launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
 		free_tokens(data);

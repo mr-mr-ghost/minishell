@@ -29,7 +29,7 @@ static char	*extract_line(char *line)
 	next_line = ft_substr(line, i, line_buffer);
 	if (!next_line || next_line[0] == '\0')
 	{
-		if (next_line[0] == '\0')
+		if (next_line && next_line[0] == '\0')
 			free(next_line);
 		next_line = NULL;
 	}

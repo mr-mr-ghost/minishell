@@ -70,7 +70,7 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	bin = NULL;
 	enva = NULL;
 	cmda = NULL;
-	signal(SIGINT, sig_child_handler);
+	signal_manager(sig_child_handler, 0);
 	bin = find_bin(data->env, cmdt->value);
 	if (!bin)
 		bin_error(data, cmdt->value);
