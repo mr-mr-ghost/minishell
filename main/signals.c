@@ -47,7 +47,7 @@ void	sigint_handler(int signum)
 	}
 }
 
-void	heredoc_signal(int signum)
+void	heredoc_sig_handler(int signum)
 {
 	if (signum == SIGINT)
 	{

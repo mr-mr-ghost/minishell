@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-// wrapper function for redirection of builtin commands
+/* wrapper function for redirection of builtin commands*/
 int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 {
 	int	status;
@@ -37,9 +37,9 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 	return (status);
 }
 
-// handles input/output redirection (>, >>, <)
-// opens a file and sets it as the new stdout or stdin
-// returns 0 on success, -1 on failure of open or dup2
+/* handles input/output redirection (>, >>, <)*/
+/* opens a file and sets it as the new stdout or stdin*/
+/* returns 0 on success, -1 on failure of open or dup2*/
 int	handle_redirection(t_token *fname, int type)
 {
 	int	fd;

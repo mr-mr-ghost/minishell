@@ -142,7 +142,7 @@ void	sigint_handler(int signum);
 void	sig_init(void);
 void	signal_manager(void (*handler)(int), int flag);
 void	sig_child_handler(int signum);
-void	heredoc_signal(int signum);
+void	heredoc_sig_handler(int signum);
 
 /*	pwd command	*/
 int		pwd_command(void);
@@ -219,6 +219,7 @@ int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 /*	heredoc redirect*/
 char	*get_heredoc(char *delimiter);
 char	*heredoc_error(char *delimiter, char *heredoc);
+int		process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
 char	*join_strings(char *s1, char *s2);
 

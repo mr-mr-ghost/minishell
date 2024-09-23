@@ -2,9 +2,15 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: Dollar sign in heredoc
+TODO: Dollar sign in heredoc (maybe?)
+
+TODO: heredoc pipe
+
+TODO: cleanup the calamity of the call_pipe function in pipes_utils
 
 TODO: probably some memory leaks
+
+TODO: resolve the semi-colon question
 
 TODO: cleanup
 

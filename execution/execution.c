@@ -58,16 +58,13 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next) /* redirect sign without next string*/
+	else if (!redirt->next)
 		return (err_msg(NULL, NULL,
 				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		if (redirt->type == HEREDOC)
-		{
-			handle_heredoc(data, cmdt, redirt);
-			return (0);
-		}
+			return (handle_heredoc(data, cmdt, redirt));
 		if (is_cmd(cmdt->value, 0)
 			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
 			return (redirection_wrap_builtins(data, cmdt, redirt));
@@ -84,9 +81,9 @@ void	process_n_exec(t_data *data)
 		return ;
 	count = count_args(data->token, PIPE);
 	nextt = get_nth_token(data->token, count);
-	if (!nextt) /* no PIPE OR END*/
+	if (!nextt)
 		data->exit_code = launch_single_anycmd(data, data->token);
-	else if (nextt->type == PIPE && nextt->next) /*	disables cmd | nothing*/
+	else if (nextt->type == PIPE && nextt->next)
 		data->exit_code = call_pipe(data, data->token);
 	else if (nextt->type == END)
 		data->exit_code = err_msg(NULL, NULL,

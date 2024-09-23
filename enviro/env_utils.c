@@ -87,7 +87,7 @@ char	*get_env_name(char *dest, const char *src)
 	int	i;
 
 	i = 0;
-	while (src[i] && src[i] != '=')
+	while (src[i] && !ft_strchr("=\"\' ", src[i]))
 	{
 		dest[i] = src[i];
 		i++;

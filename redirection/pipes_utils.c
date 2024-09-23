@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-// example: /bin/echo "Hello World!" | /bin/tr 'a-z' 'A-Z' | /bin/tr '!' '?'
-// example: /bin/ls -l | /usr/bin/grep '.c' | /bin/wc -l
-// example: /bin/echo "Hello World!" | /bin/tr 'H' 'h' | /bin/tr 'e' 'E' | /bin/tr 'l' 'L' | /bin/tr 'o' 'O'
+/* example: echo "Hello World!" | tr 'a-z' 'A-Z' | tr '!' '?'*/
+/* example: ls -l | grep '.c' | wc -l*/
+/* example: echo "Hello World!" | tr 'H' 'h' | tr 'e' 'E' | tr 'l' 'L'*/
 int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
@@ -28,9 +28,9 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			child_process(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next) /* redirect sign without next string*/
+	else if (!redirt->next)
 		return (err_msg(NULL, NULL,
-						"syntax error near unexpected token `newline'", 2));
+				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		if (redirt->type == HEREDOC)
@@ -60,14 +60,14 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("fork");
+		err_msg(NULL, NULL, strerror(errno), 1);
 		return (pid);
 	}
 	else if (pid == 0)
-	{	/* Child process*/
-		if (input_fd) /* Redirect stdin if input_fd is not NULL*/
+	{
+		if (input_fd)
 			close_fd(input_fd, STDIN_FILENO);
-		if (output_fd) /* Redirect stdout if output_fd is not NULL*/
+		if (output_fd)
 			close_fd(output_fd, STDOUT_FILENO);
 		launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
@@ -84,8 +84,10 @@ int	call_pipe(t_data *data, t_token *currentt)
 	t_token	*nextt;
 	int		pipefd[2];
 	int		prev_pipefd[2];
+	int		status;
 	pid_t	pid;
 
+	status = 0;
 	g_sig.in_cmd = true;
 	while (currentt)
 	{
@@ -95,12 +97,12 @@ int	call_pipe(t_data *data, t_token *currentt)
 		else
 		{
 			if (nextt && nextt->type == PIPE && nextt->next == NULL)
-				ft_putstr_fd("no command after pipe\n", 2);
+				status = err_msg(NULL, NULL, "Unclosed pipe", 2);
 			nextt = NULL;
 		}
 		if (nextt && pipe(pipefd) == -1)
 		{
-			perror("pipe");
+			status = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
 		if (currentt->prev == NULL)
@@ -129,5 +131,5 @@ int	call_pipe(t_data *data, t_token *currentt)
 		;
 	if (g_sig.sigint)
 		return (130);
-	return (0);
+	return (status);
 }
