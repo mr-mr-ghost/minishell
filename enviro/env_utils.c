@@ -87,7 +87,7 @@ char	*get_env_name(char *dest, const char *src)
 	int	i;
 
 	i = 0;
-	while (src[i] && !ft_strchr("=\"\' ", src[i]))
+	while (src[i] && (ft_isalpha(src[i]) || src[i] == '_'))
 	{
 		dest[i] = src[i];
 		i++;
