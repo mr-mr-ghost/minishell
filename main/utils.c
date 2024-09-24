@@ -51,10 +51,12 @@ bool	check_char(char *str)
 
 	if (!str || !str[0])
 		return (false);
-	i = 0;
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (false);
+	i = 1;
 	while (str[i] && str[i] != '=')
 	{
-		if (!ft_isalpha(str[i]) && str[i] != '_')
+		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (false);
 		i++;
 	}

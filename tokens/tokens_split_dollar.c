@@ -46,7 +46,7 @@ char	*process_dollar(t_data *data, char *line, int *i)
 		&& (line[*i] || line[*i] == ' '))
 	{
 		env_value = ft_strdup("");
-		while (line[*i] && (ft_isalpha(line[*i]) || line[*i] == '_'))
+		while (line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
 			(*i)++;
 	}
 	else
