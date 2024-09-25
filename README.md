@@ -2,6 +2,8 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
+TODO: Fix return issues in pipes and heredoc
+
 TODO: heredoc pipe
 
 TODO: cleanup the calamity of the call_pipe function in pipes_utils
