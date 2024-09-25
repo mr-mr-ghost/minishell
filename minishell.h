@@ -91,7 +91,6 @@ int		err_msg(char *location, char *arg, char *msg, int code);
 
 /*	libft utils	*/
 int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strstr(const char *big, const char *little);
 
 /*	environment initialisation	*/
 int		init_env(t_data *data, char **envp);
@@ -217,11 +216,15 @@ int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 
 /*	heredoc redirect*/
-char	*get_heredoc(char *delimiter);
-char	*heredoc_error(char *delimiter, char *heredoc);
+char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
-char	*join_strings(char *s1, char *s2);
+
+
+/*	heredoc redirect utils	*/
+char	*heredoc_error(char *delimiter, char *heredoc);
+char	*join_strings(t_data *data, char *s1, char *s2);
+int		heredoc_strcat(char *dest, char *src, int start);
 
 t_token	*get_nth_token(t_token *token, int n);
 t_token	*return_redirt(t_token *cmdt);

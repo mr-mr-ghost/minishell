@@ -56,12 +56,14 @@ void	close_fd(int *fd, int dst)
 int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 {
 	pid_t	pid;
+	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid < 0)
 	{
 		err_msg(NULL, NULL, strerror(errno), 1);
-		return (pid);
+		return (-1);
 	}
 	else if (pid == 0)
 	{
@@ -69,14 +71,14 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 			close_fd(input_fd, STDIN_FILENO);
 		if (output_fd)
 			close_fd(output_fd, STDOUT_FILENO);
-		launch_cmd_inpipe(data, cmdt);
+		status = launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
 		free_tokens(data);
 		free_env(data->env);
 		free_env(data->secret_env);
-		exit(EXIT_FAILURE);
+		exit(status);
 	}
-	return (1);
+	return (WEXITSTATUS(status));
 }
 
 int	call_pipe(t_data *data, t_token *currentt)
@@ -85,7 +87,6 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		pipefd[2];
 	int		prev_pipefd[2];
 	int		status;
-	pid_t	pid;
 
 	status = 0;
 	g_sig.in_cmd = true;
@@ -106,11 +107,11 @@ int	call_pipe(t_data *data, t_token *currentt)
 			break ;
 		}
 		if (currentt->prev == NULL)
-			pid = pipe_fork(data, currentt, NULL, pipefd);
+			status = pipe_fork(data, currentt, NULL, pipefd);
 		else if (nextt)
-			pid = pipe_fork(data, currentt, prev_pipefd, pipefd);
+			status = pipe_fork(data, currentt, prev_pipefd, pipefd);
 		else
-			pid = pipe_fork(data, currentt, prev_pipefd, NULL);
+			status = pipe_fork(data, currentt, prev_pipefd, NULL);
 		if (currentt->prev != NULL)
 		{	// Close the previous pipe in the parent
 			close(prev_pipefd[0]);
@@ -122,8 +123,11 @@ int	call_pipe(t_data *data, t_token *currentt)
 			prev_pipefd[1] = pipefd[1];
 		}
 		currentt = nextt;
-		if (pid < 0)
+		if (status < 0)
+		{
 			currentt = NULL;
+			status = 1;
+		}
 	}
 	close(prev_pipefd[0]); // Close the last pipe in the parent process
 	close(prev_pipefd[1]);

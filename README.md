@@ -2,8 +2,6 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: Dollar sign in heredoc (maybe?)
-
 TODO: heredoc pipe
 
 TODO: cleanup the calamity of the call_pipe function in pipes_utils
