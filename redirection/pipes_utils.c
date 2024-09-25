@@ -131,9 +131,9 @@ int	call_pipe(t_data *data, t_token *currentt)
 	}
 	close(prev_pipefd[0]); // Close the last pipe in the parent process
 	close(prev_pipefd[1]);
-	while (wait(NULL) > 0) // Wait for all child processes
+	while (wait(&status) > 0) // Wait for all child processes
 		;
 	if (g_sig.sigint)
 		return (130);
-	return (status);
+	return (WEXITSTATUS(status));
 }

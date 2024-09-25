@@ -67,6 +67,7 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	char	*heredoc;
 	int		pipefd[2];
+	int		status;
 	t_token	*secondredir;
 
 	secondredir = return_redirt(redirt->next);
@@ -82,6 +83,6 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 	if (heredoc)
 		free(heredoc);
 	close(pipefd[1]);
-	wait(NULL);
-	return (0);
+	wait(&status);
+	return (WEXITSTATUS(status));
 }
