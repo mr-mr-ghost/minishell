@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int heredoc_strcat(char *dest, char *src, int start)
+int	heredoc_strcat(char *dest, char *src, int start)
 {
 	int	j;
 

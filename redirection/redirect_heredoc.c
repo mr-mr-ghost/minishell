@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char *get_heredoc(t_data *data, char *delimiter)
+char	*get_heredoc(t_data *data, char *delimiter)
 {
 	char	*heredoc;
 	char	*hereline;
