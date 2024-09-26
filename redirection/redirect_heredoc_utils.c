@@ -33,7 +33,7 @@ char	*join_strings(t_data *data, char *s1, char *s2)
 
 	i = heredoc_strcat(buffer, s1, 0);
 	j = 0;
-	while (s2 && s2[j])
+	while (s2 && s2[j] && i < BUFF_SIZE)
 	{
 		if (s2[j] == '$' && s2[j + 1] && s2[j + 1] != ' ' && s2[j + 1] != '\n')
 		{
@@ -44,6 +44,8 @@ char	*join_strings(t_data *data, char *s1, char *s2)
 			buffer[i++] = s2[j++];
 	}
 	buffer[i] = '\0';
+	if (s2)
+		free(s2);
 	return (ft_strdup(buffer));
 }
 
@@ -54,7 +56,6 @@ char	*heredoc_error(char *delimiter, char *heredoc)
 	{
 		if (heredoc)
 			free(heredoc);
-		g_sig.sigint = 0;
 		return (NULL);
 	}
 	ft_putstr_fd("minishell: warning: ", 2);

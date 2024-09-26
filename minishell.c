@@ -45,13 +45,13 @@ int	main(int argc, char **argv, char **envp)
 	{
 		sig_init();
 		data.line = read_line(data.env);
+		if (g_sig.sigint)
+			data.exit_code = 130;
 		if (!data.line)
 			break ;
 		if (token_split(&data))
 			continue ;
-		if (g_sig.sigint)
-			data.exit_code = 130;
-		else if (!data.token)
+		if (!data.token)
 			data.exit_code = 0;
 		process_n_exec(&data);
 		free_tokens(&data);

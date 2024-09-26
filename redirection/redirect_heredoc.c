@@ -72,7 +72,7 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 
 	secondredir = return_redirt(redirt->next);
 	heredoc = get_heredoc(data, redirt->next->value);
-	if (cmdt->next->type >= TRUNC && !heredoc)
+	if (g_sig.sigint)
 		return (0);
 	if (pipe(pipefd) == -1)
 		return (err_msg(NULL, NULL, strerror(errno), 1));

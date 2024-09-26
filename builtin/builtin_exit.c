@@ -19,15 +19,21 @@
 int	validate_exit(char *arg)
 {
 	size_t	i;
+	int		nbr;
 
 	i = 0;
-	if (ft_strchr("-+", arg[0]) != NULL && arg[1] != '\0')
+	if (ft_strchr("-+", arg[0]) && arg[1] != '\0')
 		i++;
 	while (arg[i] && ft_isdigit(arg[i]))
 		i++;
 	if (arg[i] != '\0')
 		return (err_msg("exit", arg, "numeric argument required", 2));
-	return (ft_atoi(arg) % 256);
+	nbr = ft_atoi(arg);
+	if (nbr < 0)
+		nbr = 256 + (nbr % 256);
+	else
+		nbr = nbr % 256;
+	return (nbr);
 }
 
 int	exit_command(t_data *data, t_token *token)
@@ -41,12 +47,13 @@ int	exit_command(t_data *data, t_token *token)
 		return (0);
 	}
 	exit_token = token->next;
-	if (!exit_token->next)
+	if (exit_token->next && exit_token->next->type <= ARG
+		&& check_numeric (exit_token->value))
 	{
-		exit_status = validate_exit(exit_token->value);
-		data->end = true;
-		return (exit_status);
+		ft_putendl_fd("exit", 1);
+		return (err_msg("exit", NULL, "too many arguments", 1));
 	}
-	ft_putendl_fd("exit", 1);
-	return (err_msg("exit", NULL, "too many arguments", 1));
+	exit_status = validate_exit(exit_token->value);
+	data->end = true;
+	return (exit_status);
 }

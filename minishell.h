@@ -182,6 +182,7 @@ char	*check_declaration(t_token *token);
 bool	valid_env_name(t_env *env, char *key);
 char	*add_quotes_var(char *line);
 bool	select_valid_env(t_env *env, char *line, int start);
+bool	check_numeric(char *str);
 
 /*	non-builtins handling	*/
 int		launch_nonbuiltins(t_data *data, t_token *cmd, t_token *redirt);

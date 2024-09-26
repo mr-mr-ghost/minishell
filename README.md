@@ -2,7 +2,9 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: Fix return issues in pipes and heredoc
+TODO: Fix return issues in pipes and heredoc(?)
+
+TODO: echo > | ls should return an error
 
 TODO: heredoc pipe
 

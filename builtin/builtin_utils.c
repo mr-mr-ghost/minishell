@@ -76,3 +76,19 @@ bool	select_valid_env(t_env *env, char *line, int start)
 	free(env_name);
 	return (false);
 }
+
+bool	check_numeric(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}

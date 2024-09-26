@@ -36,7 +36,7 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 		if (redirt->type == HEREDOC)
 		{
 			printf("TODO: heredoc\n");
-			return (status = 0);
+			return (0);
 		}
 		if (is_cmd(cmdt->value, 0)
 			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
@@ -61,10 +61,7 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 	status = 0;
 	pid = fork();
 	if (pid < 0)
-	{
-		err_msg(NULL, NULL, strerror(errno), 1);
-		return (-1);
-	}
+		return (err_msg(NULL, NULL, strerror(errno), -1));
 	else if (pid == 0)
 	{
 		if (input_fd)
@@ -88,7 +85,6 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		prev_pipefd[2];
 	int		status;
 
-	status = 0;
 	g_sig.in_cmd = true;
 	while (currentt)
 	{
@@ -124,10 +120,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 		}
 		currentt = nextt;
 		if (status < 0)
-		{
 			currentt = NULL;
-			status = 1;
-		}
 	}
 	close(prev_pipefd[0]); // Close the last pipe in the parent process
 	close(prev_pipefd[1]);
