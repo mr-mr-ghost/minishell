@@ -6,6 +6,8 @@ TODO: Fix return issues in pipes and heredoc(?)
 
 TODO: echo > | ls should return an error
 
+TODO: builtins should probably not go through child_process in heredoc
+
 TODO: heredoc pipe
 
 TODO: cleanup the calamity of the call_pipe function in pipes_utils

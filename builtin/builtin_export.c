@@ -78,7 +78,6 @@ int	export_command(t_data *data, t_token *token)
 {
 	t_token	*export_token;
 	bool	error;
-	int		exit_status;
 
 	if (!token->next || token->next->type >= TRUNC)
 		return (single_export(data->env));
@@ -86,8 +85,7 @@ int	export_command(t_data *data, t_token *token)
 	error = false;
 	while (export_token && export_token->type <= ARG)
 	{
-		exit_status = process_export(data, export_token);
-		if (exit_status)
+		if (process_export(data, export_token))
 			error = true;
 		export_token = export_token->next;
 	}

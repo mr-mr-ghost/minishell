@@ -84,8 +84,10 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		pipefd[2];
 	int		prev_pipefd[2];
 	int		status;
+	int		error;
 
 	g_sig.in_cmd = true;
+	error = 0;
 	while (currentt)
 	{
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));
@@ -94,12 +96,12 @@ int	call_pipe(t_data *data, t_token *currentt)
 		else
 		{
 			if (nextt && nextt->type == PIPE && nextt->next == NULL)
-				status = err_msg(NULL, NULL, "Unclosed pipe", 2);
+				error = err_msg(NULL, NULL, "Unclosed pipe", 2);
 			nextt = NULL;
 		}
 		if (nextt && pipe(pipefd) == -1)
 		{
-			status = err_msg(NULL, NULL, strerror(errno), 1);
+			error = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
 		if (currentt->prev == NULL)
@@ -126,7 +128,9 @@ int	call_pipe(t_data *data, t_token *currentt)
 	close(prev_pipefd[1]);
 	while (wait(&status) > 0) // Wait for all child processes
 		;
-	if (g_sig.sigint)
-		return (130);
+//	if (g_sig.sigint)
+//		return (130);
+	if (error)
+		return (error);
 	return (WEXITSTATUS(status));
 }

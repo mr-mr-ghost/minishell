@@ -12,14 +12,16 @@
 
 #include "../minishell.h"
 
-int	init_env(t_data *data, char **envp)
+void	init_env(t_data *data, char **envp)
 {
 	data->env = create_env_list(data->env, envp);
 	data->secret_env = create_env_list(data->secret_env, envp);
 	if (!data->env || !data->secret_env)
-		return (err_msg(NULL, NULL,
-				"Environment memory allocation failure", 1));
-	return (0);
+	{
+		data->exit_code = err_msg(NULL, NULL,
+				"Memory allocation failure", 1);
+		data->end = true;
+	}
 }
 
 t_env	*create_env_list(t_env *env, char **envp)

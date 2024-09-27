@@ -93,7 +93,7 @@ int		err_msg(char *location, char *arg, char *msg, int code);
 int		ft_strcmp(const char *s1, const char *s2);
 
 /*	environment initialisation	*/
-int		init_env(t_data *data, char **envp);
+void	init_env(t_data *data, char **envp);
 t_env	*create_env_list(t_env *env, char **envp);
 void	set_shell_lvl(t_env *env);
 char	*set_env_name(char *line);

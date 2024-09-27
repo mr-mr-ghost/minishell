@@ -55,7 +55,7 @@ int	handle_normal_chars(t_data *data, int *i)
 
 	k = 0;
 	while (data->line[*i] && !ft_strchr("><|; ", data->line[*i])
-		&& k < BUFF_SIZE)
+		&& k < BUFF_SIZE - 1)
 	{
 		if (data->line[*i] == '\"' || data->line[*i] == '\'')
 			handle_quotes(data, buffer, i, &k);

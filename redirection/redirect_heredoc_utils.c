@@ -28,17 +28,17 @@ char	*join_strings(t_data *data, char *s1, char *s2)
 {
 	int		i;
 	int		j;
-	char	*env_value;
+	char	*string;
 	char	buffer[BUFF_SIZE];
 
-	i = heredoc_strcat(buffer, s1, 0);
+	i = 0;
 	j = 0;
-	while (s2 && s2[j] && i < BUFF_SIZE)
+	while (s2 && s2[j] && i < BUFF_SIZE - 1)
 	{
 		if (s2[j] == '$' && s2[j + 1] && s2[j + 1] != ' ' && s2[j + 1] != '\n')
 		{
-			env_value = process_dollar(data, s2, &j);
-			i = heredoc_strcat(buffer, env_value, i);
+			string = process_dollar(data, s2, &j);
+			i = heredoc_strcat(buffer, string, i);
 		}
 		else
 			buffer[i++] = s2[j++];
@@ -46,7 +46,10 @@ char	*join_strings(t_data *data, char *s1, char *s2)
 	buffer[i] = '\0';
 	if (s2)
 		free(s2);
-	return (ft_strdup(buffer));
+	string = ft_strjoin(s1, buffer);
+	if (s1)
+		free(s1);
+	return (string);
 }
 
 char	*heredoc_error(char *delimiter, char *heredoc)
