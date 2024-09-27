@@ -52,7 +52,7 @@ char	*join_strings(t_data *data, char *s1, char *s2)
 	return (string);
 }
 
-char	*heredoc_error(char *delimiter, char *heredoc, bool *exit)
+char	*heredoc_error(char *delimiter, char *heredoc)
 {
 	ft_putchar_fd('\n', 1);
 	if (g_sig.sigint)
@@ -65,8 +65,5 @@ char	*heredoc_error(char *delimiter, char *heredoc, bool *exit)
 	ft_putstr_fd("here-document delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd(delimiter, 2);
 	ft_putstr_fd("')\n", 2);
-	*exit = true;
-	if (heredoc)
-		free(heredoc);
-	return (NULL);
+	return (heredoc);
 }

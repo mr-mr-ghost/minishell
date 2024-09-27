@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char	*get_heredoc(t_data *data, char *delimiter, bool *exit)
+char	*get_heredoc(t_data *data, char *delimiter)
 {
 	char	*heredoc;
 	char	*hereline;
@@ -33,7 +33,7 @@ char	*get_heredoc(t_data *data, char *delimiter, bool *exit)
 	}
 	if (g_sig.sigint || !hereline
 		|| ft_strncmp(hereline, delimiter, ft_strlen(delimiter)))
-		heredoc = heredoc_error(delimiter, heredoc, exit);
+		heredoc = heredoc_error(delimiter, heredoc);
 	if (hereline)
 		free(hereline);
 	signal_manager(sigint_handler, SA_RESTART);
@@ -68,14 +68,12 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 	char	*heredoc;
 	int		pipefd[2];
 	int		status;
-	bool	exit;
 	t_token	*secondredir;
 
-	exit = false;
 	secondredir = return_redirt(redirt->next);
-	heredoc = get_heredoc(data, redirt->next->value, &exit);
-	if (g_sig.sigint || exit)
-		return (0);
+	heredoc = get_heredoc(data, redirt->next->value);
+	if (g_sig.sigint)
+		return (130);
 	if (pipe(pipefd) == -1)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	if (process_heredoc(data, cmdt, secondredir, pipefd))

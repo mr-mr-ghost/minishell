@@ -217,12 +217,12 @@ int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 
 /*	heredoc redirect*/
-char	*get_heredoc(t_data *data, char *delimiter, bool *exit);
+char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
 
 /*	heredoc redirect utils	*/
-char	*heredoc_error(char *delimiter, char *heredoc, bool *exit);
+char	*heredoc_error(char *delimiter, char *heredoc);
 char	*join_strings(t_data *data, char *s1, char *s2);
 int		heredoc_strcat(char *dest, char *src, int start);
 
