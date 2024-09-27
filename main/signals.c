@@ -17,15 +17,16 @@ void	signal_manager(void (*handler)(int), int flag)
 	struct sigaction	act;
 	struct termios		term;
 
-	tcgetattr(0, &term);
-	term.c_cc[VQUIT] = _POSIX_VDISABLE;
-	tcsetattr(0, TCSANOW, &term);
 	act.sa_handler = handler;
 	act.sa_flags = flag;
 	sigemptyset(&act.sa_mask);
 	sigaddset(&act.sa_mask, SIGINT);
 	sigaction(SIGINT, &act, NULL);
 	signal(SIGQUIT, SIG_IGN);
+	if (tcgetattr(0, &term) == -1)
+		return ;
+	term.c_cc[VQUIT] = _POSIX_VDISABLE;
+	tcsetattr(0, TCSANOW, &term);
 }
 
 void	sig_child_handler(int signum)

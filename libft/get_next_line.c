@@ -109,7 +109,7 @@ char	*get_next_line(int fd)
 	{
 		if (line && line[0] == '\0')
 			free(line);
-		return (NULL);
+		line = NULL;
 	}
 	one_line = get_line(line);
 	line = extract_line(line);
