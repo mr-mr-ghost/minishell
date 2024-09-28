@@ -64,7 +64,7 @@ int	process_token(t_data *data)
 
 int	token_split(t_data *data)
 {
-	if (data->line[0] != '\0')
+	if (data->line[0])
 		add_history(data->line);
 	if (quotes_check(data->line))
 		return (token_err(data, data->line, "Unclosed quotes", 2));

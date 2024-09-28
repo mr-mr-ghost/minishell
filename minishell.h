@@ -204,7 +204,6 @@ void	process_n_exec(t_data *data);
 /*	execution utils	*/
 int		check_launch_builtins(t_data *data, t_token *token);
 int		is_cmd(char *line, int i);
-void	free_cmd(char **cmd);
 
 /*	execution array utils	*/
 char	**form_enva(t_env *env);

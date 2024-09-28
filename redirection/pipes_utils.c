@@ -75,7 +75,7 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 		free_env(data->secret_env);
 		exit(status);
 	}
-	return (WEXITSTATUS(status));
+	return (status);
 }
 
 int	call_pipe(t_data *data, t_token *currentt)
@@ -128,8 +128,6 @@ int	call_pipe(t_data *data, t_token *currentt)
 	close(prev_pipefd[1]);
 	while (wait(&status) > 0) // Wait for all child processes
 		;
-//	if (g_sig.sigint)
-//		return (130);
 	if (error)
 		return (error);
 	return (WEXITSTATUS(status));

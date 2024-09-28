@@ -12,21 +12,6 @@
 
 #include "../minishell.h"
 
-void	free_cmd(char **cmd)
-{
-	int	i;
-
-	if (!cmd)
-		return ;
-	i = 0;
-	while (cmd[i])
-	{
-		free(cmd[i]);
-		i++;
-	}
-	free(cmd);
-}
-
 int	is_cmd(char *line, int i)
 {
 	const char	*cmds[] = {"echo", "cd", "pwd",
