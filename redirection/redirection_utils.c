@@ -45,9 +45,9 @@ int	handle_redirection(t_token *fname, int type)
 	int	fd;
 	int	dupstatus;
 
-	if (type == TRUNC && fname->next->type <= ARG)
+	if (type == TRUNC && fname->type == CMD)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (type == APPEND && fname->next->type <= ARG)
+	else if (type == APPEND && fname->type == CMD)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		fd = open(fname->value, O_RDONLY);
