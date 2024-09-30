@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/09/22 14:37:15 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/09/30 14:36:54 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,11 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd)
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
-		child_process(data, cmdt, redir);
+		if (is_cmd(cmdt->value, 0))
+			redirection_wrap_builtins(data, cmdt, redir);
+		else
+			//handle_redirection
+			child_process(data, cmdt, redir);
 	}
 	return (0);
 }
