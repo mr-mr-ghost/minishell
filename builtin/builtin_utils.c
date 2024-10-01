@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:08:39 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/26 12:08:39 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/01 14:48:23 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ bool	valid_env_name(t_env *env, char *key)
 	if (!env || !key)
 		return (false);
 	tmp = env;
+	get_env_name(key_name, key);
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		get_env_name(key_name, key);
 		if (!ft_strcmp(env_name, key_name))
 			return (true);
 		tmp = tmp->next;

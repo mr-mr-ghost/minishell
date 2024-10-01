@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 12:20:14 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 12:03:01 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/01 14:45:48 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,23 @@ char	*get_dollar_value(t_env *env, char *line, int *start)
 	env_value = find_env_value(env, env_name);
 	free(env_name);
 	return (env_value);
+}
+
+int	update_line_iter(char *line, int i)
+{
+	if (ft_isdigit(line[i]))
+	{
+		while (line[i] && ft_isdigit(line[i]))
+			i++;
+	}
+	else if (ft_isalpha(line[i]) || line[i] == '_')
+	{
+		while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
+			i++;
+	}
+	else
+		i++;
+	return (i);
 }
 
 char	*process_dollar(t_data *data, char *line, int *i)
@@ -44,11 +61,10 @@ char	*process_dollar(t_data *data, char *line, int *i)
 	else if (select_valid_env(data->env, line, *i))
 		env_value = get_dollar_value(data->env, line, i);
 	else if (!select_valid_env(data->env, line, *i)
-		&& (line[*i] || line[*i] == ' '))
+		&& (!ft_strchr("><|%+,./:=^~ ", line[*i])))
 	{
 		env_value = ft_strdup("");
-		while (line[*i] && (ft_isalnum(line[*i]) || line[*i] == '_'))
-			(*i)++;
+		*i = update_line_iter(line, *i);
 	}
 	else
 		env_value = ft_strdup("$");

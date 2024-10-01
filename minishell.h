@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/07/10 16:46:05 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/01 14:57:02 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@
 # define INPUT 5
 # define HEREDOC 6
 # define PIPE 7
-# define END 8
 
 # define MAX_ARGS 42
 # define CMD_SIZE 1024
@@ -122,7 +121,8 @@ int		handle_special_chars(t_data *data, char *line, int *i);
 void	handle_quotes(t_data *data, char *buffer, int *i, int *k);
 int		handle_normal_chars(t_data *data, int *i);
 
-/*	tokens split special	*/
+/*	tokens split dollar	*/
+int		update_line_iter(char *line, int i);
 char	*process_dollar(t_data *data, char *line, int *i);
 void	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
 char	*get_dollar_value(t_env *env, char *line, int *start);
