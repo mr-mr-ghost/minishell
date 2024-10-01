@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/07/10 16:46:05 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/01 12:39:18 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 
 /*	heredoc redirect*/
 char	*get_heredoc(t_data *data, char *delimiter);
-int		process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd);
+int		process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd, char *heredoc);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
 
 /*	heredoc redirect utils	*/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_split_dollar.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 12:20:14 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/27 12:20:14 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/01 12:03:17 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ char	*get_dollar_value(t_env *env, char *line, int *start)
 		return (NULL);
 	*start += ft_strlen(env_name);
 	env_value = find_env_value(env, env_name);
+	free(env_name);
 	return (env_value);
 }
 
