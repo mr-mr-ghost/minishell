@@ -8,7 +8,7 @@
 
 - [x] multiple redirects
 
-- [ ] [fgsdfg > a.txt > b.txt > c.txt] differences in bash and minishell?
+- [x] [fgsdfg > a.txt > b.txt > c.txt] differences in bash and minishell?
 
 - [ ] multiple heredocs
 
