@@ -1,22 +1,30 @@
 TODOS *************************************************
 
-TODO: Fix misc. errors in tokens (if there are any)
+- [ ] Fix misc. errors in tokens (if there are any)
 
-TODO: Fix return issues in pipes and heredoc(?)
+- [ ] Fix return issues in pipes and heredoc(?)
 
-TODO: echo > | ls does not work properly
+- [ ] echo > | ls does not work properly
 
-TODO: builtins should probably not go through child_process in heredoc
+- [*] multiple redirects
 
-TODO: heredoc pipe
+- [ ] "fgsdfg > a.txt > b.txt > c.txt" differences in bash and minishell?
 
-TODO: cleanup the calamity of the call_pipe function in pipes_utils
+- [ ] multiple heredocs
 
-TODO: probably some memory leaks
+- [ ] heredoc pipe
 
-TODO: resolve the semi-colon question
+- [ ] builtins and heredoc
 
-TODO: cleanup
+- [ ] builtins, nonbuiltins, heredoc, redirections and pipes working together
+
+- [ ] cleanup the calamity of the call_pipe function in pipes_utils
+
+- [ ] probably some memory leaks
+
+- [ ] resolve the semi-colon question
+
+- [ ] cleanup
 
 LINKS *************************************************
 
