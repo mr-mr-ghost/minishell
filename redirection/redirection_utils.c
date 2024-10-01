@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/21 17:16:54 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/09/30 12:17:04 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 	minilib_stdout = dup(STDOUT_FILENO);
 	if (minilib_stdout < 0)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
-	if (handle_redirection(redir->next, redir->type) == -1)
+	status = handle_redirection(redir->next, redir->type);
+	if (status)
 	{
 		if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
 			err_msg(NULL, NULL, strerror(errno), 1);
 		close(minilib_stdout);
-		return (1);
+		return (status);
 	}
-	status = 0;
 	if (cmdt->type == CMD)
 		status = check_launch_builtins(data, cmdt);
 	if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
@@ -49,16 +49,19 @@ int	handle_redirection(t_token *fname, int type)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (type == APPEND && fname->type == CMD)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else
+	else if (type == INPUT && fname->type == CMD)
 		fd = open(fname->value, O_RDONLY);
+	else
+		return (err_msg(NULL, NULL,
+				"syntax error near unexpected token `|'", 2));
 	if (fd < 0)
-		return (err_msg(NULL, fname->value, strerror(errno), -1));
+		return (err_msg(NULL, fname->value, strerror(errno), 1));
 	if (type == TRUNC || type == APPEND)
 		dupstatus = dup2(fd, STDOUT_FILENO);
 	else
 		dupstatus = dup2(fd, STDIN_FILENO);
 	close(fd);
 	if (dupstatus < 0)
-		return (err_msg(NULL, NULL, strerror(errno), -1));
+		return (err_msg(NULL, NULL, strerror(errno), 1));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/26 15:53:19 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/01 12:21:39 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	check_error(char *path)
 		exit_code = err_msg(NULL, path, "Permission denied", 126);
 	if (dir)
 		closedir(dir);
-	close(fd);
+	if (fd >= 0)
+		close(fd);
 	return (exit_code);
 }
 
@@ -48,6 +49,9 @@ void	bin_error(t_data *data, char *cmd)
 
 void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 {
+	int	exit_status;
+
+	exit_status = check_error(bin);
 	if (bin)
 		free(bin);
 	if (enva)
@@ -58,7 +62,7 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 	free_tokens(data);
 	free_env(data->env);
 	free_env(data->secret_env);
-	exit(EXIT_FAILURE);
+	exit(exit_status);
 }
 
 void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
@@ -80,7 +84,7 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	cmda = form_cmd(cmdt, count_args(cmdt, TRUNC));
 	if (!cmda)
 		child_cleanexit(data, bin, enva, cmda);
-	if (redirt && handle_redirection(redirt->next, redirt->type) == -1)
+	if (redirt && handle_redirection(redirt->next, redirt->type))
 		child_cleanexit(data, bin, enva, cmda);
 	execve(bin, cmda, enva);
 	child_cleanexit(data, bin, enva, cmda);
