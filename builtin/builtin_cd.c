@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 16:38:34 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 13:26:18 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:41:57 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ char	*determine_path(t_env *env, t_token *token)
 		path = set_back_dir();
 	else
 		path = ft_strdup(token->value);
-	if (!path)
-		return (NULL);
 	return (path);
 }
 
@@ -89,6 +87,8 @@ int	cd_command(t_data *data, t_token *token)
 	if (!old_pwd)
 		return (1);
 	cd_token = token->next;
+	if (cd_token->next && cd_token->next->type <= ARG)
+		return (err_msg("cd", NULL, "too many arguments", 1));
 	path = determine_path(data->env, cd_token);
 	status = chdir(path);
 	if (status < 0)

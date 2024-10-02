@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 13:41:41 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 12:39:42 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:20:34 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,35 +43,29 @@ t_env	*create_env_list(t_env *env, char **envp)
 
 char	*set_env_value(char *line)
 {
-	char	*new_line;
 	char	env_value[ARG_MAX];
 	int		i;
 	int		j;
 
-	new_line = ft_strdup(line);
 	i = 0;
-	while (new_line[i] && new_line[i] != '=')
+	while (line[i] && line[i] != '=')
 		i++;
-	if (new_line[i] == '=')
+	if (line[i] == '=')
 		i++;
 	else
 		return (ft_strdup(""));
 	j = 0;
-	while (new_line[i])
-		env_value[j++] = new_line[i++];
+	while (line[i] && j < ARG_MAX - 1)
+		env_value[j++] = line[i++];
 	env_value[j] = '\0';
-	free(new_line);
 	return (ft_strdup(env_value));
 }
 
 char	*set_env_name(char *line)
 {
-	char	*new_line;
 	char	env_name[ARG_MAX];
 
-	new_line = ft_strdup(line);
-	get_env_name(env_name, new_line);
-	free(new_line);
+	get_env_name(env_name, line);
 	return (ft_strdup(env_name));
 }
 

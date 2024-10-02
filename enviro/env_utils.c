@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:44:58 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 12:39:35 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:17:24 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*get_env_name(char *dest, const char *src)
 	int	i;
 
 	i = 0;
-	while (src[i] && (ft_isalnum(src[i]) || src[i] == '_'))
+	while (src[i] && (ft_isalnum(src[i]) || src[i] == '_') && i < ARG_MAX - 1)
 	{
 		dest[i] = src[i];
 		i++;
