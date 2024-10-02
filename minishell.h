@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 12:39:18 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:26:35 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void	del_env(t_env **env, char *key);
 int		cd_command(t_data *data, t_token *token);
 char	*determine_path(t_env *env, t_token *token);
 int		change_env_path(t_data *data, char *old_pwd);
-int		replace_path(t_env *env, char *name, char *path);
+void	replace_path(t_env *env, char *name, char *path);
 char	*set_back_dir(void);
 
 /*	declaration handling	*/

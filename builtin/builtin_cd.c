@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 16:38:34 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/19 16:38:34 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:26:18 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,16 @@ char	*set_back_dir(void)
 	return (tmp);
 }
 
-int	replace_path(t_env *env, char *name, char *path)
+void	replace_path(t_env *env, char *name, char *path)
 {
 	char	*line;
 	char	*tmp;
 
-	line = find_env_line(env, name);
-	if (!line)
-		return (1);
 	tmp = ft_strjoin(name, "=");
-	free(line);
 	line = ft_strjoin(tmp, path);
 	env_replace(env, name, line);
 	free(tmp);
 	free(line);
-	return (0);
 }
 
 int	change_env_path(t_data *data, char *old_pwd)
