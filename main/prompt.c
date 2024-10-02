@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 12:13:29 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/27 12:13:29 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:41:50 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,20 @@ char	*shorten_path(char *path)
 		i--;
 	}
 	line = ft_substr(path, slash_index, ft_strlen(path) - slash_index);
-	free(path);
 	return (line);
 }
 
 char	*generate_prompt(t_env *env)
 {
+	char	*pwd;
 	char	*tmp;
 	char	*prompt;
 	char	*env_path;
 
-	env_path = shorten_path(find_env_value(env, "PWD"));
+	pwd = find_env_value(env, "PWD");
+	env_path = shorten_path(pwd);
+	if (pwd)
+		free(pwd);
 	if (env_path)
 	{
 		if ((!ft_strchr(env_path, '/') || !ft_strncmp(env_path, "/home", 5)))
@@ -55,12 +58,13 @@ char	*generate_prompt(t_env *env)
 		else
 			tmp = ft_strjoin("\001\033[1;34m\002Minishell:\001\033[0m\002 ~",
 					env_path);
-		free(env_path);
 		prompt = ft_strjoin(tmp, "> ");
 		free(tmp);
 	}
 	else
 		prompt = ft_strdup("\001\033[1;34m\002Minishell:\001\033[0m\002 > ");
+	if (env_path)
+		free(env_path);
 	return (prompt);
 }
 
