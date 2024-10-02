@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/26 13:57:01 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:53:04 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,21 @@ t_token	*get_nth_token(t_token *token, int n)
 		return (NULL);
 	return (tmp);
 }
+
+/* t_token	*return_heredoct(t_token *cmdt)
+{
+	int		count;
+	int		i;
+	t_token	*heredoct;
+
+	i = 0;
+	count = count_args(cmdt, HEREDOC);
+	heredoct = get_nth_token(cmdt, count);
+	if (heredoct && heredoct->type == HEREDOC)
+		return (heredoct);
+	else
+		return (NULL);
+} */
 
 t_token	*return_redirt(t_token *cmdt)
 {

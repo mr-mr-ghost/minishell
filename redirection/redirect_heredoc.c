@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 12:50:02 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:09:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,15 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd, char *
 		close(fd[0]);
 		if (heredoc)
 			free(heredoc);
-		if (is_cmd(cmdt->value, 0))
-			redirection_wrap_builtins(data, cmdt, redir);
-		else
-			child_process(data, cmdt, redir);
+		/* if (is_cmd(cmdt->value, 0))
+		{
+			if (redir)
+				redirection_wrap_builtins(data, cmdt, redir);
+			else
+				check_launch_builtins(data, cmdt);
+		}
+		else */
+		child_process(data, cmdt, redir);
 	}
 	return (0);
 }
@@ -92,7 +97,12 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 		return (1);
 	}
 	close(pipefd[0]);
-	ft_putstr_fd(heredoc, pipefd[1]);
+	// Program received signal SIGPIPE (commands who dont read STDIN)
+	ft_putstr_fd("sending to pipe ", 2);
+	ft_putnbr_fd(pipefd[1], 2);
+	ft_putstr_fd("\n", 2);
+
+	ft_putstr_fd(heredoc, pipefd[1]); // puts the heredoc where it needs to go
 	if (heredoc)
 		free(heredoc);
 	close(pipefd[1]);
