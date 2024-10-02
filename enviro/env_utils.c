@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:44:58 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 14:50:18 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:39:35 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 char	*find_env_line(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	tmp = env;
 	get_env_name(key_name, key);
@@ -33,8 +33,8 @@ char	*find_env_line(t_env *env, char *key)
 char	*find_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	tmp = env;
 	get_env_name(key_name, key);
@@ -51,8 +51,8 @@ char	*find_env_name(t_env *env, char *key)
 char	*find_env_value(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	tmp = env;
 	get_env_name(key_name, key);

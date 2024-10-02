@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/09/22 14:37:15 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:48:16 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*get_heredoc(t_data *data, char *delimiter)
 		heredoc = join_strings(data, heredoc, hereline);
 		hereline = get_next_line(0);
 	}
-	if (g_sig.sigint || !hereline
+	if (g_sigint || !hereline
 		|| ft_strncmp(hereline, delimiter, ft_strlen(delimiter)))
 		heredoc = heredoc_error(delimiter, heredoc);
 	if (hereline)
@@ -45,7 +45,7 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd)
 	pid_t	pid;
 
 	pid = fork();
-	g_sig.in_cmd = true;
+	signal_manager(sigint_handler_incmd, SA_RESTART);
 	if (pid == -1)
 	{
 		close(fd[0]);
@@ -72,7 +72,7 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 
 	secondredir = return_redirt(redirt->next);
 	heredoc = get_heredoc(data, redirt->next->value);
-	if (g_sig.sigint)
+	if (g_sigint)
 		return (130);
 	if (pipe(pipefd) == -1)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
@@ -84,5 +84,6 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 		free(heredoc);
 	close(pipefd[1]);
 	wait(&status);
+	signal_manager(sigint_handler, SA_RESTART);
 	return (WEXITSTATUS(status));
 }

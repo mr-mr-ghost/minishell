@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 13:41:41 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/12 13:41:41 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:39:42 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_env	*create_env_list(t_env *env, char **envp)
 char	*set_env_value(char *line)
 {
 	char	*new_line;
-	char	env_value[BUFF_SIZE];
+	char	env_value[ARG_MAX];
 	int		i;
 	int		j;
 
@@ -67,7 +67,7 @@ char	*set_env_value(char *line)
 char	*set_env_name(char *line)
 {
 	char	*new_line;
-	char	env_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
 
 	new_line = ft_strdup(line);
 	get_env_name(env_name, new_line);
@@ -80,7 +80,7 @@ void	set_shell_lvl(t_env *env)
 	int		lvl;
 	char	*lvl_str;
 	char	*lvl_value;
-	char	env_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
 
 	lvl_value = find_env_line(env, "SHLVL");
 	lvl = find_env_lvl(lvl_value) + 1;

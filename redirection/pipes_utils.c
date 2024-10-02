@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/09/30 12:16:22 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:43:36 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		status;
 	int		error;
 
-	g_sig.in_cmd = true;
+	signal_manager(sigint_handler_incmd, SA_RESTART);
 	error = 0;
 	while (currentt)
 	{
@@ -128,6 +128,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 	close(prev_pipefd[1]);
 	while (wait(&status) > 0) // Wait for all child processes
 		;
+	signal_manager(sigint_handler, SA_RESTART);
 	if (error)
 		return (error);
 	return (WEXITSTATUS(status));

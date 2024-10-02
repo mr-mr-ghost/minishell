@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:08:39 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 14:48:23 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:39:50 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 bool	valid_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	if (!env || !key)
 		return (false);

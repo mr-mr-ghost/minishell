@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 12:42:09 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:40:04 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int	token_split(t_data *data)
 {
 	if (data->line[0])
 		add_history(data->line);
+	if (ft_strlen(data->line) >= ARG_MAX)
+		return (token_err(data, NULL, "Argument list too long", 126));
 	if (quotes_check(data->line))
 		return (token_err(data, data->line,
 				"syntax error with unclosed quotes", 2));

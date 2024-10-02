@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 14:57:02 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:39:18 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@
 # define HEREDOC 6
 # define PIPE 7
 
-# define MAX_ARGS 42
-# define CMD_SIZE 1024
-# define BUFF_SIZE 4096
+# define ARG_MAX 4096
 
 typedef struct s_env
 {
@@ -61,12 +59,6 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
-typedef struct s_sig
-{
-	bool	in_cmd;
-	int		sigint;
-}	t_sig;
-
 typedef struct s_data
 {
 	char	*line;
@@ -76,6 +68,9 @@ typedef struct s_data
 	t_env	*secret_env;
 	t_token	*token;
 }	t_data;
+
+/*	global	*/
+extern int	g_sigint;
 
 /*	prompt	*/
 char	*read_line(t_env *env);
@@ -138,7 +133,7 @@ int		token_err(t_data *data, char *arg, char *msg, int code);
 
 /*	signals	*/
 void	sigint_handler(int signum);
-void	sig_init(void);
+void	sigint_handler_incmd(int signum);
 void	signal_manager(void (*handler)(int), int flag);
 void	sig_child_handler(int signum);
 void	heredoc_sig_handler(int signum);
@@ -233,8 +228,5 @@ int		launch_single_anycmd(t_data *data, t_token *cmdt);
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
 int		pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd);
 int		call_pipe(t_data *data, t_token *currentt);
-
-/*	global	*/
-extern t_sig	g_sig;
 
 #endif
