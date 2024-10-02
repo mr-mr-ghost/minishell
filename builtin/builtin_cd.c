@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 16:38:34 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 14:49:37 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:58:22 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	cd_command(t_data *data, t_token *token)
 	t_token	*cd_token;
 
 	cd_token = token->next;
-	if (cd_token->next && cd_token->next->type <= ARG)
+	if (cd_token && cd_token->next && cd_token->next->type <= ARG)
 		return (err_msg("cd", NULL, "too many arguments", 1));
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
