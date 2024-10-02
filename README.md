@@ -14,7 +14,7 @@
 
 - [ ] heredoc pipe
 
-- [ ] builtins and heredoc
+- [x] builtins and heredoc
 
 - [ ] builtins, nonbuiltins, heredoc, redirections and pipes working together
 
