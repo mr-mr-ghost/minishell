@@ -9,8 +9,10 @@
 - [x] multiple redirects
 
 - [x] [fgsdfg > a.txt > b.txt > c.txt] differences in bash and minishell?
+      
+- [ ] echo << X > a.txt (should create an empty file)
 
-- [ ] multiple heredocs
+- [ ] multiple heredocs?
 
 - [ ] heredoc pipe
 
