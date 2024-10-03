@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/02 11:43:36 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/03 14:55:19 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 	pid_t	pid;
 	int		status;
 
-	status = 0;
 	pid = fork();
 	if (pid < 0)
 		return (err_msg(NULL, NULL, strerror(errno), -1));
@@ -75,7 +74,7 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 		free_env(data->secret_env);
 		exit(status);
 	}
-	return (status);
+	return (0);
 }
 
 int	call_pipe(t_data *data, t_token *currentt)
@@ -84,24 +83,18 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		pipefd[2];
 	int		prev_pipefd[2];
 	int		status;
-	int		error;
 
 	signal_manager(sigint_handler_incmd, SA_RESTART);
-	error = 0;
 	while (currentt)
 	{
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));
 		if (nextt && nextt->type == PIPE && nextt->next)
 			nextt = nextt->next;
 		else
-		{
-			if (nextt && nextt->type == PIPE && nextt->next == NULL)
-				error = err_msg(NULL, NULL, "Unclosed pipe", 2);
 			nextt = NULL;
-		}
 		if (nextt && pipe(pipefd) == -1)
 		{
-			error = err_msg(NULL, NULL, strerror(errno), 1);
+			status = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
 		if (currentt->prev == NULL)
@@ -129,7 +122,5 @@ int	call_pipe(t_data *data, t_token *currentt)
 	while (wait(&status) > 0) // Wait for all child processes
 		;
 	signal_manager(sigint_handler, SA_RESTART);
-	if (error)
-		return (error);
 	return (WEXITSTATUS(status));
 }

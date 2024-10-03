@@ -4,8 +4,6 @@ TODO: Fix misc. errors in tokens (if there are any)
 
 TODO: Fix return issues in pipes and heredoc(?)
 
-TODO: echo > | ls does not work properly
-
 TODO: builtins should probably not go through child_process in heredoc
 
 TODO: heredoc pipe

@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 14:42:04 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/03 13:45:03 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	env_replace(t_env *env, char *name, char *line);
 int		token_split(t_data *data);
 void	tokens_type_define(t_data *data);
 int		process_token(t_data *data);
+int		parse_tokens(t_data *data, t_token *token);
 
 /*	tokens split utils	*/
 int		handle_special_chars(t_data *data, char *line, int *i);
