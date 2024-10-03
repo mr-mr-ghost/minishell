@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 13:53:04 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:23:08 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,23 @@ t_token	*get_nth_token(t_token *token, int n)
 	return (tmp);
 }
 
-/* t_token	*return_heredoct(t_token *cmdt)
+t_token	*return_1stheredoct(t_token *cmdt)
 {
 	int		count;
-	int		i;
-	t_token	*heredoct;
+	t_token	*redirt;
 
-	i = 0;
-	count = count_args(cmdt, HEREDOC);
-	heredoct = get_nth_token(cmdt, count);
-	if (heredoct && heredoct->type == HEREDOC)
-		return (heredoct);
+	count = count_args(cmdt, TRUNC);
+	redirt = get_nth_token(cmdt, count);
+	while (redirt && redirt->type >= TRUNC && redirt->type <= INPUT)
+	{
+		count = count_args(redirt->next, TRUNC);
+		redirt = get_nth_token(redirt->next, count);
+	}
+	if (redirt && redirt->type == HEREDOC)
+		return (redirt);
 	else
 		return (NULL);
-} */
+}
 
 t_token	*return_redirt(t_token *cmdt)
 {
@@ -63,6 +66,7 @@ t_token	*return_redirt(t_token *cmdt)
 int	launch_single_anycmd(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
+	t_token	*heredoc;
 	int		status;
 
 	redirt = return_redirt(cmdt);
@@ -78,8 +82,13 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 				"syntax error near unexpected token `newline'", 2));
 	else
 	{
-		if (redirt->type == HEREDOC)
-			return (handle_heredoc(data, cmdt, redirt));
+		//if (redirt->type == HEREDOC)
+		//	return (handle_heredoc(data, cmdt, redirt));
+		heredoc = return_1stheredoct(cmdt);
+		//printf("got heredoc: %s\n", heredoc->next->value);
+		//return (0);
+		if (heredoc)
+			ft_putstr_fd("heredoc shit\n", 2);
 		if (is_cmd(cmdt->value, 0)
 			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
 			return (redirection_wrap_builtins(data, cmdt, redirt));

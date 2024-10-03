@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/02 13:32:38 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:25:55 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	while (redir)
 	{
-		if (handle_redirection(redir->next, redir->type) == -1)
+		if (redir->type >= TRUNC && redir->type <= INPUT &&
+			handle_redirection(redir->next, redir->type) == -1)
 		{
 			if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
 				err_msg(NULL, NULL, strerror(errno), 1);

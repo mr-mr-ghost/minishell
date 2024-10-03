@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 16:16:51 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/03 16:48:09 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	signal_manager(sig_child_handler, 0);
 	while (redirt)
 	{
-		if (handle_redirection(redirt->next, redirt->type) == -1)
+		if (redirt->type >= TRUNC && redirt->type <= INPUT &&
+			handle_redirection(redirt->next, redirt->type) != 0)
 			child_cleanexit(data, bin, enva, cmda);
 		redirt = return_redirt(redirt->next);
 	}

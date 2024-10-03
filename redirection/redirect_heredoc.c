@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 18:10:22 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:16:13 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,10 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd, char *
 {
 	pid_t	pid;
 
+	(void)data;
+	(void)cmdt;
+	(void)redir;
+
 	pid = fork();
 	g_sig.in_cmd = true;
 	if (pid == -1)
@@ -59,7 +63,7 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd, char *
 		close(fd[0]);
 		if (heredoc)
 			free(heredoc);
-		child_process(data, cmdt, redir);
+		//child_process(data, cmdt, redir);
 	}
 	return (0);
 }
