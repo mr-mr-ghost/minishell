@@ -92,7 +92,7 @@ int	token_split(t_data *data)
 		return (token_err(data, data->line,
 				"syntax error: unclosed quotes", 2));
 	if (process_token(data))
-		return (token_err(data, NULL, "Memory allocation failure", 1));
+		return (token_err(data, NULL, "memory allocation error", 1));
 	tokens_type_define(data);
 	return (parse_tokens(data, data->token));
 }

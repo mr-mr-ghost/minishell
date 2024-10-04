@@ -58,9 +58,6 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next)
-		return (err_msg(NULL, NULL,
-				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		if (redirt->type == HEREDOC)

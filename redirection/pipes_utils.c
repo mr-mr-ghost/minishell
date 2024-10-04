@@ -28,9 +28,6 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			child_process(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next)
-		return (err_msg(NULL, NULL,
-				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		if (redirt->type == HEREDOC)

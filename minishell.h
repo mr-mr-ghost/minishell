@@ -195,6 +195,9 @@ int		check_error(char *path);
 void	bin_error(t_data *data, char *cmd);
 
 /*	execution	*/
+t_token	*get_nth_token(t_token *token, int n);
+t_token	*return_redirt(t_token *cmdt);
+int		launch_single_anycmd(t_data *data, t_token *cmdt);
 void	process_n_exec(t_data *data);
 
 /*	execution utils	*/
@@ -220,10 +223,6 @@ int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
 char	*heredoc_error(char *delimiter, char *heredoc);
 char	*join_strings(t_data *data, char *s1, char *s2);
 int		heredoc_strcat(char *dest, char *src, int start);
-
-t_token	*get_nth_token(t_token *token, int n);
-t_token	*return_redirt(t_token *cmdt);
-int		launch_single_anycmd(t_data *data, t_token *cmdt);
 
 /*	pipes	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);

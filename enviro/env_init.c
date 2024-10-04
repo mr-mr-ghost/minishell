@@ -19,7 +19,7 @@ void	init_env(t_data *data, char **envp)
 	if (!data->env || !data->secret_env)
 	{
 		data->exit_code = err_msg(NULL, NULL,
-				"Memory allocation failure", 1);
+				"memory allocation error", 1);
 		data->end = true;
 	}
 }
