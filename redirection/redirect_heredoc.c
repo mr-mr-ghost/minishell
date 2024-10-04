@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/03 19:39:25 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:04:56 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,12 @@ char	*get_heredoc(t_data *data, char *delimiter)
 	return (heredoc);
 }
 
-int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd, char *heredoc)
+int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
 {
 	pid_t	pid;
+	t_token	*redirt;
 
-	(void)data;
-	(void)cmdt;
-	(void)redir;
+	redirt = return_redirt(cmdt);
 
 	pid = fork();
 	g_sig.in_cmd = true;
@@ -63,38 +62,31 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd, char *
 		close(fd[0]);
 		if (heredoc)
 			free(heredoc);
-		//child_process(data, cmdt, redir);
+		child_process(data, cmdt, redirt);
 	}
 	return (0);
 }
 
 /* example of << delimiter: "cat <<'X' > t.txt		contentbla X"*/
-int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
+int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 {
 	char	*heredoc;
 	int		pipefd[2];
-	int		ret;
 	int		status;
-	t_token	*secondredir;
 
-	secondredir = return_redirt(redirt->next);
-	heredoc = get_heredoc(data, redirt->next->value);
 	if (g_sig.sigint) // ctrl + c
 		return (130);
-	if (is_cmd(cmdt->value, 0))
-	{
-		ret = check_launch_builtins(data, cmdt);
-		if (heredoc)
-			free(heredoc);
-		return (ret);
-	}
+	heredoc = get_heredoc(data, hdtoken->next->value);
+
+	// if no heredoc deal with that?
+
 	if (pipe(pipefd) == -1)
 	{
 		if (heredoc)
 			free(heredoc);
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	}
-	if (process_heredoc(data, cmdt, secondredir, pipefd, heredoc))
+	if (process_heredoc(data, cmdt, pipefd, heredoc))
 	{
 		if (heredoc)
 			free(heredoc);
@@ -108,4 +100,27 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 	close(pipefd[1]);
 	wait(&status);
 	return (WEXITSTATUS(status));
+}
+
+int	handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken)
+{
+	char	*heredoc;
+	t_token	*redirt;
+	int		ret;
+
+	if (g_sig.sigint) // ctrl + c
+		return (130);
+	heredoc = get_heredoc(data, hdtoken->next->value);
+	if (heredoc)
+		free(heredoc);
+
+	redirt = return_redirt(cmdt);
+	while (redirt && redirt->type == HEREDOC)
+		redirt = return_redirt(redirt->next);
+
+	if (!redirt)
+		ret = check_launch_builtins(data, cmdt);
+	else
+		ret = redirection_wrap_builtins(data, cmdt, redirt);
+	return (ret);
 }

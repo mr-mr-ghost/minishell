@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/03 19:43:38 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/04 14:39:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_token	*return_redirt(t_token *cmdt)
 int	launch_single_anycmd(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
-	t_token	*heredoc;
+	t_token	*hdtoken;
 	int		status;
 
 	redirt = return_redirt(cmdt);
@@ -82,21 +82,21 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 				"syntax error near unexpected token `newline'", 2));
 	else
 	{
-		//if (redirt->type == HEREDOC)
-		//	return (handle_heredoc(data, cmdt, redirt));
-		heredoc = return_1stheredoct(cmdt);
-		//printf("got heredoc: %s\n", heredoc->next->value);
-		//return (0);
-		if (heredoc)
+		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
+		if (is_cmd(cmdt->value, 0))
 		{
-			handle_heredoc(data, cmdt, heredoc);
-			//ft_putstr_fd("heredoc shit\n", 2);
-
+			if (hdtoken)
+				return (handle_heredoc_builtins(data, cmdt, hdtoken));
+			else
+				return (redirection_wrap_builtins(data, cmdt, redirt));
 		}
-		if (is_cmd(cmdt->value, 0)
-			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
-			return (redirection_wrap_builtins(data, cmdt, redirt));
-		return (launch_nonbuiltins(data, cmdt, redirt));
+		else
+		{
+			if (hdtoken)
+				return (handle_heredoc(data, cmdt, hdtoken));
+			else
+				return (launch_nonbuiltins(data, cmdt, redirt));
+		}
 	}
 }
 
