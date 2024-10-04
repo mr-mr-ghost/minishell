@@ -10,13 +10,15 @@
 
 - [x] [fgsdfg > a.txt > b.txt > c.txt] differences in bash and minishell?
       
-- [ ] echo << X > a.txt (should create an empty file)
+- [x] echo << X > a.txt (should create an empty file)
+
+- [x] pick first heredoc, ignore the other heredocs, but deal with all other redirs
 
 - [ ] multiple heredocs?
 
-- [ ] heredoc pipe
-
 - [x] builtins and heredoc
+
+- [ ] heredoc pipe
 
 - [ ] builtins, nonbuiltins, heredoc, redirections and pipes working together
 
