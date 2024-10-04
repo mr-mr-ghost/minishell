@@ -67,12 +67,16 @@ int	parse_tokens(t_data *data, t_token *token)
 	tmp = token;
 	while (tmp)
 	{
-		if (tmp->type == PIPE && !tmp->next)
+		if (tmp->type == PIPE && !tmp->prev)
+			return (syntax_err(data, "|"));
+		else if ((tmp->type >= TRUNC && tmp->type <= HEREDOC)
+			&& tmp->next && tmp->next->type >= TRUNC)
+			return (syntax_err(data, tmp->next->value));
+		else if ((tmp->type >= TRUNC && tmp->type <= HEREDOC) && !tmp->next)
+			return (syntax_err(data, "newline"));
+		else if (tmp->type == PIPE && !tmp->next)
 			return (token_err(data, NULL,
 					"syntax error: unexpected end of file", 2));
-		else if (tmp->type == PIPE && (!tmp->prev || tmp->prev->type >= TRUNC))
-			return (token_err(data, NULL,
-					"syntax error near unexpected token `|'", 2));
 		tmp = tmp->next;
 	}
 	return (0);

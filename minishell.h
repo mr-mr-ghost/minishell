@@ -129,15 +129,16 @@ void	token_add_back(t_token **token, t_token *new);
 
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);
+bool	select_valid_env(t_env *env, char *line, int start);
 bool	quotes_check(char *line);
 int		token_err(t_data *data, char *arg, char *msg, int code);
+int		syntax_err(t_data *data, char *arg);
 
 /*	signals	*/
 void	sigint_handler(int signum);
 void	sigint_handler_incmd(int signum);
 void	signal_manager(void (*handler)(int), int flag);
 void	sig_child_handler(int signum);
-void	heredoc_sig_handler(int signum);
 
 /*	pwd command	*/
 int		pwd_command(void);
@@ -177,7 +178,6 @@ char	*check_declaration(t_token *token);
 /*	builtins utils	*/
 bool	valid_env_name(t_env *env, char *key);
 char	*add_quotes_var(char *line);
-bool	select_valid_env(t_env *env, char *line, int start);
 bool	check_numeric(char *str);
 
 /*	non-builtins handling	*/

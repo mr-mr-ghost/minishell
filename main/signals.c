@@ -57,12 +57,3 @@ void	sigint_handler_incmd(int signum)
 		g_sigint = 1;
 	}
 }
-
-void	heredoc_sig_handler(int signum)
-{
-	if (signum == SIGINT)
-	{
-		g_sigint = 1;
-		rl_on_new_line();
-	}
-}

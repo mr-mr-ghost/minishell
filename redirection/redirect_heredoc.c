@@ -17,7 +17,7 @@ char	*get_heredoc(t_data *data, char *delimiter)
 	char	*heredoc;
 	char	*hereline;
 
-	signal_manager(heredoc_sig_handler, 0);
+	signal_manager(sigint_handler_incmd, 0);
 	ft_putstr_fd("> ", 1);
 	heredoc = NULL;
 	hereline = get_next_line(0);
@@ -74,6 +74,12 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt)
 	heredoc = get_heredoc(data, redirt->next->value);
 	if (g_sigint)
 		return (130);
+	if (!redirt->prev || redirt->prev->type == PIPE)
+	{
+		if (heredoc)
+			free(heredoc);
+		return (0);
+	}
 	if (pipe(pipefd) == -1)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	if (process_heredoc(data, cmdt, secondredir, pipefd))

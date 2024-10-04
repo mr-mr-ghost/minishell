@@ -61,22 +61,6 @@ char	*add_quotes_var(char *line)
 	return (new_line);
 }
 
-bool	select_valid_env(t_env *env, char *line, int start)
-{
-	char	*env_name;
-
-	env_name = find_env_name(env, line + start);
-	if (!env_name)
-		return (false);
-	if (valid_env_name(env, env_name))
-	{
-		free(env_name);
-		return (true);
-	}
-	free(env_name);
-	return (false);
-}
-
 bool	check_numeric(char *str)
 {
 	int	i;

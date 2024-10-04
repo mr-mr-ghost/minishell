@@ -54,13 +54,13 @@ char	*join_strings(t_data *data, char *s1, char *s2)
 
 char	*heredoc_error(char *delimiter, char *heredoc)
 {
-	ft_putchar_fd('\n', 1);
 	if (g_sigint)
 	{
 		if (heredoc)
 			free(heredoc);
 		return (NULL);
 	}
+	ft_putchar_fd('\n', 1);
 	ft_putstr_fd("minishell: warning: ", 2);
 	ft_putstr_fd("here-document delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd(delimiter, 2);

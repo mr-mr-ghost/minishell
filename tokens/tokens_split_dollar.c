@@ -77,12 +77,11 @@ void	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
 	int		i;
 
 	env_value = process_dollar(data, data->line, j);
-	if (!env_value)
-		return ;
 	i = 0;
-	while (env_value[i])
+	while (env_value && env_value[i])
 		buffer[(*k)++] = env_value[i++];
-	free(env_value);
+	if (env_value)
+		free(env_value);
 	if ((*k) == 0)
 		while (data->line[*j] && data->line[*j] == ' ')
 			(*j)++;
