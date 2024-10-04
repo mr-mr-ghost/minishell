@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/04 13:22:47 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:40:16 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ char	*join_strings(t_data *data, char *s1, char *s2);
 int		heredoc_strcat(char *dest, char *src, int start);
 
 t_token	*get_nth_token(t_token *token, int n);
-t_token	*return_heredoct(t_token *cmdt);
+t_token	*return_1stheredoct(t_token *cmdt);
 t_token	*return_redirt(t_token *cmdt);
 int		launch_single_anycmd(t_data *data, t_token *cmdt);
 

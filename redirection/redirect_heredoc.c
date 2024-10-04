@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/04 15:04:56 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:24:34 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 			free(heredoc);
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	}
-	if (process_heredoc(data, cmdt, pipefd, heredoc))
+	if (process_heredoc(data, cmdt, pipefd, heredoc) != 0)
 	{
 		if (heredoc)
 			free(heredoc);

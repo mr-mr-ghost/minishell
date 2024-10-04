@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/08/29 11:49:23 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:40:25 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
 	int		status;
+	t_token	*hdtoken;
 
 	redirt = return_redirt(cmdt);
 	if (!redirt)
@@ -33,7 +34,23 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 				"syntax error near unexpected token `newline'", 2));
 	else
 	{
-		if (redirt->type == HEREDOC)
+		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
+		if (is_cmd(cmdt->value, 0))
+		{
+			if (hdtoken)
+				return (handle_heredoc_builtins(data, cmdt, hdtoken));
+			else
+				return (redirection_wrap_builtins(data, cmdt, redirt));
+		}
+		else
+		{
+			if (hdtoken)
+				return (handle_heredoc(data, cmdt, hdtoken));
+			else
+				child_process(data, cmdt, redirt);
+			return (0);
+		}
+		/* if (redirt->type == HEREDOC)
 		{
 			printf("TODO: heredoc\n");
 			return (0);
@@ -42,7 +59,7 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
 			return (redirection_wrap_builtins(data, cmdt, redirt));
 		child_process(data, cmdt, redirt);
-		return (0);
+		return (0); */
 	}
 }
 
