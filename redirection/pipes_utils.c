@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/07 12:15:43 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:14:52 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ int	call_pipe(t_data *data, t_token *currentt)
 	close(prev_pipefd[0]); // Close the last pipe in the parent process
 	close(prev_pipefd[1]);
 	waitpid(pid, &status, 0);
+	if (g_sigint)
+		status = 0x8200;
 	while (wait(NULL) > 0) // Wait for all child processes
 		;
 	signal_manager(sigint_handler, SA_RESTART);

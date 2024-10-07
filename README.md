@@ -2,8 +2,6 @@ TODOS *************************************************
 
 TODO: Fix misc. errors in tokens (if there are any)
 
-TODO: Fix return issues in pipes and heredoc(it's probably fine?)
-
 TODO: builtins should probably not go through child_process in heredoc
 
 TODO: heredoc pipe

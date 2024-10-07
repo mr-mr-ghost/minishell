@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 12:20:14 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 14:45:48 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:37:01 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ char	*get_dollar_value(t_env *env, char *line, int *start)
 
 	env_name = find_env_name(env, line + *start);
 	if (!env_name)
+	{
+		*start = update_line_iter(line, *start);
 		return (NULL);
+	}
 	*start += ft_strlen(env_name);
 	env_value = find_env_value(env, env_name);
 	free(env_name);
@@ -78,7 +81,7 @@ void	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
 
 	env_value = process_dollar(data, data->line, j);
 	i = 0;
-	while (env_value && env_value[i])
+	while (env_value && env_value[i] && *k < ARG_MAX - 1)
 		buffer[(*k)++] = env_value[i++];
 	if (env_value)
 		free(env_value);

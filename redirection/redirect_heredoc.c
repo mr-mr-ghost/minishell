@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 11:48:16 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:44:23 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd)
 {
 	pid_t	pid;
 
-	pid = fork();
 	signal_manager(sigint_handler_incmd, SA_RESTART);
+	pid = fork();
 	if (pid == -1)
 	{
 		close(fd[0]);
