@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/03 14:55:19 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:15:43 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 		free_env(data->secret_env);
 		exit(status);
 	}
-	return (0);
+	return (pid);
 }
 
 int	call_pipe(t_data *data, t_token *currentt)
@@ -80,6 +80,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		pipefd[2];
 	int		prev_pipefd[2];
 	int		status;
+	pid_t	pid;
 
 	signal_manager(sigint_handler_incmd, SA_RESTART);
 	while (currentt)
@@ -99,7 +100,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 		else if (nextt)
 			status = pipe_fork(data, currentt, prev_pipefd, pipefd);
 		else
-			status = pipe_fork(data, currentt, prev_pipefd, NULL);
+			pid = pipe_fork(data, currentt, prev_pipefd, NULL);
 		if (currentt->prev != NULL)
 		{	// Close the previous pipe in the parent
 			close(prev_pipefd[0]);
@@ -111,12 +112,13 @@ int	call_pipe(t_data *data, t_token *currentt)
 			prev_pipefd[1] = pipefd[1];
 		}
 		currentt = nextt;
-		if (status < 0)
+		if (status < 0 || pid < 0)
 			currentt = NULL;
 	}
 	close(prev_pipefd[0]); // Close the last pipe in the parent process
 	close(prev_pipefd[1]);
-	while (wait(&status) > 0) // Wait for all child processes
+	waitpid(pid, &status, 0);
+	while (wait(NULL) > 0) // Wait for all child processes
 		;
 	signal_manager(sigint_handler, SA_RESTART);
 	return (WEXITSTATUS(status));
