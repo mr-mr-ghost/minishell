@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:21:30 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 14:21:30 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:40:23 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ void	handle_quotes(t_data *data, char *buffer, int *i, int *k)
 
 int	handle_normal_chars(t_data *data, int *i)
 {
-	char	buffer[BUFF_SIZE];
+	char	buffer[ARG_MAX];
 	int		k;
 	t_token	*new;
 
 	k = 0;
-	while (data->line[*i] && !ft_strchr("><|; ", data->line[*i])
-		&& k < BUFF_SIZE - 1)
+	while (data->line[*i] && !ft_strchr("><| ", data->line[*i])
+		&& k < ARG_MAX - 1)
 	{
 		if (data->line[*i] == '\"' || data->line[*i] == '\'')
 			handle_quotes(data, buffer, i, &k);

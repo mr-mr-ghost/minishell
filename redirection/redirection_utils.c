@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/03 18:25:55 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:16:22 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,14 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	while (redir)
 	{
-		if (redir->type >= TRUNC && redir->type <= INPUT &&
-			handle_redirection(redir->next, redir->type) == -1)
+		if (redir->type >= TRUNC && redir-> type <= INPUT &&
+			handle_redirection(redir->next, redir->type))
 		{
 			if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
 				err_msg(NULL, NULL, strerror(errno), 1);
 			close(minilib_stdout);
 			return (1);
 		}
-		redir = return_redirt(redir->next);
 	}
 	status = 0;
 	if (cmdt->type == CMD)
@@ -50,20 +49,20 @@ int	handle_redirection(t_token *fname, int type)
 	int	fd;
 	int	dupstatus;
 
-	if (type == TRUNC && fname->type == CMD)
+	if (type == TRUNC)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (type == APPEND && fname->type == CMD)
+	else if (type == APPEND)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		fd = open(fname->value, O_RDONLY);
 	if (fd < 0)
-		return (err_msg(NULL, fname->value, strerror(errno), -1));
+		return (err_msg(NULL, fname->value, strerror(errno), 1));
 	if (type == TRUNC || type == APPEND)
 		dupstatus = dup2(fd, STDOUT_FILENO);
 	else
 		dupstatus = dup2(fd, STDIN_FILENO);
 	close(fd);
 	if (dupstatus < 0)
-		return (err_msg(NULL, NULL, strerror(errno), -1));
+		return (err_msg(NULL, NULL, strerror(errno), 1));
 	return (0);
 }

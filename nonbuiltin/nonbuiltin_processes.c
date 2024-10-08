@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nonbuiltin_processes.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/03 16:48:09 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:25:38 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ void	bin_error(t_data *data, char *cmd)
 
 void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 {
+	int	exit_status;
+
+	exit_status = check_error(bin);
 	if (bin)
 		free(bin);
 	if (enva)
@@ -59,7 +62,7 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 	free_tokens(data);
 	free_env(data->env);
 	free_env(data->secret_env);
-	exit(EXIT_FAILURE);
+	exit(exit_status);
 }
 
 void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
@@ -82,10 +85,10 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	bin = find_bin(data->env, cmdt->value);
 	if (!bin)
 		bin_error(data, cmdt->value);
-	enva = form_enva(data->env);
+	enva = form_enva(data->env, data->secret_env);
 	if (!enva)
 		child_cleanexit(data, bin, enva, cmda);
-	cmda = form_cmd(cmdt, count_args(cmdt, TRUNC));
+	cmda = form_cmd(data, cmdt, count_args(cmdt, TRUNC));
 	if (!cmda)
 		child_cleanexit(data, bin, enva, cmda);
 	execve(bin, cmda, enva);

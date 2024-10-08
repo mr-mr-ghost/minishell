@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:50:41 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/26 15:50:41 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:47:04 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 	int		status;
 
 	status = 0;
-	g_sig.in_cmd = true;
+	signal_manager(sigint_handler_incmd, SA_RESTART);
 	pid = fork();
 	if (pid < 0)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
@@ -27,7 +27,8 @@ int	launch_nonbuiltins(t_data *data, t_token *cmdt, t_token *redirt)
 		child_process(data, cmdt, redirt);
 	else
 		waitpid(pid, &status, 0);
-	if (g_sig.sigint)
+	signal_manager(sigint_handler, SA_RESTART);
+	if (g_sigint)
 		return (130);
 	return (WEXITSTATUS(status));
 }

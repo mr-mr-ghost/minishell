@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 13:06:41 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/18 13:07:02 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/09/30 15:14:12 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	single_export(t_env *env)
 	{
 		env_line = add_quotes_var(enviro->line);
 		if (!env_line)
-			return (err_msg("export", NULL, "Memory allocation failure", 1));
+			return (err_msg("export", NULL, "memory allocation error", 1));
 		printf("declare -x %s\n", env_line);
 		free(env_line);
 		enviro = enviro->next;

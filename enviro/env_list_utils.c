@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 15:00:12 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/19 15:00:12 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:23:22 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,6 @@ void	env_replace(t_env *env, char *name, char *line)
 		}
 		tmp = tmp->next;
 	}
-	if (tmp)
+	if (!tmp)
 		env_add_back(&env, line);
 }

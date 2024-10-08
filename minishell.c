@@ -6,13 +6,13 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 14:48:59 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/09 15:10:20 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:57:03 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_sig	g_sig;
+int	g_sigint;
 
 void	exit_shell(t_data *data)
 {
@@ -43,9 +43,9 @@ int	main(int argc, char **argv, char **envp)
 	init_env(&data, envp);
 	while (!data.end)
 	{
-		sig_init();
+		g_sigint = 0;
 		data.line = read_line(data.env);
-		if (g_sig.sigint)
+		if (g_sigint)
 			data.exit_code = 130;
 		if (!data.line)
 			break ;

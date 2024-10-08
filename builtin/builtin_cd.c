@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 16:38:34 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/19 16:38:34 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:58:22 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,16 @@ char	*set_back_dir(void)
 	return (tmp);
 }
 
-int	replace_path(t_env *env, char *name, char *path)
+void	replace_path(t_env *env, char *name, char *path)
 {
 	char	*line;
 	char	*tmp;
 
-	line = find_env_line(env, name);
-	if (!line)
-		return (1);
 	tmp = ft_strjoin(name, "=");
-	free(line);
 	line = ft_strjoin(tmp, path);
 	env_replace(env, name, line);
 	free(tmp);
 	free(line);
-	return (0);
 }
 
 int	change_env_path(t_data *data, char *old_pwd)
@@ -78,8 +73,6 @@ char	*determine_path(t_env *env, t_token *token)
 		path = set_back_dir();
 	else
 		path = ft_strdup(token->value);
-	if (!path)
-		return (NULL);
 	return (path);
 }
 
@@ -90,10 +83,12 @@ int	cd_command(t_data *data, t_token *token)
 	int		status;
 	t_token	*cd_token;
 
+	cd_token = token->next;
+	if (cd_token && cd_token->next && cd_token->next->type <= ARG)
+		return (err_msg("cd", NULL, "too many arguments", 1));
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
 		return (1);
-	cd_token = token->next;
 	path = determine_path(data->env, cd_token);
 	status = chdir(path);
 	if (status < 0)

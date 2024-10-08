@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/04 15:40:25 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:12:21 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 /* example: echo "Hello World!" | tr 'a-z' 'A-Z' | tr '!' '?'*/
 /* example: ls -l | grep '.c' | wc -l*/
 /* example: echo "Hello World!" | tr 'H' 'h' | tr 'e' 'E' | tr 'l' 'L'*/
+
 int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
@@ -29,9 +30,6 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			child_process(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next)
-		return (err_msg(NULL, NULL,
-				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
@@ -50,16 +48,6 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 				child_process(data, cmdt, redirt);
 			return (0);
 		}
-		/* if (redirt->type == HEREDOC)
-		{
-			printf("TODO: heredoc\n");
-			return (0);
-		}
-		if (is_cmd(cmdt->value, 0)
-			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
-			return (redirection_wrap_builtins(data, cmdt, redirt));
-		child_process(data, cmdt, redirt);
-		return (0); */
 	}
 }
 
@@ -75,7 +63,6 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 	pid_t	pid;
 	int		status;
 
-	status = 0;
 	pid = fork();
 	if (pid < 0)
 		return (err_msg(NULL, NULL, strerror(errno), -1));
@@ -92,7 +79,7 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 		free_env(data->secret_env);
 		exit(status);
 	}
-	return (status);
+	return (pid);
 }
 
 int	call_pipe(t_data *data, t_token *currentt)
@@ -101,24 +88,20 @@ int	call_pipe(t_data *data, t_token *currentt)
 	int		pipefd[2];
 	int		prev_pipefd[2];
 	int		status;
-	int		error;
+	pid_t	pid;
 
-	g_sig.in_cmd = true;
-	error = 0;
+	signal_manager(sigint_handler_incmd, SA_RESTART);
+	pid = 0;
 	while (currentt)
 	{
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));
 		if (nextt && nextt->type == PIPE && nextt->next)
 			nextt = nextt->next;
 		else
-		{
-			if (nextt && nextt->type == PIPE && nextt->next == NULL)
-				error = err_msg(NULL, NULL, "Unclosed pipe", 2);
 			nextt = NULL;
-		}
 		if (nextt && pipe(pipefd) == -1)
 		{
-			error = err_msg(NULL, NULL, strerror(errno), 1);
+			status = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
 		if (currentt->prev == NULL)
@@ -126,7 +109,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 		else if (nextt)
 			status = pipe_fork(data, currentt, prev_pipefd, pipefd);
 		else
-			status = pipe_fork(data, currentt, prev_pipefd, NULL);
+			pid = pipe_fork(data, currentt, prev_pipefd, NULL);
 		if (currentt->prev != NULL)
 		{	// Close the previous pipe in the parent
 			close(prev_pipefd[0]);
@@ -138,14 +121,16 @@ int	call_pipe(t_data *data, t_token *currentt)
 			prev_pipefd[1] = pipefd[1];
 		}
 		currentt = nextt;
-		if (status < 0)
+		if (status < 0 || pid < 0)
 			currentt = NULL;
 	}
 	close(prev_pipefd[0]); // Close the last pipe in the parent process
 	close(prev_pipefd[1]);
-	while (wait(&status) > 0) // Wait for all child processes
+	waitpid(pid, &status, 0);
+	if (g_sigint)
+		status = 0x8200;
+	while (wait(NULL) > 0) // Wait for all child processes
 		;
-	if (error)
-		return (error);
+	signal_manager(sigint_handler, SA_RESTART);
 	return (WEXITSTATUS(status));
 }

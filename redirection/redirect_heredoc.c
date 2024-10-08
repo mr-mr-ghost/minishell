@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/04 15:24:34 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 11:54:53 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*get_heredoc(t_data *data, char *delimiter)
 	char	*heredoc;
 	char	*hereline;
 
-	signal_manager(heredoc_sig_handler, 0);
+	signal_manager(sigint_handler_incmd, 0);
 	ft_putstr_fd("> ", 1);
 	heredoc = NULL;
 	hereline = get_next_line(0);
@@ -31,7 +31,7 @@ char	*get_heredoc(t_data *data, char *delimiter)
 		heredoc = join_strings(data, heredoc, hereline);
 		hereline = get_next_line(0);
 	}
-	if (g_sig.sigint || !hereline
+	if (g_sigint || !hereline
 		|| ft_strncmp(hereline, delimiter, ft_strlen(delimiter)))
 		heredoc = heredoc_error(delimiter, heredoc);
 	if (hereline)
@@ -46,9 +46,8 @@ int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
 	t_token	*redirt;
 
 	redirt = return_redirt(cmdt);
-
+	signal_manager(sigint_handler_incmd, SA_RESTART);
 	pid = fork();
-	g_sig.in_cmd = true;
 	if (pid == -1)
 	{
 		close(fd[0]);
@@ -74,12 +73,15 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 	int		pipefd[2];
 	int		status;
 
-	if (g_sig.sigint) // ctrl + c
-		return (130);
 	heredoc = get_heredoc(data, hdtoken->next->value);
-
-	// if no heredoc deal with that?
-
+	if (g_sigint) // ctrl + c
+		return (130);
+	if (!hdtoken->prev || hdtoken->prev->type == PIPE)
+	{
+		if (heredoc)
+			free(heredoc);
+		return (0);
+	}
 	if (pipe(pipefd) == -1)
 	{
 		if (heredoc)
@@ -99,6 +101,7 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 		free(heredoc);
 	close(pipefd[1]);
 	wait(&status);
+	signal_manager(sigint_handler, SA_RESTART);
 	return (WEXITSTATUS(status));
 }
 
@@ -108,16 +111,14 @@ int	handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken)
 	t_token	*redirt;
 	int		ret;
 
-	if (g_sig.sigint) // ctrl + c
-		return (130);
 	heredoc = get_heredoc(data, hdtoken->next->value);
+	if (g_sigint) // ctrl + c
+		return (130);
 	if (heredoc)
 		free(heredoc);
-
 	redirt = return_redirt(cmdt);
 	while (redirt && redirt->type == HEREDOC)
 		redirt = return_redirt(redirt->next);
-
 	if (!redirt)
 		ret = check_launch_builtins(data, cmdt);
 	else

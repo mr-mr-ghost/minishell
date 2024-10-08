@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 12:08:39 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/26 12:08:39 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 12:39:50 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 bool	valid_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	if (!env || !key)
 		return (false);
 	tmp = env;
+	get_env_name(key_name, key);
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		get_env_name(key_name, key);
 		if (!ft_strcmp(env_name, key_name))
 			return (true);
 		tmp = tmp->next;
@@ -59,22 +59,6 @@ char	*add_quotes_var(char *line)
 		new_line[j++] = '\"';
 	new_line[j] = '\0';
 	return (new_line);
-}
-
-bool	select_valid_env(t_env *env, char *line, int start)
-{
-	char	*env_name;
-
-	env_name = find_env_name(env, line + start);
-	if (!env_name)
-		return (false);
-	if (valid_env_name(env, env_name))
-	{
-		free(env_name);
-		return (true);
-	}
-	free(env_name);
-	return (false);
 }
 
 bool	check_numeric(char *str)

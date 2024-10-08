@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/04 14:39:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:08:30 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,6 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 			status = launch_nonbuiltins(data, cmdt, NULL);
 		return (status);
 	}
-	else if (!redirt->next)
-		return (err_msg(NULL, NULL,
-				"syntax error near unexpected token `newline'", 2));
 	else
 	{
 		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
@@ -113,9 +110,6 @@ void	process_n_exec(t_data *data)
 		data->exit_code = launch_single_anycmd(data, data->token);
 	else if (nextt->type == PIPE && nextt->next)
 		data->exit_code = call_pipe(data, data->token);
-	else if (nextt->type == END)
-		data->exit_code = err_msg(NULL, NULL,
-				"syntax error near unexpected token `;'", 2);
 	else
 		data->exit_code = err_msg(NULL, data->token->value,
 				"Command not found", 127);

@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:44:58 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/15 16:45:06 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:17:24 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 char	*find_env_line(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	tmp = env;
+	get_env_name(key_name, key);
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		get_env_name(key_name, key);
 		if (!ft_strcmp(env_name, key_name))
 			return (ft_strdup(tmp->line));
 		tmp = tmp->next;
@@ -33,16 +33,16 @@ char	*find_env_line(t_env *env, char *key)
 char	*find_env_name(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	tmp = env;
+	get_env_name(key_name, key);
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		get_env_name(key_name, key);
 		if (!ft_strcmp(env_name, key_name))
-			return (ft_strdup(env_name));
+			return (ft_strdup(tmp->name));
 		tmp = tmp->next;
 	}
 	return (NULL);
@@ -51,14 +51,14 @@ char	*find_env_name(t_env *env, char *key)
 char	*find_env_value(t_env *env, char *key)
 {
 	t_env	*tmp;
-	char	env_name[BUFF_SIZE];
-	char	key_name[BUFF_SIZE];
+	char	env_name[ARG_MAX];
+	char	key_name[ARG_MAX];
 
 	tmp = env;
+	get_env_name(key_name, key);
 	while (tmp)
 	{
 		get_env_name(env_name, tmp->line);
-		get_env_name(key_name, key);
 		if (!ft_strcmp(env_name, key_name))
 			return (ft_strdup(tmp->value));
 		tmp = tmp->next;
@@ -87,7 +87,7 @@ char	*get_env_name(char *dest, const char *src)
 	int	i;
 
 	i = 0;
-	while (src[i] && (ft_isalnum(src[i]) || src[i] == '_'))
+	while (src[i] && (ft_isalnum(src[i]) || src[i] == '_') && i < ARG_MAX - 1)
 	{
 		dest[i] = src[i];
 		i++;

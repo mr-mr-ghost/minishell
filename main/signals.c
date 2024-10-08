@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 14:38:49 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/15 14:38:49 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/02 11:54:22 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,18 @@ void	sigint_handler(int signum)
 		ft_putstr_fd("\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		if (!g_sig.in_cmd)
-			rl_redisplay();
-		g_sig.sigint = 1;
+		rl_redisplay();
+		g_sigint = 1;
 	}
 }
 
-void	heredoc_sig_handler(int signum)
+void	sigint_handler_incmd(int signum)
 {
 	if (signum == SIGINT)
 	{
-		g_sig.sigint = 1;
+		ft_putchar_fd('\n', 1);
 		rl_on_new_line();
+		rl_replace_line("", 0);
+		g_sigint = 1;
 	}
-}
-
-void	sig_init(void)
-{
-	g_sig.in_cmd = false;
-	g_sig.sigint = 0;
 }
