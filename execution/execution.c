@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/03 13:24:00 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:08:30 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,24 @@ t_token	*get_nth_token(t_token *token, int n)
 	return (tmp);
 }
 
+t_token	*return_1stheredoct(t_token *cmdt)
+{
+	int		count;
+	t_token	*redirt;
+
+	count = count_args(cmdt, TRUNC);
+	redirt = get_nth_token(cmdt, count);
+	while (redirt && redirt->type >= TRUNC && redirt->type <= INPUT)
+	{
+		count = count_args(redirt->next, TRUNC);
+		redirt = get_nth_token(redirt->next, count);
+	}
+	if (redirt && redirt->type == HEREDOC)
+		return (redirt);
+	else
+		return (NULL);
+}
+
 t_token	*return_redirt(t_token *cmdt)
 {
 	int		count;
@@ -48,6 +66,7 @@ t_token	*return_redirt(t_token *cmdt)
 int	launch_single_anycmd(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
+	t_token	*hdtoken;
 	int		status;
 
 	redirt = return_redirt(cmdt);
@@ -60,12 +79,21 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	}
 	else
 	{
-		if (redirt->type == HEREDOC)
-			return (handle_heredoc(data, cmdt, redirt));
-		if (is_cmd(cmdt->value, 0)
-			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
-			return (redirection_wrap_builtins(data, cmdt, redirt));
-		return (launch_nonbuiltins(data, cmdt, redirt));
+		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
+		if (is_cmd(cmdt->value, 0))
+		{
+			if (hdtoken)
+				return (handle_heredoc_builtins(data, cmdt, hdtoken));
+			else
+				return (redirection_wrap_builtins(data, cmdt, redirt));
+		}
+		else
+		{
+			if (hdtoken)
+				return (handle_heredoc(data, cmdt, hdtoken));
+			else
+				return (launch_nonbuiltins(data, cmdt, redirt));
+		}
 	}
 }
 

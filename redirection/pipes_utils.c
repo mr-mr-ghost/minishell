@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/07 13:14:52 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:12:21 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 /* example: echo "Hello World!" | tr 'a-z' 'A-Z' | tr '!' '?'*/
 /* example: ls -l | grep '.c' | wc -l*/
 /* example: echo "Hello World!" | tr 'H' 'h' | tr 'e' 'E' | tr 'l' 'L'*/
+
 int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
 	int		status;
+	t_token	*hdtoken;
 
 	redirt = return_redirt(cmdt);
 	if (!redirt)
@@ -30,16 +32,22 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	}
 	else
 	{
-		if (redirt->type == HEREDOC)
+		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
+		if (is_cmd(cmdt->value, 0))
 		{
-			printf("TODO: heredoc\n");
+			if (hdtoken)
+				return (handle_heredoc_builtins(data, cmdt, hdtoken));
+			else
+				return (redirection_wrap_builtins(data, cmdt, redirt));
+		}
+		else
+		{
+			if (hdtoken)
+				return (handle_heredoc(data, cmdt, hdtoken));
+			else
+				child_process(data, cmdt, redirt);
 			return (0);
 		}
-		if (is_cmd(cmdt->value, 0)
-			|| (cmdt->type >= TRUNC && cmdt->type <= INPUT))
-			return (redirection_wrap_builtins(data, cmdt, redirt));
-		child_process(data, cmdt, redirt);
-		return (0);
 	}
 }
 
@@ -83,6 +91,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 	pid_t	pid;
 
 	signal_manager(sigint_handler_incmd, SA_RESTART);
+	pid = 0;
 	while (currentt)
 	{
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));

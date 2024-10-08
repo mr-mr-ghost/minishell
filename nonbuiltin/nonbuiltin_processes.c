@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/01 12:21:39 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:25:38 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,21 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	enva = NULL;
 	cmda = NULL;
 	signal_manager(sig_child_handler, 0);
+	while (redirt)
+	{
+		if (redirt->type >= TRUNC && redirt->type <= INPUT &&
+			handle_redirection(redirt->next, redirt->type) != 0)
+			child_cleanexit(data, bin, enva, cmda);
+		redirt = return_redirt(redirt->next);
+	}
 	bin = find_bin(data->env, cmdt->value);
 	if (!bin)
 		bin_error(data, cmdt->value);
-	enva = form_enva(data->env);
+	enva = form_enva(data->env, data->secret_env);
 	if (!enva)
 		child_cleanexit(data, bin, enva, cmda);
-	cmda = form_cmd(cmdt, count_args(cmdt, TRUNC));
+	cmda = form_cmd(data, cmdt, count_args(cmdt, TRUNC));
 	if (!cmda)
-		child_cleanexit(data, bin, enva, cmda);
-	if (redirt && handle_redirection(redirt->next, redirt->type))
 		child_cleanexit(data, bin, enva, cmda);
 	execve(bin, cmda, enva);
 	child_cleanexit(data, bin, enva, cmda);

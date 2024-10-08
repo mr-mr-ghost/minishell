@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/03 13:12:15 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:16:22 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 	minilib_stdout = dup(STDOUT_FILENO);
 	if (minilib_stdout < 0)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
-	status = handle_redirection(redir->next, redir->type);
-	if (status)
+	while (redir)
 	{
-		if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
-			err_msg(NULL, NULL, strerror(errno), 1);
-		close(minilib_stdout);
-		return (status);
+		if (redir->type >= TRUNC && redir-> type <= INPUT &&
+			handle_redirection(redir->next, redir->type))
+		{
+			if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
+				err_msg(NULL, NULL, strerror(errno), 1);
+			close(minilib_stdout);
+			return (1);
+		}
 	}
+	status = 0;
 	if (cmdt->type == CMD)
 		status = check_launch_builtins(data, cmdt);
 	if (dup2(minilib_stdout, STDOUT_FILENO) < 0)

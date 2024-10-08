@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/03 13:45:03 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:26:25 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ void	bin_error(t_data *data, char *cmd);
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
 t_token	*return_redirt(t_token *cmdt);
+t_token	*return_1stheredoct(t_token *cmdt);
 int		launch_single_anycmd(t_data *data, t_token *cmdt);
 void	process_n_exec(t_data *data);
 
@@ -205,8 +206,8 @@ int		check_launch_builtins(t_data *data, t_token *token);
 int		is_cmd(char *line, int i);
 
 /*	execution array utils	*/
-char	**form_enva(t_env *env);
-char	**form_cmd(t_token *cmd, int size);
+char	**form_enva(t_env *env, t_env *secret_env);
+char	**form_cmd(t_data *data, t_token *cmd, int size);
 int		count_args(t_token *cmd, int type);
 void	free_array(char **array);
 
@@ -216,8 +217,9 @@ int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 
 /*	heredoc redirect*/
 char	*get_heredoc(t_data *data, char *delimiter);
-int		process_heredoc(t_data *data, t_token *cmdt, t_token *redir, int *fd);
-int		handle_heredoc(t_data *data, t_token *cmdt, t_token *redirt);
+int		process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc);
+int		handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken);
+int		handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken);
 
 /*	heredoc redirect utils	*/
 char	*heredoc_error(char *delimiter, char *heredoc);
