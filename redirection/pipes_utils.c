@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/08 12:12:21 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:55:34 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ void	close_fd(int *fd, int dst)
 int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 {
 	pid_t	pid;
+	t_token	*redirt;
+	t_token	*hdtoken;
+	char	*heredoc;
 	int		status;
 
 	pid = fork();
@@ -68,11 +71,41 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd)
 		return (err_msg(NULL, NULL, strerror(errno), -1));
 	else if (pid == 0)
 	{
+		status = EXIT_FAILURE;
+		redirt = return_redirt(cmdt);
+		// getting heredoc before replacing stdin/out
+		hdtoken = return_1stheredoct(cmdt);
+		if (hdtoken)
+			heredoc = get_heredoc(data, hdtoken->next->value);
+		// replacing stdin/out
 		if (input_fd)
 			close_fd(input_fd, STDIN_FILENO);
 		if (output_fd)
 			close_fd(output_fd, STDOUT_FILENO);
-		status = launch_cmd_inpipe(data, cmdt);
+
+		// launching commands accordingly
+		// status = launch_cmd_inpipe(data, cmdt);
+		if (is_cmd(cmdt->value, 0))
+		{
+			if (heredoc)
+				free(heredoc);
+			if (!redirt)
+				status = check_launch_builtins(data, cmdt);
+			else if (!heredoc)
+				status = redirection_wrap_builtins(data, cmdt, redirt);
+			else
+			{
+				while (redirt && redirt->type == HEREDOC)
+					redirt = return_redirt(redirt->next);
+				if (!redirt)
+					status = check_launch_builtins(data, cmdt);
+				else
+					status = redirection_wrap_builtins(data, cmdt, redirt);
+			}
+		}
+		else
+			child_process(data, cmdt, redirt);
+		// cleaning
 		rl_clear_history();
 		free_tokens(data);
 		free_env(data->env);
