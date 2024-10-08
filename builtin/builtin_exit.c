@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 13:39:53 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/21 13:39:53 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 13:26:46 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exit_command(t_data *data, t_token *token)
 	}
 	exit_token = token->next;
 	if (exit_token->next && exit_token->next->type <= ARG
-		&& check_numeric (exit_token->value))
+		&& check_numeric(exit_token->value))
 	{
 		ft_putendl_fd("exit", 1);
 		return (err_msg("exit", NULL, "too many arguments", 1));
