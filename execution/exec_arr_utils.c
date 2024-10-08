@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:07:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:25:58 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:45:31 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	count_args(t_token *token, int maxtype)
 }
 
 /* forms a string array of 1 command*/
-char	**form_cmd(t_data *data, t_token *token, int len)
+char	**form_cmd(t_token *token, int len)
 {
 	char	**cmd;
 	t_token	*tmp;
@@ -66,12 +66,11 @@ char	**form_cmd(t_data *data, t_token *token, int len)
 		tmp = tmp->next;
 	}
 	cmd[i] = NULL;
-	free_tokens(data);
 	return (cmd);
 }
 
 /* forms a string array of minishell environment variables*/
-char	**form_enva(t_env *env, t_env *secret_env)
+char	**form_enva(t_env *env)
 {
 	char	**array;
 	t_env	*tmp;
@@ -95,7 +94,5 @@ char	**form_enva(t_env *env, t_env *secret_env)
 		tmp = tmp->next;
 	}
 	array[i] = NULL;
-	free_env(env);
-	free_env(secret_env);
 	return (array);
 }

@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:26:25 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:46:07 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,8 +206,8 @@ int		check_launch_builtins(t_data *data, t_token *token);
 int		is_cmd(char *line, int i);
 
 /*	execution array utils	*/
-char	**form_enva(t_env *env, t_env *secret_env);
-char	**form_cmd(t_data *data, t_token *cmd, int size);
+char	**form_enva(t_env *env);
+char	**form_cmd(t_token *cmd, int size);
 int		count_args(t_token *cmd, int type);
 void	free_array(char **array);
 
@@ -219,6 +219,7 @@ int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken);
+int		handle_heredoc_error(char *msg, char *heredoc, int code);
 int		handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken);
 
 /*	heredoc redirect utils	*/

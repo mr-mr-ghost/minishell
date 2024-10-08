@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 11:54:53 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/08 12:45:08 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,18 @@ int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
 	return (0);
 }
 
+int	handle_heredoc_error(char *msg, char *heredoc, int code)
+{
+	if (msg)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putendl_fd(msg, 2);
+	}
+	if (heredoc)
+		free(heredoc);
+	return (code);
+}
+
 /* example of << delimiter: "cat <<'X' > t.txt		contentbla X"*/
 int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 {
@@ -77,25 +89,12 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 	if (g_sigint) // ctrl + c
 		return (130);
 	if (!hdtoken->prev || hdtoken->prev->type == PIPE)
-	{
-		if (heredoc)
-			free(heredoc);
-		return (0);
-	}
+		return (handle_heredoc_error(NULL, heredoc, 0));
 	if (pipe(pipefd) == -1)
-	{
-		if (heredoc)
-			free(heredoc);
-		return (err_msg(NULL, NULL, strerror(errno), 1));
-	}
+		return (handle_heredoc_error(strerror(errno), heredoc, 1));
 	if (process_heredoc(data, cmdt, pipefd, heredoc) != 0)
-	{
-		if (heredoc)
-			free(heredoc);
-		return (1);
-	}
+		return (handle_heredoc_error(NULL, heredoc, 1));
 	close(pipefd[0]);
-	// Program receives signal SIGPIPE (dies?) from commands who dont read STDIN
 	ft_putstr_fd(heredoc, pipefd[1]);
 	if (heredoc)
 		free(heredoc);
