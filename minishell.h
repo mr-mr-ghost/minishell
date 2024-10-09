@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:46:07 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/09 14:02:21 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,13 @@ int		handle_normal_chars(t_data *data, int *i);
 /*	tokens split dollar	*/
 int		update_line_iter(char *line, int i);
 char	*process_dollar(t_data *data, char *line, int *i);
-void	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
+bool	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
 char	*get_dollar_value(t_env *env, char *line, int *start);
 
 /*	tokens list utils	*/
 t_token	*token_new(char *value, bool div);
 void	token_add_back(t_token **token, t_token *new);
+int		token_lst_add(t_token **token, char *line, bool div);
 
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);

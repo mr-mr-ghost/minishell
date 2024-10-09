@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:21:30 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 12:40:23 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/09 14:05:27 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,13 @@
 int	handle_special_chars(t_data *data, char *line, int *i)
 {
 	int		j;
-	t_token	*new;
 
 	j = *i + 1;
 	if ((line[*i] == '<' && line[*i + 1] == '<')
 		|| (line[*i] == '>' && line[*i + 1] == '>'))
 		j++;
-	new = token_new(ft_substr(line, *i, j - *i), true);
-	if (!new || !new->value)
+	if (token_lst_add(&data->token, ft_substr(line, *i, j - *i), true))
 		return (1);
-	token_add_back(&data->token, new);
 	*i = j;
 	return (0);
 }
@@ -51,9 +48,10 @@ int	handle_normal_chars(t_data *data, int *i)
 {
 	char	buffer[ARG_MAX];
 	int		k;
-	t_token	*new;
+	bool	var;
 
 	k = 0;
+	var = false;
 	while (data->line[*i] && !ft_strchr("><| ", data->line[*i])
 		&& k < ARG_MAX - 1)
 	{
@@ -61,14 +59,14 @@ int	handle_normal_chars(t_data *data, int *i)
 			handle_quotes(data, buffer, i, &k);
 		else if (data->line[*i] == '$' && data->line[(*i) + 1]
 			&& data->line[(*i) + 1] != ' ')
-			add_dollar_value(data, buffer, i, &k);
+			var = add_dollar_value(data, buffer, i, &k);
 		else
 			buffer[k++] = data->line[(*i)++];
 	}
 	buffer[k] = '\0';
-	new = token_new(ft_strdup(buffer), false);
-	if (!new || !new->value)
+	if (!buffer[0] && var)
+		return (0);
+	if (token_lst_add(&data->token, ft_strdup(buffer), false))
 		return (1);
-	token_add_back(&data->token, new);
 	return (0);
 }

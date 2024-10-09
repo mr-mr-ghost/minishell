@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/08 12:16:22 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/09 13:19:41 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 			close(minilib_stdout);
 			return (1);
 		}
+		redir = return_redirt(redir->next);
 	}
 	status = 0;
 	if (cmdt->type == CMD)

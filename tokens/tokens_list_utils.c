@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 20:43:03 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/28 20:43:06 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/09 14:03:47 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,15 @@ void	token_add_back(t_token **token, t_token *new)
 		tmp = tmp->next;
 	tmp->next = new;
 	new->prev = tmp;
+}
+
+int	token_lst_add(t_token **token, char *line, bool div)
+{
+	t_token *new;
+
+	new = token_new(line, div);
+	if (!new || !new->value)
+		return (1);
+	token_add_back(token, new);
+	return (0);
 }
