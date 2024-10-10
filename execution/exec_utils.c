@@ -24,7 +24,7 @@ int	is_cmd(char *line, int i)
 	while (j < num_cmds)
 	{
 		if (select_cmp(line, cmds[j], i, lengths[j])
-			&& ft_strchr("><|;\"\' \0", line[i + lengths[j]]))
+			&& ft_strchr("><|\"\' \0", line[i + lengths[j]]))
 			return (lengths[j]);
 		j++;
 	}
@@ -37,24 +37,24 @@ int	is_cmd(char *line, int i)
 /* Returns 0, if builtin command execution failed*/
 int	check_launch_builtins(t_data *data, t_token *token)
 {
-	int	i;
+	int	status;
 
-	i = -1;
+	status = -1;
 	if (!ft_memcmp(token->value, "echo", ft_strlen("echo") + 1))
-		i = echo_command(token);
+		status = echo_command(token);
 	else if (!ft_memcmp(token->value, "cd", ft_strlen("cd") + 1))
-		i = cd_command(data, token);
+		status = cd_command(data, token);
 	else if (!ft_memcmp(token->value, "pwd", ft_strlen("pwd") + 1))
-		i = pwd_command();
+		status = pwd_command();
 	else if (!ft_memcmp(token->value, "export", ft_strlen("export") + 1))
-		i = export_command(data, token);
+		status = export_command(data, token);
 	else if (!ft_memcmp(token->value, "unset", ft_strlen("unset") + 1))
-		i = unset_command(data, token);
+		status = unset_command(data, token);
 	else if (!ft_memcmp(token->value, "env", ft_strlen("env") + 1))
-		i = env_command(data, token);
+		status = env_command(data, token);
 	else if (!ft_memcmp(token->value, "exit", ft_strlen("exit") + 1))
-		i = exit_command(data, token);
+		status = exit_command(data, token);
 	else if (ft_strchr(token->value, '='))
-		i = handle_declaration(data->secret_env, token);
-	return (i);
+		status = handle_declaration(data->secret_env, token);
+	return (status);
 }

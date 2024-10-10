@@ -23,8 +23,8 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	while (redir)
 	{
-		if (redir->type >= TRUNC && redir-> type <= INPUT &&
-			handle_redirection(redir->next, redir->type))
+		if (redir->type >= TRUNC && redir-> type <= INPUT
+			&& handle_redirection(redir->next, redir->type))
 		{
 			if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
 				err_msg(NULL, NULL, strerror(errno), 1);

@@ -86,7 +86,7 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 	int		status;
 
 	heredoc = get_heredoc(data, hdtoken->next->value);
-	if (g_sigint) // ctrl + c
+	if (g_sigint)
 		return (130);
 	if (!hdtoken->prev || hdtoken->prev->type == PIPE)
 		return (handle_heredoc_error(NULL, heredoc, 0));
@@ -111,7 +111,7 @@ int	handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken)
 	int		ret;
 
 	heredoc = get_heredoc(data, hdtoken->next->value);
-	if (g_sigint) // ctrl + c
+	if (g_sigint)
 		return (130);
 	if (heredoc)
 		free(heredoc);
