@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:44:58 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 14:17:24 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/10 20:21:48 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,6 @@ char	*find_env_value(t_env *env, char *key)
 		tmp = tmp->next;
 	}
 	return (NULL);
-}
-
-int	find_env_lvl(char *env_value)
-{
-	int		i;
-	char	*lvl_str;
-
-	i = 0;
-	while (env_value[i] && env_value[i] != '=')
-		i++;
-	if (env_value[i] == '=')
-		i++;
-	lvl_str = ft_strdup(env_value + i);
-	i = ft_atoi(lvl_str);
-	free(lvl_str);
-	return (i);
 }
 
 char	*get_env_name(char *dest, const char *src)

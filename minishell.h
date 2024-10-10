@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/09 14:02:21 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/10 20:43:11 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ char	*set_env_value(char *line);
 
 /*	environment utils	*/
 char	*find_env_line(t_env *env, char *key);
-int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, const char *src);
 char	*find_env_value(t_env *env, char *key);
 char	*find_env_name(t_env *env, char *key);
@@ -216,7 +215,7 @@ void	free_array(char **array);
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 
-/*	heredoc redirect*/
+/*	heredoc redirect	*/
 char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken);

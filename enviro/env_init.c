@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 13:41:41 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/02 14:20:34 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/10 20:31:34 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,24 +72,22 @@ char	*set_env_name(char *line)
 void	set_shell_lvl(t_env *env)
 {
 	int		lvl;
-	char	*lvl_str;
 	char	*lvl_value;
-	char	env_name[ARG_MAX];
 
-	lvl_value = find_env_line(env, "SHLVL");
-	lvl = find_env_lvl(lvl_value) + 1;
+	lvl_value = find_env_value(env, "SHLVL");
+	if (!lvl_value)
+		return ;
+	lvl = ft_atoi(lvl_value) + 1;
 	free(lvl_value);
-	while (env && env->next)
+	while (env)
 	{
-		get_env_name(env_name, env->line);
-		if (!ft_strncmp(env_name, "SHLVL", ft_strlen(env_name)))
+		if (!ft_strcmp(env->name, "SHLVL"))
 		{
 			free(env->line);
 			free(env->value);
-			lvl_str = ft_itoa(lvl);
-			env->line = ft_strjoin("SHLVL=", lvl_str);
-			env->value = ft_strdup(lvl_str);
-			free(lvl_str);
+			lvl_value = ft_itoa(lvl);
+			env->line = ft_strjoin("SHLVL=", lvl_value);
+			env->value = lvl_value;
 			return ;
 		}
 		env = env->next;
