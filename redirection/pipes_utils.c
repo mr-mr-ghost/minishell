@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/10 15:30:44 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/10 15:42:02 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,10 @@ int	call_pipe(t_data *data, t_token *currentt)
 			status = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
+
+		// put heredoc to the pipe
+		if (hdtoken && !is_cmd(currentt->value, 0))
+			ft_putstr_fd(heredoc, pipefd[1]);
 
 		// make forks for each command/pipe
 		if (currentt->prev == NULL) // first command fork
