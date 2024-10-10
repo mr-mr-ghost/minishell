@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:26:25 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/10 15:07:35 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ int		heredoc_strcat(char *dest, char *src, int start);
 
 /*	pipes	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
-int		pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd);
+int		pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd, char *heredoc);
 int		call_pipe(t_data *data, t_token *currentt);
 
 #endif
