@@ -1,33 +1,22 @@
 ## TODOS:
 
 - [ ] Fix misc. errors in tokens (if there are any)
-
 - [ ] Fix return issues in pipes and heredoc(?)
-
 - [ ] echo > | ls does not work properly
-
 - [x] multiple redirects
-
 - [x] [fgsdfg > a.txt > b.txt > c.txt] differences in bash and minishell?
-      
 - [x] echo << X > a.txt (should create an empty file)
-
 - [x] pick first heredoc, ignore the other heredocs, but deal with all other redirs
-
 - [ ] multiple heredocs?
-
 - [x] builtins and heredoc
-
-- [ ] heredoc pipe
-
+- [x] heredoc pipe (with issues)
+- [x] fix builtins accepting the heredoc and stdin
+- [ ] fix non builtins accepting the heredoc and stdin
+- [ ] fix non builtins and heredoc not returning prompt
 - [ ] builtins, nonbuiltins, heredoc, redirections and pipes working together
-
 - [ ] cleanup the calamity of the call_pipe function in pipes_utils
-
 - [ ] probably some memory leaks
-
 - [ ] resolve the semi-colon question
-
 - [ ] cleanup
 
 ## LINKS:
