@@ -25,7 +25,7 @@ int	check_error(char *path)
 		exit_code = err_msg(NULL, path, "Command not found", 127);
 	else if (access(path, F_OK))
 		exit_code = err_msg(NULL, path, strerror(errno), 127);
-	else if (fd != -1 && dir != NULL)
+	else if (fd == -1 && dir != NULL)
 		exit_code = err_msg(NULL, path, "Is a directory", 126);
 	else if (access(path, X_OK))
 		exit_code = err_msg(NULL, path, strerror(errno), 126);
