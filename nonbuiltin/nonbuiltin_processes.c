@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 13:11:09 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/11 16:11:59 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ int	check_error(char *path)
 	int	fd;
 	int	exit_code;
 
-	fd = open(path, O_RDONLY);
+	fd = open(path, O_WRONLY);
 	dir = opendir(path);
 	exit_code = 0;
 	if (!ft_strchr(path, '/'))
 		exit_code = err_msg(NULL, path, "Command not found", 127);
-	else if (fd == -1 && dir == NULL)
-		exit_code = err_msg(NULL, path, "No such file or directory", 127);
-	else if (fd == -1 && dir != NULL)
+	else if (access(path, F_OK))
+		exit_code = err_msg(NULL, path, strerror(errno), 127);
+	else if (fd != -1 && dir != NULL)
 		exit_code = err_msg(NULL, path, "Is a directory", 126);
-	else if (fd != -1 && dir == NULL)
-		exit_code = err_msg(NULL, path, "Permission denied", 126);
+	else if (access(path, X_OK))
+		exit_code = err_msg(NULL, path, strerror(errno), 126);
 	if (dir)
 		closedir(dir);
 	if (fd >= 0)
@@ -77,8 +77,8 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	signal_manager(sig_child_handler, 0);
 	while (redirt)
 	{
-		if (redirt->type >= TRUNC && redirt->type <= INPUT &&
-			handle_redirection(redirt->next, redirt->type) != 0)
+		if (redirt->type >= TRUNC && redirt->type <= INPUT
+			&& handle_redirection(redirt->next, redirt->type) != 0)
 			child_cleanexit(data, bin, enva, cmda);
 		redirt = return_redirt(redirt->next);
 	}
@@ -86,10 +86,8 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	if (!bin)
 		bin_error(data, cmdt->value);
 	enva = form_enva(data->env);
-	if (!enva)
-		child_cleanexit(data, bin, enva, cmda);
 	cmda = form_cmd(cmdt, count_args(cmdt, TRUNC));
-	if (!cmda)
+	if (!enva || !cmda)
 		child_cleanexit(data, bin, enva, cmda);
 	execve(bin, cmda, enva);
 	child_cleanexit(data, bin, enva, cmda);
