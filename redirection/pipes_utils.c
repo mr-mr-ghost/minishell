@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/10 15:42:02 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:45:57 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,6 @@
 /* example: echo "Hello World!" | tr 'a-z' 'A-Z' | tr '!' '?'*/
 /* example: ls -l | grep '.c' | wc -l*/
 /* example: echo "Hello World!" | tr 'H' 'h' | tr 'e' 'E' | tr 'l' 'L'*/
-
-
-/* if (is_cmd(cmdt->value, 0))
-{
-	if (heredoc)
-		free(heredoc);
-	if (!redirt)
-		status = check_launch_builtins(data, cmdt);
-	else if (!heredoc)
-		status = redirection_wrap_builtins(data, cmdt, redirt);
-	else
-	{
-		while (redirt && redirt->type == HEREDOC)
-			redirt = return_redirt(redirt->next);
-		if (!redirt)
-			status = check_launch_builtins(data, cmdt);
-		else
-			status = redirection_wrap_builtins(data, cmdt, redirt);
-	}
-} */
 
 int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
@@ -85,7 +65,7 @@ void	close_fd(int *fd, int dst)
 	close(fd[1]);
 }
 
-int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd, char *heredoc)
+int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[2][2], char *heredoc)
 {
 	pid_t	pid;
 	int		status;
@@ -96,10 +76,10 @@ int	pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd, char *
 		return (err_msg(NULL, NULL, strerror(errno), -1));
 	else if (pid == 0)
 	{
-		if (input_fd)
-			close_fd(input_fd, STDIN_FILENO);
-		if (output_fd)
-			close_fd(output_fd, STDOUT_FILENO);
+		if (pipefd[0][0] != -1 && pipefd[0][1] != -1)
+			close_fd(pipefd[0], STDIN_FILENO);
+		if (pipefd[1][0] != -1 && pipefd[1][1] != -1)
+			close_fd(pipefd[1], STDOUT_FILENO);
 
 		if (heredoc)
 			free(heredoc);
@@ -119,8 +99,9 @@ int	call_pipe(t_data *data, t_token *currentt)
 	t_token	*nextt;
 	t_token	*hdtoken;
 	char	*heredoc;
-	int		pipefd[2];
-	int		prev_pipefd[2];
+	int		pipefd[2][2]; // pipefd[0] - previous pipe, pipefd[1] - current pipe
+	//int		pipefd[2];
+	//int		prev_pipefd[2];
 	int		status;
 	pid_t	pid;
 
@@ -145,7 +126,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 			heredoc = get_heredoc(data, hdtoken->next->value);
 
 		// pipe fail
-		if (nextt && pipe(pipefd) == -1)
+		if (nextt && pipe(pipefd[1]) == -1)
 		{
 			if (hdtoken && heredoc)
 				free(heredoc);
@@ -155,26 +136,39 @@ int	call_pipe(t_data *data, t_token *currentt)
 
 		// put heredoc to the pipe
 		if (hdtoken && !is_cmd(currentt->value, 0))
-			ft_putstr_fd(heredoc, pipefd[1]);
+			ft_putstr_fd(heredoc, pipefd[1][1]);
 
 		// make forks for each command/pipe
 		if (currentt->prev == NULL) // first command fork
-			status = pipe_fork(data, currentt, NULL, pipefd, heredoc);
+		{
+			pipefd[0][0] = -1;
+			pipefd[0][1] = -1;
+			status = pipe_fork(data, currentt, pipefd, heredoc);
+		}
 		else if (nextt) // mid command fork
-			status = pipe_fork(data, currentt, prev_pipefd, pipefd, heredoc);
+			status = pipe_fork(data, currentt, pipefd, heredoc);
 		else // end command fork
-			pid = pipe_fork(data, currentt, prev_pipefd, NULL, heredoc);
-
+		{
+			pipefd[1][0] = -1;
+			pipefd[1][1] = -1;
+			pid = pipe_fork(data, currentt, pipefd, heredoc);
+		}
+		/* if (currentt->prev == NULL) // first command fork
+			status = pipe_fork(data, currentt, NULL, pipefd[1], heredoc);
+		else if (nextt) // mid command fork
+			status = pipe_fork(data, currentt, pipefd[0], pipefd[1], heredoc);
+		else // end command fork
+			pid = pipe_fork(data, currentt, pipefd[0], NULL, heredoc); */
 
 		if (currentt->prev != NULL)
 		{	// Close the previous pipe in the parent
-			close(prev_pipefd[0]);
-			close(prev_pipefd[1]);
+			close(pipefd[0][0]);
+			close(pipefd[0][1]);
 		}
 		if (nextt)
 		{	// Move the current pipe to prev_pipefd for the next iteration
-			prev_pipefd[0] = pipefd[0];
-			prev_pipefd[1] = pipefd[1];
+			pipefd[0][0] = pipefd[1][0];
+			pipefd[0][1] = pipefd[1][1];
 		}
 
 		currentt = nextt; // set next command as current command
@@ -188,8 +182,8 @@ int	call_pipe(t_data *data, t_token *currentt)
 		if (status < 0 || pid < 0) // errors from forks?
 			currentt = NULL;
 	}
-	close(prev_pipefd[0]); // Close the last pipe in the parent process
-	close(prev_pipefd[1]);
+	close(pipefd[0][0]); // Close the last pipe in the parent process
+	close(pipefd[0][1]);
 	waitpid(pid, &status, 0);
 	if (g_sigint)
 		status = 0x8200;
