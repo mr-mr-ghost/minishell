@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/11 16:11:59 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/12 01:02:00 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	bin_error(t_data *data, char *cmd)
 	int	exit_status;
 
 	exit_status = check_error(cmd);
+	rl_clear_history();
 	free_tokens(data);
 	free_env(data->env);
 	free_env(data->secret_env);

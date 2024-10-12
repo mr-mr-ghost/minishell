@@ -12,9 +12,7 @@ CFILES = minishell.c main/prompt.c main/utils.c main/libft_utils.c \
 		nonbuiltin/nonbuiltin_processes.c redirection/redirection_utils.c redirection/pipes_utils.c \
 		redirection/redirect_heredoc.c redirection/redirect_heredoc_utils.c
 
-OBJ_DIR = build/obj/
-
-BUILD_DIR = build/
+OBJ_DIR = obj/
 
 MAIN = main/
 BUILTINS = builtin/
@@ -92,7 +90,6 @@ all: $(NAME)
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@rm -rf $(BUILD_DIR)
 	@$(MAKE) -s -C ./libft clean
 	@echo "${YELLOW}[Minishell]${RESET}	${RED}Deleted directory${RESET} $(OBJ_DIR) ${RED}containing${RESET} $(notdir $(patsubst %.c, %.o, $(CFILES)))"
 

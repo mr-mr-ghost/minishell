@@ -6,8 +6,7 @@ minishell
 *.a
 *.supp
 readline.supp
-build/obj
-build/
+obj/
 libft/libft.a
 libft/obj
 a.out
