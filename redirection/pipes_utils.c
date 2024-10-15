@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/15 02:53:46 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:41:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 		}
 		if (pipefd[1][0] != -1 && pipefd[1][1] != -1)
 			close_fd(pipefd[1], STDOUT_FILENO, NULL);
-
 		status = launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
 		free_tokens(data);
@@ -109,35 +108,31 @@ int	call_pipe(t_data *data, t_token *currentt)
 
 	signal_manager(sigint_handler_incmd, SA_RESTART);
 	heredoc = NULL;
+	pipefd[0][0] = -1;
+	pipefd[0][1] = -1;
+	pipefd[1][0] = -1;
+	pipefd[1][1] = -1;
 	pipefd[2][0] = -1;
 	pipefd[2][1] = -1;
 	pid = 0;
 	while (currentt)
 	{
-		// get next command
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));
 		if (nextt && nextt->type == PIPE && nextt->next)
 			nextt = nextt->next;
 		else
 			nextt = NULL;
-
-		// check for current command's heredoc
-		/* if (nextt)
-			hdtoken = return_1stheredoct(nextt); */
 		hdtoken = return_1stheredoct(currentt);
-
-		// if heredoc here, replace pipe with heredoc?
-
 		if (hdtoken)
 		{
 			heredoc = get_heredoc(data, hdtoken->next->value);
-			/* if (g_sigint) // copilot offer
+			if (g_sigint) // copilot offer
 			{
 				if (heredoc)
 					free(heredoc);
 				status = 0x8200;
 				break ;
-			} */
+			}
 			if (pipe(pipefd[2]) == -1)
 			{
 				if (heredoc)
@@ -146,21 +141,13 @@ int	call_pipe(t_data *data, t_token *currentt)
 				break ;
 			}
 		}
-
-		// pipe fail
-		if (nextt && pipe(pipefd[1]) == -1)
+		if (nextt && pipe(pipefd[1]) == -1) // pipe fail
 		{
 			if (hdtoken && heredoc)
 				free(heredoc);
 			status = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
-
-		// put heredoc to the pipe
-		/* if (hdtoken && !is_cmd(currentt->value, 0))
-			ft_putstr_fd(heredoc, pipefd[1][1]); */
-
-		// make forks for each command/pipe
 		if (currentt->prev == NULL) // first command fork
 		{
 			pipefd[0][0] = -1;
@@ -175,13 +162,6 @@ int	call_pipe(t_data *data, t_token *currentt)
 			pipefd[1][1] = -1;
 			pid = pipe_fork(data, currentt, pipefd, heredoc);
 		}
-		/* if (currentt->prev == NULL) // first command fork
-			status = pipe_fork(data, currentt, NULL, pipefd[1], heredoc);
-		else if (nextt) // mid command fork
-			status = pipe_fork(data, currentt, pipefd[0], pipefd[1], heredoc);
-		else // end command fork
-			pid = pipe_fork(data, currentt, pipefd[0], NULL, heredoc); */
-
 		if (currentt->prev != NULL)
 		{	// Close the previous pipe in the parent
 			close(pipefd[0][0]);
@@ -192,7 +172,6 @@ int	call_pipe(t_data *data, t_token *currentt)
 			pipefd[0][0] = pipefd[1][0];
 			pipefd[0][1] = pipefd[1][1];
 		}
-
 		currentt = nextt; // set next command as current command
 		if (hdtoken)
 		{
@@ -207,8 +186,10 @@ int	call_pipe(t_data *data, t_token *currentt)
 		if (status < 0 || pid < 0) // errors from forks?
 			currentt = NULL;
 	}
-	close(pipefd[0][0]); // Close the last pipe in the parent process
-	close(pipefd[0][1]);
+	if (pipefd[0][0] != -1)  // Close the last pipe in the parent process
+		close(pipefd[0][0]);
+	if (pipefd[0][1] != -1)
+		close(pipefd[0][1]);
 	waitpid(pid, &status, 0);
 	if (g_sigint)
 		status = 0x8200;
