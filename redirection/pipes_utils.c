@@ -6,12 +6,13 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/15 18:14:15 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:09:32 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+// similarities to launch_single_anycmd in execution.c
 int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
@@ -96,23 +97,47 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 	return (pid);
 }
 
-int	call_pipe(t_data *data, t_token *currentt)
+void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose)
 {
-	t_token	*nextt;
-	t_token	*hdtoken;
-	char	*heredoc;
-	int		pipefd[3][2]; //pipefd[0] prev, pipefd[1] current, pipefd[2] heredoc
-	int		status;
-	pid_t	pid;
+	if (isclose)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	else if (pipefd2)
+	{
+		pipefd[0] = pipefd2[0];
+		pipefd[1] = pipefd2[1];
+	}
+	else
+	{
+		pipefd[0] = value;
+		pipefd[1] = value;
+	}
+}
 
-	signal_manager(sigint_handler_incmd, SA_RESTART);
-	heredoc = NULL;
+void	set_pipeset(int pipefd[3][2])/* , char *heredoc, int pid) */
+{
 	pipefd[0][0] = -1;
 	pipefd[0][1] = -1;
 	pipefd[1][0] = -1;
 	pipefd[1][1] = -1;
 	pipefd[2][0] = -1;
 	pipefd[2][1] = -1;
+}
+
+int	call_pipe(t_data *data, t_token *currentt)
+{
+	t_token	*nextt;
+	t_token	*hdtoken;
+	char	*heredoc;
+	int		pipefd[3][2]; //pipefd[0] in, pipefd[1] out, pipefd[2] heredoc
+	int		status;
+	pid_t	pid;
+
+	signal_manager(sigint_handler_incmd, SA_RESTART);
+	set_pipeset(pipefd);
+	heredoc = NULL;
 	pid = 0;
 	while (currentt)
 	{
@@ -121,14 +146,15 @@ int	call_pipe(t_data *data, t_token *currentt)
 			nextt = nextt->next;
 		else
 			nextt = NULL;
+
 		hdtoken = return_1stheredoct(currentt);
 		if (hdtoken)
 		{
 			heredoc = get_heredoc(data, hdtoken->next->value);
-			if (g_sigint) // copilot offer
+			if (g_sigint)
 			{
 				if (heredoc)
-					free(heredoc);
+					free (heredoc);
 				status = 0x8200;
 				break ;
 			}
@@ -147,36 +173,30 @@ int	call_pipe(t_data *data, t_token *currentt)
 			status = err_msg(NULL, NULL, strerror(errno), 1);
 			break ;
 		}
+
+
 		if (currentt->prev == NULL) // first command fork
 		{
-			pipefd[0][0] = -1;
-			pipefd[0][1] = -1;
+			edit_pipeset(pipefd[0], NULL, -1, 0);
 			status = pipe_fork(data, currentt, pipefd, heredoc);
 		}
 		else if (nextt) // mid command fork
 			status = pipe_fork(data, currentt, pipefd, heredoc);
 		else // end command fork
 		{
-			pipefd[1][0] = -1;
-			pipefd[1][1] = -1;
+			edit_pipeset(pipefd[1], NULL, -1, 0);
 			pid = pipe_fork(data, currentt, pipefd, heredoc);
 		}
-		if (currentt->prev != NULL)
-		{	// Close the previous pipe in the parent
-			close(pipefd[0][0]);
-			close(pipefd[0][1]);
-		}
-		if (nextt)
-		{	// Move the current pipe to prev_pipefd for the next iteration
-			pipefd[0][0] = pipefd[1][0];
-			pipefd[0][1] = pipefd[1][1];
-		}
+
+		if (currentt->prev != NULL) // Close the previous pipe in the parent
+			edit_pipeset(pipefd[0], NULL, 0, 1);
+		if (nextt) // Move the current pipe to prev_pipefd for the next iteration
+			edit_pipeset(pipefd[0], pipefd[1], 0, 0);
 		currentt = nextt; // set next command as current command
 		if (hdtoken)
 		{
-			close(pipefd[2][0]);
 			ft_putstr_fd(heredoc, pipefd[2][1]);
-			close(pipefd[2][1]);
+			edit_pipeset(pipefd[2], NULL, 0, 1);
 			if (heredoc)
 				free (heredoc);
 			heredoc = NULL;
@@ -185,10 +205,8 @@ int	call_pipe(t_data *data, t_token *currentt)
 		if (status < 0 || pid < 0) // errors from forks?
 			currentt = NULL;
 	}
-	if (pipefd[0][0] != -1) // Close the last pipe in the parent process
-		close(pipefd[0][0]);
-	if (pipefd[0][1] != -1)
-		close(pipefd[0][1]);
+	if (pipefd[0][0] != -1 && pipefd[0][1] != -1) // Close the last pipe in the parent process
+		edit_pipeset(pipefd[0], NULL, 0, 1);
 	waitpid(pid, &status, 0);
 	if (g_sigint)
 		status = 0x8200;
