@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/15 13:57:15 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/15 22:57:54 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,29 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 	exit(exit_status);
 }
 
+/*
+// Get last file name in each redirection
+int	check_builtin_redirs(t_token *redirt)
+{
+	t_token	*last_file;
+
+	while (redirt)
+	{
+		if (redirt->type >= TRUNC && redirt->type <= INPUT)
+		{
+			last_file = redirt;
+			while (last_file->next && last_file->next->type == ARG)
+				last_file = redirt->next;
+			if (last_file->type == ARG
+				&& handle_redirection(last_file, redirt->type) != 0)
+				return (1);
+		}
+		redirt = return_redirt(redirt->next);
+	}
+	return (0);
+}
+*/
+
 void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	char	**enva;
@@ -79,6 +102,8 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	enva = NULL;
 	cmda = NULL;
 	signal_manager(sig_child_handler, 0);
+	/* if (check_builtin_redirs(redirt) != 0)
+		child_cleanexit(data, bin, enva, cmda); */
 	while (redirt)
 	{
 		if (redirt->type >= TRUNC && redirt->type <= INPUT &&
