@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nonbuiltin_processes.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:25:38 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/15 13:57:15 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,13 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 {
 	int	exit_status;
 
-	exit_status = check_error(bin);
 	if (bin)
+	{
+		exit_status = check_error(bin);
 		free(bin);
+	}
+	else
+		exit_status = 1;
 	if (enva)
 		free(enva);
 	if (cmda)

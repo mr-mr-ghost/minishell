@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/15 11:41:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/15 14:57:42 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 		status = check_launch_builtins(data, cmdt);
 		if (status == -1)
 			child_process(data, cmdt, NULL);
-		return (status);
+		else
+			return (status);
 	}
 	else
 	{
 		hdtoken = return_1stheredoct(cmdt);
 		if (is_cmd(cmdt->value, 0))
 		{
+			//return (handle_heredoc_builtins(data, cmdt, hdtoken));
 			if (!hdtoken)
 				return (redirection_wrap_builtins(data, cmdt, redirt));
 			else
@@ -48,15 +50,39 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 			}
 		}
 		else
-		{
-			/* if (hdtoken)
-				return (handle_heredoc(data, cmdt, hdtoken));
-			else */
 			child_process(data, cmdt, redirt);
-			return (0);
-		}
 	}
+	return (0);
 }
+
+/* int	close_fd(int fd[3][2], int dst, char *heredoc)
+{
+	int	error;
+
+	error = 0;
+	if (!heredoc)
+	{
+		error = dup2(fd[dst][dst], dst);
+		if (error < 0)
+			err_msg(NULL, NULL, strerror(errno), 1);
+		close(fd[dst][0]);
+		close(fd[dst][1]);
+	}
+	else
+	{
+		if (fd[0][0] != -1 && fd[0][1] != -1)
+		{
+			close(fd[dst][0]);
+			close(fd[dst][1]);
+		}
+		error = dup2(fd[2][dst], dst);
+		if (error < 0)
+			err_msg(NULL, NULL, strerror(errno), 1);
+		close(fd[2][0]);
+		close(fd[2][1]);
+	}
+	return (error);
+} */
 
 void	close_fd(int *fd, int dst, char *heredoc)
 {
@@ -71,11 +97,20 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid < 0)
 		return (err_msg(NULL, NULL, strerror(errno), -1));
 	else if (pid == 0)
 	{
+		/* if ((pipefd[0][0] != -1 && pipefd[0][1] != -1) || heredoc)
+			status = close_fd(pipefd, STDIN_FILENO, heredoc);
+		if (heredoc)
+			free(heredoc);
+		if ((pipefd[1][0] != -1 && pipefd[1][1] != -1) && status == 0)
+			status = close_fd(pipefd, STDOUT_FILENO, NULL);
+		if (status == 0)
+			status = launch_cmd_inpipe(data, cmdt); */
 		if (pipefd[0][0] != -1 && pipefd[0][1] != -1)
 			close_fd(pipefd[0], STDIN_FILENO, heredoc);
 		if (heredoc)
@@ -88,6 +123,7 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 		if (pipefd[1][0] != -1 && pipefd[1][1] != -1)
 			close_fd(pipefd[1], STDOUT_FILENO, NULL);
 		status = launch_cmd_inpipe(data, cmdt);
+
 		rl_clear_history();
 		free_tokens(data);
 		free_env(data->env);
