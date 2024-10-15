@@ -1,23 +1,25 @@
 ## TODOS:
 
-- [ ] Fix misc. errors in tokens (if there are any)
-- [ ] Fix return issues in pipes and heredoc(?)
-- [ ] echo > | ls does not work properly
 - [x] multiple redirects
 - [x] [fgsdfg > a.txt > b.txt > c.txt] differences in bash and minishell?
 - [x] echo << X > a.txt (should create an empty file)
 - [x] pick first heredoc, ignore the other heredocs, but deal with all other redirs
-- [ ] multiple heredocs?
 - [x] builtins and heredoc
-- [x] heredoc pipe (with issues)
-- [x] fix builtins accepting the heredoc and stdin
-- [ ] fix non builtins accepting the heredoc and stdin
-- [ ] fix non builtins and heredoc not returning prompt
-- [ ] builtins, nonbuiltins, heredoc, redirections and pipes working together
+- [x] builtins, nonbuiltins, heredoc, redirections and pipes working together
+- [ ] multiple heredocs?
 - [ ] cleanup the calamity of the call_pipe function in pipes_utils
+- [ ] fix minishell_tester fails
 - [ ] probably some memory leaks
 - [ ] resolve the semi-colon question
 - [ ] cleanup
+
+## minishel tester fails:
+
+- [ ] echo "$" (should return $)
+- [ ] echo hi < a.txt bye bye (should ignore redirection and repeat words after redir)
+- [ ] cat <.filename ./filename (should ignore the first file)
+- [ ] echo hi > b.txt bye (should write "hi bye" in the file)
+- [ ] some bad $? during builtin redirection stuff maybe?
 
 ## LINKS:
 - https://www.codequoi.com/en/handling-a-file-by-its-descriptor-in-c/
