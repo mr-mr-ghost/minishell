@@ -1,6 +1,7 @@
 .vscode
 .idea
 minishell
+minishell_tester
 tmp
 *.txt
 *.swp
