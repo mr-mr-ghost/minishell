@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/15 18:03:06 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/15 18:14:15 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
 	int		status;
-	t_token	*hdtoken;
 
 	redirt = return_redirt(cmdt);
 	if (!redirt)
@@ -29,22 +28,8 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	}
 	else
 	{
-		hdtoken = return_1stheredoct(cmdt);
 		if (is_cmd(cmdt->value, 0))
-		{
-			//return (handle_heredoc_builtins(data, cmdt, hdtoken));
-			if (!hdtoken)
-				return (redirection_wrap_builtins(data, cmdt, redirt));
-			else
-			{
-				while (redirt && redirt->type == HEREDOC)
-					redirt = return_redirt(redirt->next);
-				if (!redirt)
-					return (check_launch_builtins(data, cmdt));
-				else
-					return (redirection_wrap_builtins(data, cmdt, redirt));
-			}
-		}
+			return (handle_heredoc_builtins(data, cmdt, NULL));
 		else
 			child_process(data, cmdt, redirt);
 	}

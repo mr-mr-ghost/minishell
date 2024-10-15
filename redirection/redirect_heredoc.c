@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 11:54:53 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/15 18:13:07 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,32 +38,6 @@ char	*get_heredoc(t_data *data, char *delimiter)
 		free(hereline);
 	signal_manager(sigint_handler, SA_RESTART);
 	return (heredoc);
-}
-
-int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
-{
-	pid_t	pid;
-	t_token	*redirt;
-
-	redirt = return_redirt(cmdt);
-	signal_manager(sigint_handler_incmd, SA_RESTART);
-	pid = fork();
-	if (pid == -1)
-	{
-		close(fd[0]);
-		close(fd[1]);
-		return (err_msg(NULL, NULL, strerror(errno), 1));
-	}
-	if (pid == 0)
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		if (heredoc)
-			free(heredoc);
-		child_process(data, cmdt, redirt);
-	}
-	return (0);
 }
 
 /* example of << delimiter: "cat <<'X' > t.txt		contentbla X"*/
@@ -105,13 +79,17 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 	return (WEXITSTATUS(status));
 }
 
+// receives heredoc if needed and deals with other redirs or their absence
 int	handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken)
 {
 	char	*heredoc;
 	t_token	*redirt;
 	int		ret;
 
-	heredoc = get_heredoc(data, hdtoken->next->value);
+	if (hdtoken)
+		heredoc = get_heredoc(data, hdtoken->next->value);
+	else
+		heredoc = NULL;
 	if (g_sigint) // ctrl + c
 		return (130);
 	if (heredoc)
@@ -124,4 +102,30 @@ int	handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken)
 	else
 		ret = redirection_wrap_builtins(data, cmdt, redirt);
 	return (ret);
+}
+
+int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
+{
+	pid_t	pid;
+	t_token	*redirt;
+
+	redirt = return_redirt(cmdt);
+	signal_manager(sigint_handler_incmd, SA_RESTART);
+	pid = fork();
+	if (pid == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		return (err_msg(NULL, NULL, strerror(errno), 1));
+	}
+	if (pid == 0)
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		if (heredoc)
+			free(heredoc);
+		child_process(data, cmdt, redirt);
+	}
+	return (0);
 }
