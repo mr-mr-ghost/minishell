@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/11 13:45:57 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/15 02:53:46 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,31 +58,35 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	}
 }
 
-void	close_fd(int *fd, int dst)
+void	close_fd(int *fd, int dst, char *heredoc)
 {
-	dup2(fd[dst], dst);
+	if (!heredoc)
+		dup2(fd[dst], dst);
 	close(fd[0]);
 	close(fd[1]);
 }
 
-int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[2][2], char *heredoc)
+int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 {
 	pid_t	pid;
 	int		status;
 
-	(void)heredoc;
 	pid = fork();
 	if (pid < 0)
 		return (err_msg(NULL, NULL, strerror(errno), -1));
 	else if (pid == 0)
 	{
 		if (pipefd[0][0] != -1 && pipefd[0][1] != -1)
-			close_fd(pipefd[0], STDIN_FILENO);
-		if (pipefd[1][0] != -1 && pipefd[1][1] != -1)
-			close_fd(pipefd[1], STDOUT_FILENO);
-
+			close_fd(pipefd[0], STDIN_FILENO, heredoc);
 		if (heredoc)
+		{
+			dup2(pipefd[2][0], STDIN_FILENO);
+			close(pipefd[2][0]);
+			close(pipefd[2][1]);
 			free(heredoc);
+		}
+		if (pipefd[1][0] != -1 && pipefd[1][1] != -1)
+			close_fd(pipefd[1], STDOUT_FILENO, NULL);
 
 		status = launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
@@ -99,20 +103,17 @@ int	call_pipe(t_data *data, t_token *currentt)
 	t_token	*nextt;
 	t_token	*hdtoken;
 	char	*heredoc;
-	int		pipefd[2][2]; // pipefd[0] - previous pipe, pipefd[1] - current pipe
-	//int		pipefd[2];
-	//int		prev_pipefd[2];
+	int		pipefd[3][2]; //pipefd[0] prev, pipefd[1] current, pipefd[2] heredoc
 	int		status;
 	pid_t	pid;
 
 	signal_manager(sigint_handler_incmd, SA_RESTART);
 	heredoc = NULL;
+	pipefd[2][0] = -1;
+	pipefd[2][1] = -1;
 	pid = 0;
 	while (currentt)
 	{
-		// check for current command's heredoc
-		hdtoken = return_1stheredoct(currentt);
-
 		// get next command
 		nextt = get_nth_token(currentt, count_args(currentt, PIPE));
 		if (nextt && nextt->type == PIPE && nextt->next)
@@ -120,10 +121,31 @@ int	call_pipe(t_data *data, t_token *currentt)
 		else
 			nextt = NULL;
 
+		// check for current command's heredoc
+		/* if (nextt)
+			hdtoken = return_1stheredoct(nextt); */
+		hdtoken = return_1stheredoct(currentt);
+
 		// if heredoc here, replace pipe with heredoc?
 
 		if (hdtoken)
+		{
 			heredoc = get_heredoc(data, hdtoken->next->value);
+			/* if (g_sigint) // copilot offer
+			{
+				if (heredoc)
+					free(heredoc);
+				status = 0x8200;
+				break ;
+			} */
+			if (pipe(pipefd[2]) == -1)
+			{
+				if (heredoc)
+					free(heredoc);
+				status = err_msg(NULL, NULL, strerror(errno), 1);
+				break ;
+			}
+		}
 
 		// pipe fail
 		if (nextt && pipe(pipefd[1]) == -1)
@@ -135,8 +157,8 @@ int	call_pipe(t_data *data, t_token *currentt)
 		}
 
 		// put heredoc to the pipe
-		if (hdtoken && !is_cmd(currentt->value, 0))
-			ft_putstr_fd(heredoc, pipefd[1][1]);
+		/* if (hdtoken && !is_cmd(currentt->value, 0))
+			ft_putstr_fd(heredoc, pipefd[1][1]); */
 
 		// make forks for each command/pipe
 		if (currentt->prev == NULL) // first command fork
@@ -174,6 +196,9 @@ int	call_pipe(t_data *data, t_token *currentt)
 		currentt = nextt; // set next command as current command
 		if (hdtoken)
 		{
+			close(pipefd[2][0]);
+			ft_putstr_fd(heredoc, pipefd[2][1]);
+			close(pipefd[2][1]);
 			if (heredoc)
 				free (heredoc);
 			heredoc = NULL;
