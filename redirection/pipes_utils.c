@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/16 15:02:46 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:51:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	close_fd(int fd[3][2], char *heredoc)
 	return (status);
 }
 
-// forks current cmd and cleans child's memory if cmd fails
+// forks current cmd and cleans child's memory if that cmd is builtin ?
 int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 {
 	pid_t	pid;
@@ -85,7 +85,10 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 	{
 		status = close_fd(pipefd, heredoc);
 		if (heredoc)
+		{
 			free(heredoc);
+			heredoc = NULL;
+		}
 		if (status >= 0)
 			status = launch_cmd_inpipe(data, cmdt);
 		rl_clear_history();
@@ -97,6 +100,10 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 	return (pid);
 }
 
+// edits pipefd[3][2] - affected pair is *pipefd
+// if isclose = 1, then *pipefd is closed
+// else if pair *pipefd2 is not NULL, then it's values are set on *pipefd
+// else *pipefd values are set to int value
 void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose)
 {
 	if (isclose)
@@ -143,7 +150,7 @@ char	*check_set_heredoc(t_data *data, t_token *currentt, int *heredocfd, int *st
 		{
 			if (heredoc)
 				free(heredoc);
-			*statusptr = err_msg(NULL, NULL, strerror(errno), 1);
+			*statusptr = err_msg(NULL, NULL, strerror(errno), -1);
 			return (NULL);
 		}
 		return (heredoc);
@@ -175,7 +182,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 		{
 			if (heredoc)
 				free(heredoc);
-			status = err_msg(NULL, NULL, strerror(errno), 1);
+			status = err_msg(NULL, NULL, strerror(errno), -1);
 			break ;
 		}
 		if (currentt->prev == NULL) // first command fork
@@ -203,6 +210,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 				free (heredoc);
 			heredoc = NULL;
 		}
+		//if (status != 0 || pid < 0)
 		if (status < 0 || pid < 0) // errors from forks?
 			currentt = NULL;
 	}
