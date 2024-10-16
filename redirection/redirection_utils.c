@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/15 13:55:52 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:09:46 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ int	handle_redirection(t_token *fname, int type)
 	int	fd;
 	int	dupstatus;
 
+	/* if (fname->next && fname->next->type == ARG)
+	{ // chooses last filename after redir sign, but adds other issues
+		fname = fname->next;
+		while (fname->next && fname->next->type == ARG)
+			fname = fname->next;
+	} */
 	if (type == TRUNC)
 		fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (type == APPEND)
