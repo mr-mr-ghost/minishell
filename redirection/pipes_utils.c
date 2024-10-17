@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/16 16:51:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:46:28 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,18 @@ char	*check_set_heredoc(t_data *data, t_token *currentt, int *heredocfd, int *st
 	return (NULL);
 }
 
+void	send_clean_heredoc(char *heredoc, int *heredocfd)
+{
+	if (heredoc)
+	{
+		ft_putstr_fd(heredoc, heredocfd[1]);
+		edit_pipeset(heredocfd, NULL, 0, 1);
+		if (heredoc)
+			free (heredoc);
+		heredoc = NULL;
+	}
+}
+
 int	call_pipe(t_data *data, t_token *currentt)
 {
 	t_token	*nextt;
@@ -176,7 +188,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 		else
 			nextt = NULL;
 		heredoc = check_set_heredoc(data, currentt, pipefd[2], &status);
-		if (return_1stheredoct(currentt) && !heredoc)
+		if (return_1stheredoct(currentt) && (g_sigint || status < 0))
 			break ;
 		if (nextt && pipe(pipefd[1]) == -1) // pipe fail
 		{
@@ -202,14 +214,7 @@ int	call_pipe(t_data *data, t_token *currentt)
 		if (nextt) // Move the current pipe to prev_pipefd for the next iteration
 			edit_pipeset(pipefd[0], pipefd[1], 0, 0);
 		currentt = nextt; // set next command as current command
-		if (heredoc)
-		{
-			ft_putstr_fd(heredoc, pipefd[2][1]);
-			edit_pipeset(pipefd[2], NULL, 0, 1);
-			if (heredoc)
-				free (heredoc);
-			heredoc = NULL;
-		}
+		send_clean_heredoc(heredoc, pipefd[2]);
 		//if (status != 0 || pid < 0)
 		if (status < 0 || pid < 0) // errors from forks?
 			currentt = NULL;
