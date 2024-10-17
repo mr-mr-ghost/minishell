@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/17 15:46:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:29:48 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ char	*set_pipevars(int pipefd[3][2], int *pid)
 	return (NULL);
 }
 
-char	*check_set_heredoc(t_data *data, t_token *currentt, int *heredocfd, int *statusptr)
+char	*check_set_heredoc(t_data *data, t_token *currentt, int *hfd, int *sptr)
 {
 	t_token *hdtoken;
 	char	*heredoc;
@@ -146,11 +146,11 @@ char	*check_set_heredoc(t_data *data, t_token *currentt, int *heredocfd, int *st
 		heredoc = get_heredoc(data, hdtoken->next->value);
 		if (!heredoc || g_sigint)
 			return (NULL);
-		if (pipe(heredocfd) == -1)
+		if (pipe(hfd) == -1)
 		{
 			if (heredoc)
 				free(heredoc);
-			*statusptr = err_msg(NULL, NULL, strerror(errno), -1);
+			*sptr = err_msg(NULL, NULL, strerror(errno), -1);
 			return (NULL);
 		}
 		return (heredoc);
@@ -170,9 +170,8 @@ void	send_clean_heredoc(char *heredoc, int *heredocfd)
 	}
 }
 
-int	call_pipe(t_data *data, t_token *currentt)
+int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 {
-	t_token	*nextt;
 	char	*heredoc;
 	int		pipefd[3][2]; //pipefd[0] in, pipefd[1] out, pipefd[2] heredoc
 	int		status;

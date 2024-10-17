@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:08:30 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/17 16:28:04 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	process_n_exec(t_data *data)
 	if (!nextt)
 		data->exit_code = launch_single_anycmd(data, data->token);
 	else if (nextt->type == PIPE && nextt->next)
-		data->exit_code = call_pipe(data, data->token);
+		data->exit_code = call_pipe(data, data->token, nextt->next);
 	else
 		data->exit_code = err_msg(NULL, data->token->value,
 				"Command not found", 127);

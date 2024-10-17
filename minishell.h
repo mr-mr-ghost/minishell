@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/15 14:12:51 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:29:07 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,6 @@ int		heredoc_strcat(char *dest, char *src, int start);
 /*	pipes	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
 int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
-int		call_pipe(t_data *data, t_token *currentt);
+int		call_pipe(t_data *data, t_token *currentt, t_token	*nextt);
 
 #endif
