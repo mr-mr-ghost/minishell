@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/10 20:43:11 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/18 22:07:56 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
 
 /*	pipes utils	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
-int		is_pipe(char *heredoc, int *fd);
+int		is_pipe(char *heredoc, int *fd, int *status);
 void	edit_pipeset(int *pipefd, int *replace, int replace_fd, int close);
 int		close_fd(int fd[3][2], char *heredoc);
 int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
