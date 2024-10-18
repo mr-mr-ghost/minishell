@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 08:55:30 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 12:00:13 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,46 +123,50 @@ void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose)
 	}
 }
 
-int	is_pipe(char *heredoc, int *fd, int *sptr)
+// opens pipe, writes the fds into the pipe matrix
+// returns 1 on success
+// returns 0 on failure and frees heredoc before return
+int	is_pipe(char *heredoc, int *fd, int status)
 {
 	if (pipe(fd) == -1)
 	{
 		if (heredoc)
 			free(heredoc);
-		*sptr = err_msg(NULL, NULL, strerror(errno), -1);
+		status = err_msg(NULL, NULL, strerror(errno), -1);
 		return (0);
 	}
 	return (1);
 }
 
-char	*set_heredoc(t_data *data, t_token *currentt, int *hfd, int *sptr)
+char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)//int *hfd, int *sptr)
 {
-	t_token *hdtoken;
 	char	*heredoc;
 
-	hdtoken = return_1stheredoct(currentt);
-	if (hdtoken)
+	pvars->htoken = return_1stheredoct(currentt);
+	if (pvars->htoken)
 	{
-		heredoc = get_heredoc(data, hdtoken->next->value);
+		heredoc = get_heredoc(data, pvars->htoken->next->value);
 		if (!heredoc || g_sigint)
 			return (NULL);
-		if (!is_pipe(heredoc, hfd, sptr))
+		if (!is_pipe(heredoc, pvars->pfd[2], pvars->status))
 			return (NULL);
 		return (heredoc);
 	}
 	return (NULL);
 }
 
-void	send_clean_heredoc(char *heredoc, int *heredocfd)
+void	send_clean_heredoc(t_pvars *pvars)//char *heredoc, int *heredocfd)
 {
-	if (heredoc)
+	//if (pvars->htoken)
+	if (pvars->hdoc)
 	{
-		ft_putstr_fd(heredoc, heredocfd[1]);
-		edit_pipeset(heredocfd, NULL, 0, 1);
-		if (heredoc)
-			free (heredoc);
-		heredoc = NULL;
+		ft_putstr_fd(pvars->hdoc, pvars->pfd[2][1]);
+		edit_pipeset(pvars->pfd[2], NULL, 0, 1);
+		//if (pvars->hdoc)
+		free (pvars->hdoc);
+		pvars->hdoc = NULL;
 	}
+	pvars->htoken = NULL;
 }
 
 t_token	*get_next_cmd(t_token *currentt)
@@ -190,16 +194,20 @@ void	init_pvars(t_pvars *pvars)
 	pvars->pfd[2][1] = -1;
 }
 
+// edits pipeset accordingly and launches pipe_fork (to fork the current cmd):
+// if current cmd is first, pfd[0] (stdin replace pair) is set to -1, to not use
+// if current cmd is in between other cmds, pfd[0] and pfd[1] are already set
+// if current cmd is last, pfd[1] (stdout replace pair) is set to -1, to not use
 void	prep_pfork(t_data *data, t_token *currt, t_token *nextt, t_pvars *pvars)
 {
-	if (currt->prev == NULL) // first command fork
+	if (currt->prev == NULL)
 	{
 		edit_pipeset(pvars->pfd[0], NULL, -1, 0);
 		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
 	}
-	else if (nextt) // mid command fork
+	else if (nextt)
 		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
-	else // end command fork
+	else
 	{
 		edit_pipeset(pvars->pfd[1], NULL, -1, 0);
 		pvars->pid = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
@@ -227,10 +235,10 @@ int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 	while (currentt)
 	{
 		nextt = get_next_cmd(currentt);
-		pvars.hdoc = set_heredoc(data, currentt, pvars.pfd[2], &(pvars.status));
+		pvars.hdoc = set_heredoc(data, currentt, &pvars);//.pfd[2], &(pvars.status));
 		if (return_1stheredoct(currentt) && (g_sigint || pvars.status < 0))
 			break ;
-		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1], &(pvars.status)) == 0)
+		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1], pvars.status) == 0)
 			break ;
 		prep_pfork(data, currentt, nextt, &pvars);
 		if (currentt->prev != NULL) // Close the previous pipe in the parent
@@ -238,7 +246,7 @@ int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 		if (nextt) // Move the current pipe to prev_pfd for the next iteration
 			edit_pipeset(pvars.pfd[0], pvars.pfd[1], 0, 0);
 		currentt = nextt; // set next command as current command
-		send_clean_heredoc(pvars.hdoc, pvars.pfd[2]);
+		send_clean_heredoc(&pvars);
 		if (pvars.status < 0 || pvars.pid < 0) // errors from forks?
 			currentt = NULL;
 	}
