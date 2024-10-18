@@ -9,7 +9,8 @@ CFILES = minishell.c main/prompt.c main/utils.c main/libft_utils.c \
 		builtin/builtin_env.c builtin/builtin_echo.c builtin/builtin_unset.c \
 		builtin/builtin_cd.c builtin/builtin_exit.c builtin/builtin_declaration.c \
 		nonbuiltin/nonbuiltin_handling.c nonbuiltin/nonbuiltin_path_utils.c \
-		nonbuiltin/nonbuiltin_processes.c redirection/redirection_utils.c redirection/pipes_utils.c \
+		nonbuiltin/nonbuiltin_processes.c redirection/redirection_utils.c \
+		redirection/pipes_utils.c redirection/pipes_utils2.c \
 		redirection/redirect_heredoc.c redirection/redirect_heredoc_utils.c
 
 OBJ_DIR = build/obj/

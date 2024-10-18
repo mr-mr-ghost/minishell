@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 08:37:21 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:18:53 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,10 +234,21 @@ int		handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken);
 char	*heredoc_error(char *delimiter, char *heredoc);
 char	*join_strings(t_data *data, char *s1, char *s2);
 int		heredoc_strcat(char *dest, char *src, int start);
+char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars);
+void	send_clean_heredoc(t_pvars *pvars);
 
-/*	pipes	*/
+/*	pipes utils	*/
+void	init_pvars(t_pvars *pvars);
+t_token	*get_next_cmd(t_token *currentt);
+void	prep_pfork(t_data *data, t_token *currt, t_token *next, t_pvars *pvars);
+t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
+int		call_pipe(t_data *data, t_token *currentt, t_token	*nextt);
+
+/*	pipes utils 2	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
 int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
-int		call_pipe(t_data *data, t_token *currentt, t_token	*nextt);
+int		close_fd(int fd[3][2], char *heredoc);
+void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose);
+int		is_pipe(char *heredoc, int *fd, int status);
 
 #endif
