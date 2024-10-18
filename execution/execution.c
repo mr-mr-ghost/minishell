@@ -6,13 +6,13 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 15:38:54 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:18:35 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/* Function to extract commands, check if they're builtin, launch accordingly*/
+// function returns n_th token counting from *token, or NULL upon failure
 t_token	*get_nth_token(t_token *token, int n)
 {
 	t_token	*tmp;
@@ -32,6 +32,7 @@ t_token	*get_nth_token(t_token *token, int n)
 	return (tmp);
 }
 
+// function returns first heredoc (or NULL) of the current command
 t_token	*return_1stheredoct(t_token *cmdt)
 {
 	int		count;
@@ -66,21 +67,13 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	}
 	else
 	{
-		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
+		hdtoken = return_1stheredoct(cmdt);
 		if (is_cmd(cmdt->value, 0))
-		{
-			if (hdtoken)
-				return (handle_heredoc_builtins(data, cmdt, hdtoken));
-			else
-				return (redirection_wrap_builtins(data, cmdt, redirt));
-		}
+			return (hredir_builtin(data, cmdt, redirt, 0));
+		else if (hdtoken)
+			return (handle_heredoc(data, cmdt, hdtoken));
 		else
-		{
-			if (hdtoken)
-				return (handle_heredoc(data, cmdt, hdtoken));
-			else
-				return (launch_nonbuiltins(data, cmdt, redirt));
-		}
+			return (launch_nonbuiltins(data, cmdt, redirt));
 	}
 }
 

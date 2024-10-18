@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:10:08 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 15:16:21 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:17:00 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,24 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 	{
 		status = check_launch_builtins(data, cmdt);
 		if (status == -1)
+		{
 			child_process(data, cmdt, NULL);
+			return (0);
+		}
 		else
 			return (status);
 	}
 	else
 	{
 		if (is_cmd(cmdt->value, 0))
-			return (handle_heredoc_builtins(data, cmdt, NULL));
+			return (hredir_builtin(data, cmdt, redirt, 1));
 		else
 			child_process(data, cmdt, redirt);
 	}
 	return (0);
 }
 
-// forks current cmd and cleans child's memory if that cmd is builtin ?
+// forks current cmd and cleans child's memory if cmd is builtin
 int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 {
 	pid_t	pid;

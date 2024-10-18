@@ -6,11 +6,23 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/15 19:18:38 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:16:25 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	handle_heredoc_error(char *msg, char *heredoc, int code)
+{
+	if (msg)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putendl_fd(msg, 2);
+	}
+	if (heredoc)
+		free(heredoc);
+	return (code);
+}
 
 char	*get_heredoc(t_data *data, char *delimiter)
 {
@@ -43,9 +55,8 @@ char	*get_heredoc(t_data *data, char *delimiter)
 int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
 {
 	pid_t	pid;
-	t_token	*redirt;
+	int		duperr;
 
-	redirt = return_redirt(cmdt);
 	signal_manager(sigint_handler_incmd, SA_RESTART);
 	pid = fork();
 	if (pid == -1)
@@ -57,25 +68,16 @@ int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
 	if (pid == 0)
 	{
 		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
+		duperr = dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 		if (heredoc)
 			free(heredoc);
-		child_process(data, cmdt, redirt);
+		if (duperr >= 0)
+			child_process(data, cmdt, return_redirt(cmdt));
+		else
+			child_cleanexit(data, NULL, NULL, NULL);
 	}
 	return (0);
-}
-
-int	handle_heredoc_error(char *msg, char *heredoc, int code)
-{
-	if (msg)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putendl_fd(msg, 2);
-	}
-	if (heredoc)
-		free(heredoc);
-	return (code);
 }
 
 /* example of << delimiter: "cat <<'X' > t.txt		contentbla X"*/
@@ -104,27 +106,28 @@ int	handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken)
 	return (WEXITSTATUS(status));
 }
 
-int	handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken)
+int	hredir_builtin(t_data *data, t_token *cmdt, t_token *redir, int ispipe)
 {
 	char	*heredoc;
-	t_token	*redirt;
+	t_token	*hdtoken;
 	int		ret;
 
 	heredoc = NULL;
-	if (hdtoken)
+	if (!ispipe)
 	{
-		heredoc = get_heredoc(data, hdtoken->next->value);
+		hdtoken = return_1stheredoct(cmdt);
+		if (hdtoken)
+			heredoc = get_heredoc(data, hdtoken->next->value);
 		if (heredoc)
 			free(heredoc);
 	}
 	if (g_sigint)
 		return (130);
-	redirt = return_redirt(cmdt);
-	while (redirt && redirt->type == HEREDOC)
-		redirt = return_redirt(redirt->next);
-	if (!redirt)
+	while (redir && redir->type == HEREDOC)
+		redir = return_redirt(redir->next);
+	if (!redir)
 		ret = check_launch_builtins(data, cmdt);
 	else
-		ret = redirection_wrap_builtins(data, cmdt, redirt);
+		ret = redirection_wrap_builtins(data, cmdt, redir);
 	return (ret);
 }

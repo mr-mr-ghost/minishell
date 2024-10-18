@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 15:37:25 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:28:17 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ int		echo_command(t_token *token);
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);
 void	del_env(t_env **env, char *key);
+int		unset_command(t_data *data, t_token *token);
 
 /*	cd command	*/
 int		cd_command(t_data *data, t_token *token);
@@ -227,10 +228,11 @@ int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 
 /*	heredoc redirect*/
+int		handle_heredoc_error(char *msg, char *heredoc, int code);
 char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken);
-int		handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken);
+int		hredir_builtin(t_data *data, t_token *cmdt, t_token *redir, int ispipe);
 
 /*	heredoc redirect utils	*/
 char	*heredoc_error(char *delimiter, char *heredoc);
