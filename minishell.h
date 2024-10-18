@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 15:18:53 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:37:25 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,13 +199,14 @@ char	*check_dir(char *bin, char *cmd);
 char	*join_path(char *path, char *cmd);
 
 /*	non-builtins processes	*/
-void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
 int		check_error(char *path);
 void	bin_error(t_data *data, char *cmd);
+void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda);
+int		check_launch_redir(t_token *redirt);
+void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
-t_token	*return_redirt(t_token *cmdt);
 t_token	*return_1stheredoct(t_token *cmdt);
 int		launch_single_anycmd(t_data *data, t_token *cmdt);
 void	process_n_exec(t_data *data);
@@ -221,6 +222,7 @@ int		count_args(t_token *cmd, int type);
 void	free_array(char **array);
 
 /*	redirections	*/
+t_token	*return_redirt(t_token *cmdt);
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 

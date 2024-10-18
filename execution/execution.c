@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/17 16:28:04 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:38:54 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,6 @@ t_token	*return_1stheredoct(t_token *cmdt)
 		redirt = get_nth_token(redirt->next, count);
 	}
 	if (redirt && redirt->type == HEREDOC)
-		return (redirt);
-	else
-		return (NULL);
-}
-
-t_token	*return_redirt(t_token *cmdt)
-{
-	int		count;
-	t_token	*redirt;
-
-	count = count_args(cmdt, TRUNC);
-	redirt = get_nth_token(cmdt, count);
-	if (redirt && redirt->type >= TRUNC && redirt->type <= HEREDOC)
 		return (redirt);
 	else
 		return (NULL);

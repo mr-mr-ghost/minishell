@@ -6,11 +6,25 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 14:45:19 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:37:56 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// return the first redirection token (< << > >>) of the current command
+t_token	*return_redirt(t_token *cmdt)
+{
+	int		count;
+	t_token	*redirt;
+
+	count = count_args(cmdt, TRUNC);
+	redirt = get_nth_token(cmdt, count);
+	if (redirt && redirt->type >= TRUNC && redirt->type <= HEREDOC)
+		return (redirt);
+	else
+		return (NULL);
+}
 
 /* wrapper function for redirection of builtin commands */
 int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
