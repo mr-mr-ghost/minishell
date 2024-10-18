@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 12:20:14 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/07 12:37:01 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/09 14:13:17 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,23 @@ char	*process_dollar(t_data *data, char *line, int *i)
 	return (env_value);
 }
 
-void	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
+bool	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
 {
 	char	*env_value;
 	int		i;
+	bool	quote;
 
+	quote = false;
+	if (data->line[*j - 1] && data->line[*j - 1] == '\"')
+		quote = true;
 	env_value = process_dollar(data, data->line, j);
 	i = 0;
 	while (env_value && env_value[i] && *k < ARG_MAX - 1)
 		buffer[(*k)++] = env_value[i++];
 	if (env_value)
 		free(env_value);
-	if ((*k) == 0)
+	if ((*k) == 0 && !quote)
 		while (data->line[*j] && data->line[*j] == ' ')
 			(*j)++;
+	return (true);
 }

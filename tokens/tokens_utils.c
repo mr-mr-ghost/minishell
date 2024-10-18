@@ -6,7 +6,7 @@
 /*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:12 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/13 14:05:12 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/11 15:00:59 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,10 @@ bool	quotes_check(char *line)
 int	token_err(t_data *data, char *arg, char *msg, int code)
 {
 	if (arg)
-	{
 		err_msg(NULL, arg, msg, code);
-		free(arg);
-	}
 	else
-	{
 		err_msg(NULL, NULL, msg, code);
-		free_tokens(data);
-	}
+	free_tokens(data);
 	data->exit_code = code;
 	return (code);
 }

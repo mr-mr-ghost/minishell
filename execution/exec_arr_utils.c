@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_arr_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:07:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 14:49:14 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:45:31 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,12 @@ int	count_args(t_token *token, int maxtype)
 }
 
 /* forms a string array of 1 command*/
-char	**form_cmd(t_data *data, t_token *token, int len)
+char	**form_cmd(t_token *token, int len)
 {
 	char	**cmd;
 	t_token	*tmp;
 	int		i;
 
-	(void)data;
 	cmd = (char **)malloc((len + 1) * sizeof(char *));
 	if (!cmd)
 		return (NULL);
@@ -71,13 +70,12 @@ char	**form_cmd(t_data *data, t_token *token, int len)
 }
 
 /* forms a string array of minishell environment variables*/
-char	**form_enva(t_env *env, t_env *secret_env)
+char	**form_enva(t_env *env)
 {
 	char	**array;
 	t_env	*tmp;
 	int		i;
 
-	(void)secret_env;
 	i = 0;
 	tmp = env;
 	while (tmp)

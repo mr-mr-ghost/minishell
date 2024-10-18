@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 18:16:25 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:47:13 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	handle_heredoc_error(char *msg, char *heredoc, int code)
-{
-	if (msg)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putendl_fd(msg, 2);
-	}
-	if (heredoc)
-		free(heredoc);
-	return (code);
-}
 
 char	*get_heredoc(t_data *data, char *delimiter)
 {
@@ -78,6 +66,18 @@ int	process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc)
 			child_cleanexit(data, NULL, NULL, NULL);
 	}
 	return (0);
+}
+
+int	handle_heredoc_error(char *msg, char *heredoc, int code)
+{
+	if (msg)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putendl_fd(msg, 2);
+	}
+	if (heredoc)
+		free(heredoc);
+	return (code);
 }
 
 /* example of << delimiter: "cat <<'X' > t.txt		contentbla X"*/

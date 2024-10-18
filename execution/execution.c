@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 18:18:35 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:08:30 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// function returns n_th token counting from *token, or NULL upon failure
+/* Function to extract commands, check if they're builtin, launch accordingly*/
 t_token	*get_nth_token(t_token *token, int n)
 {
 	t_token	*tmp;
@@ -32,7 +32,6 @@ t_token	*get_nth_token(t_token *token, int n)
 	return (tmp);
 }
 
-// function returns first heredoc (or NULL) of the current command
 t_token	*return_1stheredoct(t_token *cmdt)
 {
 	int		count;

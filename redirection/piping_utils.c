@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes_utils2.c                                     :+:      :+:    :+:   */
+/*   piping_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:10:08 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 21:15:28 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:17:00 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,13 +129,13 @@ void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose)
 // opens pipe, writes the fds into the pipe matrix
 // returns 1 on success
 // returns 0 on failure and frees heredoc before return
-int	is_pipe(char *heredoc, int *fd, int *status)
+int	is_pipe(char *heredoc, int *fd)
 {
 	if (pipe(fd) == -1)
 	{
 		if (heredoc)
 			free(heredoc);
-		*status = err_msg(NULL, NULL, strerror(errno), -1);
+		err_msg(NULL, NULL, strerror(errno), -1);
 		return (0);
 	}
 	return (1);

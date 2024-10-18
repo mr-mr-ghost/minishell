@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:50:30 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 21:18:44 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:39:57 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ char	*heredoc_error(char *delimiter, char *heredoc)
 	return (heredoc);
 }
 
-////////// heredoc utils for pipes /////////////////////////////////////////////
 // check for heredoc token, retrieve heredoc char, open heredoc pipe
 // on success return heredoc file
 // on failure return NULL
@@ -82,7 +81,7 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 		heredoc = get_heredoc(data, pvars->htoken->next->value);
 		if (!heredoc || g_sigint)
 			return (NULL);
-		if (!is_pipe(heredoc, pvars->pfd[2], &(pvars->status)))
+		if (!is_pipe(heredoc, pvars->pfd[2]))
 			return (NULL);
 		return (heredoc);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 21:17:47 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/10 20:43:11 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct s_pvars
 	pid_t	pid;
 	t_token	*htoken;
 	char	*hdoc;
-	int		pfd[3][2]; //pipefd[0] in, pipefd[1] out, pipefd[2] heredoc
+	int		pfd[3][2];
 }	t_pvars;
 
 /*	global	*/
@@ -104,7 +104,6 @@ char	*set_env_value(char *line);
 
 /*	environment utils	*/
 char	*find_env_line(t_env *env, char *key);
-int		find_env_lvl(char *lvl);
 char	*get_env_name(char *dest, const char *src);
 char	*find_env_value(t_env *env, char *key);
 char	*find_env_name(t_env *env, char *key);
@@ -129,12 +128,13 @@ int		handle_normal_chars(t_data *data, int *i);
 /*	tokens split dollar	*/
 int		update_line_iter(char *line, int i);
 char	*process_dollar(t_data *data, char *line, int *i);
-void	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
+bool	add_dollar_value(t_data *data, char *buffer, int *j, int *k);
 char	*get_dollar_value(t_env *env, char *line, int *start);
 
 /*	tokens list utils	*/
 t_token	*token_new(char *value, bool div);
 void	token_add_back(t_token **token, t_token *new);
+int		token_lst_add(t_token **token, char *line, bool div);
 
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);
@@ -172,7 +172,6 @@ int		echo_command(t_token *token);
 /*	unset command	*/
 int		unset_command(t_data *data, t_token *token);
 void	del_env(t_env **env, char *key);
-int		unset_command(t_data *data, t_token *token);
 
 /*	cd command	*/
 int		cd_command(t_data *data, t_token *token);
@@ -200,11 +199,10 @@ char	*check_dir(char *bin, char *cmd);
 char	*join_path(char *path, char *cmd);
 
 /*	non-builtins processes	*/
+void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
+void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda);
 int		check_error(char *path);
 void	bin_error(t_data *data, char *cmd);
-void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda);
-int		check_launch_redir(t_token *redirt);
-void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
@@ -217,21 +215,21 @@ int		check_launch_builtins(t_data *data, t_token *token);
 int		is_cmd(char *line, int i);
 
 /*	execution array utils	*/
-char	**form_enva(t_env *env, t_env *secret_env);
-char	**form_cmd(t_data *data, t_token *cmd, int size);
+char	**form_enva(t_env *env);
+char	**form_cmd(t_token *cmd, int size);
 int		count_args(t_token *cmd, int type);
 void	free_array(char **array);
 
 /*	redirections	*/
-t_token	*return_redirt(t_token *cmdt);
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
+t_token	*return_redirt(t_token *cmdt);
 
-/*	heredoc redirect*/
-int		handle_heredoc_error(char *msg, char *heredoc, int code);
+/*	heredoc redirect	*/
 char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken);
+int		handle_heredoc_error(char *msg, char *heredoc, int code);
 int		hredir_builtin(t_data *data, t_token *cmdt, t_token *redir, int ispipe);
 
 /*	heredoc redirect utils	*/
@@ -241,18 +239,18 @@ int		heredoc_strcat(char *dest, char *src, int start);
 char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars);
 void	send_clean_heredoc(t_pvars *pvars);
 
-/*	pipes utils	*/
+/*	pipes	*/
 void	init_pvars(t_pvars *pvars);
+int		call_pipe(t_data *data, t_token *currentt, t_token	*nextt);
 t_token	*get_next_cmd(t_token *currentt);
 void	prep_pfork(t_data *data, t_token *currt, t_token *next, t_pvars *pvars);
 t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
-int		call_pipe(t_data *data, t_token *currentt, t_token	*nextt);
 
-/*	pipes utils 2	*/
+/*	pipes utils	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
-int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
+int		is_pipe(char *heredoc, int *fd);
+void	edit_pipeset(int *pipefd, int *replace, int replace_fd, int close);
 int		close_fd(int fd[3][2], char *heredoc);
-void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose);
-int		is_pipe(char *heredoc, int *fd, int *status);
+int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
 
 #endif

@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 15:37:56 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:19:41 by jhoddy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// return the first redirection token (< << > >>) of the current command
 t_token	*return_redirt(t_token *cmdt)
 {
 	int		count;
@@ -26,7 +25,7 @@ t_token	*return_redirt(t_token *cmdt)
 		return (NULL);
 }
 
-/* wrapper function for redirection of builtin commands */
+/* wrapper function for redirection of builtin commands*/
 int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 {
 	int	status;
