@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/17 18:53:52 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 08:55:30 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,18 +123,6 @@ void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose)
 	}
 }
 
-/* char	*set_pipevars(int pipefd[3][2], int *pid)
-{
-	pipefd[0][0] = -1;
-	pipefd[0][1] = -1;
-	pipefd[1][0] = -1;
-	pipefd[1][1] = -1;
-	pipefd[2][0] = -1;
-	pipefd[2][1] = -1;
-	*pid = 0;
-	return (NULL);
-} */
-
 int	is_pipe(char *heredoc, int *fd, int *sptr)
 {
 	if (pipe(fd) == -1)
@@ -147,7 +135,7 @@ int	is_pipe(char *heredoc, int *fd, int *sptr)
 	return (1);
 }
 
-char	*check_set_heredoc(t_data *data, t_token *currentt, int *hfd, int *sptr)
+char	*set_heredoc(t_data *data, t_token *currentt, int *hfd, int *sptr)
 {
 	t_token *hdtoken;
 	char	*heredoc;
@@ -193,53 +181,69 @@ void	init_pvars(t_pvars *pvars)
 	pvars->status = 0;
 	pvars->pid = 0;
 	pvars->htoken = NULL;
-	pvars->heredoc = NULL;
-	pvars->pipefd[0][0] = -1;
-	pvars->pipefd[0][1] = -1;
-	pvars->pipefd[1][0] = -1;
-	pvars->pipefd[1][1] = -1;
-	pvars->pipefd[2][0] = -1;
-	pvars->pipefd[2][1] = -1;
+	pvars->hdoc = NULL;
+	pvars->pfd[0][0] = -1;
+	pvars->pfd[0][1] = -1;
+	pvars->pfd[1][0] = -1;
+	pvars->pfd[1][1] = -1;
+	pvars->pfd[2][0] = -1;
+	pvars->pfd[2][1] = -1;
 }
+
+void	prep_pfork(t_data *data, t_token *currt, t_token *nextt, t_pvars *pvars)
+{
+	if (currt->prev == NULL) // first command fork
+	{
+		edit_pipeset(pvars->pfd[0], NULL, -1, 0);
+		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+	}
+	else if (nextt) // mid command fork
+		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+	else // end command fork
+	{
+		edit_pipeset(pvars->pfd[1], NULL, -1, 0);
+		pvars->pid = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+	}
+}
+
+/* void	prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars)
+{
+	if (currentt->prev != NULL) // Close the previous pipe in the parent
+		edit_pipeset(pvars->pfd[0], NULL, 0, 1);
+	if (nextt) // Move the current pipe to prev_pfd for the next iteration
+		edit_pipeset(pvars->pfd[0], pvars->pfd[1], 0, 0);
+	currentt = nextt; // set next command as current command
+	send_clean_heredoc(pvars->hdoc, pvars->pfd[2]);
+	if (pvars->status < 0 || pvars->pid < 0) // errors from forks?
+		currentt = NULL;
+} */
 
 int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 {
 	t_pvars	pvars;
 
 	signal_manager(sigint_handler_incmd, SA_RESTART);
-	//heredoc = set_pipevars(pipefd, &pid);
 	init_pvars(&pvars);
 	while (currentt)
 	{
 		nextt = get_next_cmd(currentt);
-		pvars.heredoc = check_set_heredoc(data, currentt, pvars.pipefd[2], &(pvars.status));
+		pvars.hdoc = set_heredoc(data, currentt, pvars.pfd[2], &(pvars.status));
 		if (return_1stheredoct(currentt) && (g_sigint || pvars.status < 0))
 			break ;
-		if (nextt && is_pipe(pvars.heredoc, pvars.pipefd[1], &(pvars.status)) == 0)
+		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1], &(pvars.status)) == 0)
 			break ;
-		if (currentt->prev == NULL) // first command fork
-		{
-			edit_pipeset(pvars.pipefd[0], NULL, -1, 0);
-			pvars.status = pipe_fork(data, currentt, pvars.pipefd, pvars.heredoc);
-		}
-		else if (nextt) // mid command fork
-			pvars.status = pipe_fork(data, currentt, pvars.pipefd, pvars.heredoc);
-		else // end command fork
-		{
-			edit_pipeset(pvars.pipefd[1], NULL, -1, 0);
-			pvars.pid = pipe_fork(data, currentt, pvars.pipefd, pvars.heredoc);
-		}
+		prep_pfork(data, currentt, nextt, &pvars);
 		if (currentt->prev != NULL) // Close the previous pipe in the parent
-			edit_pipeset(pvars.pipefd[0], NULL, 0, 1);
-		if (nextt) // Move the current pipe to prev_pipefd for the next iteration
-			edit_pipeset(pvars.pipefd[0], pvars.pipefd[1], 0, 0);
+			edit_pipeset(pvars.pfd[0], NULL, 0, 1);
+		if (nextt) // Move the current pipe to prev_pfd for the next iteration
+			edit_pipeset(pvars.pfd[0], pvars.pfd[1], 0, 0);
 		currentt = nextt; // set next command as current command
-		send_clean_heredoc(pvars.heredoc, pvars.pipefd[2]);
+		send_clean_heredoc(pvars.hdoc, pvars.pfd[2]);
 		if (pvars.status < 0 || pvars.pid < 0) // errors from forks?
 			currentt = NULL;
 	}
-	if (pvars.pipefd[0][0] != -1 && pvars.pipefd[0][1] != -1) // Close the last pipe in the parent process
-		edit_pipeset(pvars.pipefd[0], NULL, 0, 1);
+	if (pvars.pfd[0][0] != -1 && pvars.pfd[0][1] != -1) // Close the last pipe in the parent process
+		edit_pipeset(pvars.pfd[0], NULL, 0, 1);
 	waitpid(pvars.pid, &(pvars.status), 0);
 	if (g_sigint)
 		pvars.status = 0x8200;

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/17 18:48:52 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 08:37:21 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ typedef struct s_pvars
 	int		status;
 	pid_t	pid;
 	t_token	*htoken;
-	char	*heredoc;
-	int		pipefd[3][2]; //pipefd[0] in, pipefd[1] out, pipefd[2] heredoc
+	char	*hdoc;
+	int		pfd[3][2]; //pipefd[0] in, pipefd[1] out, pipefd[2] heredoc
 }	t_pvars;
 
 /*	global	*/

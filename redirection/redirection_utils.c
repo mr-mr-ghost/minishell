@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/16 18:14:50 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 08:37:40 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,60 +41,6 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 	close(minilib_stdout);
 	return (status);
 }
-
-/* int	handle_redirection(t_token *fname, int type)
-{
-	int	fd;
-	int	oldfd;
-	int	dupstatus;
-
-	fd = -1;
-	if (type == TRUNC || type == APPEND)
-	{
-		if (type == TRUNC)
-			fd = open(fname->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (type == APPEND)
-			fd = open(fname->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd < 0)
-			return (err_msg(NULL, fname->value, strerror(errno), 1));
-		dupstatus = dup2(fd, STDOUT_FILENO);
-		close(fd);
-		if (dupstatus < 0)
-			return (err_msg(NULL, NULL, strerror(errno), 1));
-	}
-	if (type == INPUT)
-	{
-		if (fname->next && fname->next->type == ARG)
-		{
-			oldfd = STDIN_FILENO;
-			fname = fname->next;
-			while (fname && fname->type == ARG)
-			{
-				fd = open(fname->value, O_RDONLY);
-				if (fd < 0)
-					return (err_msg(NULL, fname->value, strerror(errno), 1));
-				//probs needs to dup the old fd to new fd ?
-				dupstatus = dup2(fd, oldfd);
-				close(fd);
-				if (dupstatus < 0)
-					return (err_msg(NULL, NULL, strerror(errno), 1));
-				oldfd = fd;
-				fname = fname->next;
-			}
-		}
-		else
-		{
-			fd = open(fname->value, O_RDONLY);
-			if (fd < 0)
-				return (err_msg(NULL, fname->value, strerror(errno), 1));
-			dupstatus = dup2(fd, STDIN_FILENO);
-			close(fd);
-			if (dupstatus < 0)
-				return (err_msg(NULL, NULL, strerror(errno), 1));
-		}
-	}
-	return (0);
-} */
 
 /* handles input/output redirection (>, >>, <)*/
 /* opens a file and sets it as the new stdout or stdin*/
