@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:50:30 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 15:08:56 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 21:18:44 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 		heredoc = get_heredoc(data, pvars->htoken->next->value);
 		if (!heredoc || g_sigint)
 			return (NULL);
-		if (!is_pipe(heredoc, pvars->pfd[2], pvars->status))
+		if (!is_pipe(heredoc, pvars->pfd[2], &(pvars->status)))
 			return (NULL);
 		return (heredoc);
 	}

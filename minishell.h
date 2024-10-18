@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 18:28:17 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 21:17:47 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,6 +253,6 @@ int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
 int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
 int		close_fd(int fd[3][2], char *heredoc);
 void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose);
-int		is_pipe(char *heredoc, int *fd, int status);
+int		is_pipe(char *heredoc, int *fd, int *status);
 
 #endif
