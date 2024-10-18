@@ -7,7 +7,7 @@
 - [x] builtins and heredoc
 - [x] builtins, nonbuiltins, heredoc, redirections and pipes working together
 - [ ] multiple heredocs?
-- [ ] cleanup the calamity of the call_pipe function in pipes_utils
+- [x] cleanup the calamity of the call_pipe function in pipes_utils
 - [ ] ls | cat << X > t.txt | tr 'a' 'A' | pwd		 (writes ls to txt when heredoc NULL - it shouldn't)
 - [ ] fix minishell_tester fails
 - [ ] probably some memory leaks
