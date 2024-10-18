@@ -67,3 +67,36 @@ char	*heredoc_error(char *delimiter, char *heredoc)
 	ft_putstr_fd("')\n", 2);
 	return (heredoc);
 }
+
+// check for heredoc token, retrieve heredoc char, open heredoc pipe
+// on success return heredoc file
+// on failure return NULL
+char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
+{
+	char	*heredoc;
+
+	pvars->htoken = return_1stheredoct(currentt);
+	if (pvars->htoken)
+	{
+		heredoc = get_heredoc(data, pvars->htoken->next->value);
+		if (!heredoc || g_sigint)
+			return (NULL);
+		if (!is_pipe(heredoc, pvars->pfd[2]))
+			return (NULL);
+		return (heredoc);
+	}
+	return (NULL);
+}
+
+// send heredoc through heredoc pipe, free it and set it to NULL
+void	send_clean_heredoc(t_pvars *pvars)
+{
+	if (pvars->hdoc)
+	{
+		ft_putstr_fd(pvars->hdoc, pvars->pfd[2][1]);
+		edit_pipeset(pvars->pfd[2], NULL, 0, 1);
+		free (pvars->hdoc);
+		pvars->hdoc = NULL;
+	}
+	pvars->htoken = NULL;
+}

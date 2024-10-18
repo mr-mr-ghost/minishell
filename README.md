@@ -1,14 +1,8 @@
 TODOS *************************************************
 
-TODO: Fix misc. errors in tokens (if there are any)
+TODO: possible memory leaks
 
-TODO: heredoc pipe
-
-TODO: cleanup the calamity of the call_pipe function in pipes_utils
-
-TODO: probably some memory leaks
-
-TODO: cleanup
+TODO: end the suffering
 
 LINKS *************************************************
 

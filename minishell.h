@@ -69,6 +69,15 @@ typedef struct s_data
 	t_token	*token;
 }	t_data;
 
+typedef struct s_pvars
+{
+	int		status;
+	pid_t	pid;
+	t_token	*htoken;
+	char	*hdoc;
+	int		pfd[3][2];
+}	t_pvars;
+
 /*	global	*/
 extern int	g_sigint;
 
@@ -191,12 +200,12 @@ char	*join_path(char *path, char *cmd);
 
 /*	non-builtins processes	*/
 void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
+void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda);
 int		check_error(char *path);
 void	bin_error(t_data *data, char *cmd);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
-t_token	*return_redirt(t_token *cmdt);
 t_token	*return_1stheredoct(t_token *cmdt);
 int		launch_single_anycmd(t_data *data, t_token *cmdt);
 void	process_n_exec(t_data *data);
@@ -214,22 +223,34 @@ void	free_array(char **array);
 /*	redirections	*/
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
+t_token	*return_redirt(t_token *cmdt);
 
 /*	heredoc redirect	*/
 char	*get_heredoc(t_data *data, char *delimiter);
 int		process_heredoc(t_data *data, t_token *cmdt, int *fd, char *heredoc);
 int		handle_heredoc(t_data *data, t_token *cmdt, t_token *hdtoken);
 int		handle_heredoc_error(char *msg, char *heredoc, int code);
-int		handle_heredoc_builtins(t_data *data, t_token *cmdt, t_token *hdtoken);
+int		hredir_builtin(t_data *data, t_token *cmdt, t_token *redir, int ispipe);
 
 /*	heredoc redirect utils	*/
 char	*heredoc_error(char *delimiter, char *heredoc);
 char	*join_strings(t_data *data, char *s1, char *s2);
 int		heredoc_strcat(char *dest, char *src, int start);
+char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars);
+void	send_clean_heredoc(t_pvars *pvars);
 
 /*	pipes	*/
+void	init_pvars(t_pvars *pvars);
+int		call_pipe(t_data *data, t_token *currentt, t_token	*nextt);
+t_token	*get_next_cmd(t_token *currentt);
+void	prep_pfork(t_data *data, t_token *currt, t_token *next, t_pvars *pvars);
+t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
+
+/*	pipes utils	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
-int		pipe_fork(t_data *data, t_token *cmdt, int *input_fd, int *output_fd);
-int		call_pipe(t_data *data, t_token *currentt);
+int		is_pipe(char *heredoc, int *fd);
+void	edit_pipeset(int *pipefd, int *replace, int replace_fd, int close);
+int		close_fd(int fd[3][2], char *heredoc);
+int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
 
 #endif

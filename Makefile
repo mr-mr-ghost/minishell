@@ -9,8 +9,8 @@ CFILES = minishell.c main/prompt.c main/utils.c main/libft_utils.c \
 		builtin/builtin_env.c builtin/builtin_echo.c builtin/builtin_unset.c \
 		builtin/builtin_cd.c builtin/builtin_exit.c builtin/builtin_declaration.c \
 		nonbuiltin/nonbuiltin_handling.c nonbuiltin/nonbuiltin_path_utils.c \
-		nonbuiltin/nonbuiltin_processes.c redirection/redirection_utils.c redirection/pipes_utils.c \
-		redirection/redirect_heredoc.c redirection/redirect_heredoc_utils.c
+		nonbuiltin/nonbuiltin_processes.c redirection/redirection_utils.c redirection/piping.c \
+		redirection/redirect_heredoc.c redirection/redirect_heredoc_utils.c redirection/piping_utils.c \
 
 OBJ_DIR = obj/
 
@@ -26,7 +26,7 @@ OFILES = $(addprefix $(OBJ_DIR), $(notdir $(patsubst %.c, %.o, $(CFILES))))
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra
 
 LIBRARY = libft/libft.a -lreadline
 

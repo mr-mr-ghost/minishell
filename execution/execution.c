@@ -50,19 +50,6 @@ t_token	*return_1stheredoct(t_token *cmdt)
 		return (NULL);
 }
 
-t_token	*return_redirt(t_token *cmdt)
-{
-	int		count;
-	t_token	*redirt;
-
-	count = count_args(cmdt, TRUNC);
-	redirt = get_nth_token(cmdt, count);
-	if (redirt && redirt->type >= TRUNC && redirt->type <= HEREDOC)
-		return (redirt);
-	else
-		return (NULL);
-}
-
 int	launch_single_anycmd(t_data *data, t_token *cmdt)
 {
 	t_token	*redirt;
@@ -79,21 +66,13 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	}
 	else
 	{
-		hdtoken = return_1stheredoct(cmdt); // should check if theres eof sign?
+		hdtoken = return_1stheredoct(cmdt);
 		if (is_cmd(cmdt->value, 0))
-		{
-			if (hdtoken)
-				return (handle_heredoc_builtins(data, cmdt, hdtoken));
-			else
-				return (redirection_wrap_builtins(data, cmdt, redirt));
-		}
+			return (hredir_builtin(data, cmdt, redirt, 0));
+		else if (hdtoken)
+			return (handle_heredoc(data, cmdt, hdtoken));
 		else
-		{
-			if (hdtoken)
-				return (handle_heredoc(data, cmdt, hdtoken));
-			else
-				return (launch_nonbuiltins(data, cmdt, redirt));
-		}
+			return (launch_nonbuiltins(data, cmdt, redirt));
 	}
 }
 
@@ -109,7 +88,7 @@ void	process_n_exec(t_data *data)
 	if (!nextt)
 		data->exit_code = launch_single_anycmd(data, data->token);
 	else if (nextt->type == PIPE && nextt->next)
-		data->exit_code = call_pipe(data, data->token);
+		data->exit_code = call_pipe(data, data->token, nextt->next);
 	else
 		data->exit_code = err_msg(NULL, data->token->value,
 				"Command not found", 127);

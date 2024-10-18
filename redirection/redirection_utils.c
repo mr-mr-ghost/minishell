@@ -12,6 +12,19 @@
 
 #include "../minishell.h"
 
+t_token	*return_redirt(t_token *cmdt)
+{
+	int		count;
+	t_token	*redirt;
+
+	count = count_args(cmdt, TRUNC);
+	redirt = get_nth_token(cmdt, count);
+	if (redirt && redirt->type >= TRUNC && redirt->type <= HEREDOC)
+		return (redirt);
+	else
+		return (NULL);
+}
+
 /* wrapper function for redirection of builtin commands*/
 int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 {
