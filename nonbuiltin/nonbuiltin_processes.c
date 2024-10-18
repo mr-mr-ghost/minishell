@@ -52,9 +52,12 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 {
 	int	exit_status;
 
-	exit_status = check_error(bin);
+	exit_status = 1;
 	if (bin)
+	{
+		exit_status = check_error(bin);
 		free(bin);
+	}
 	if (enva)
 		free(enva);
 	if (cmda)
