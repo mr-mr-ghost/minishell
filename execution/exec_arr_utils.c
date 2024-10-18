@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:07:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:37:05 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:49:14 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ char	**form_cmd(t_data *data, t_token *token, int len)
 		tmp = tmp->next;
 	}
 	cmd[i] = NULL;
-	//free_tokens(data);
 	return (cmd);
 }
 
@@ -97,7 +96,5 @@ char	**form_enva(t_env *env, t_env *secret_env)
 		tmp = tmp->next;
 	}
 	array[i] = NULL;
-	//free_env(env);
-	//free_env(secret_env);
 	return (array);
 }

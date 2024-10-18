@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 14:36:32 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:53:52 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,9 +225,9 @@ void	prep_pfork(t_data *data, t_token *currt, t_token *nextt, t_pvars *pvars)
 // setup next currentt cmd as next or NULL, if there are failure indicators
 t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars)
 {
-	if (currentt->prev != NULL) // Close the previous pipe in the parent
+	if (currentt->prev != NULL)
 		edit_pipeset(pvars->pfd[0], NULL, 0, 1);
-	if (nextt) // Move the current pipe to prev_pfd for the next iteration
+	if (nextt)
 		edit_pipeset(pvars->pfd[0], pvars->pfd[1], 0, 0);
 	send_clean_heredoc(pvars);
 	if (pvars->status >= 0 || pvars->pid >= 0)
