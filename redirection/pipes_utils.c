@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 12:00:13 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:36:32 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,10 @@ int	is_pipe(char *heredoc, int *fd, int status)
 	return (1);
 }
 
-char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)//int *hfd, int *sptr)
+// check for heredoc token, retrieve heredoc char, open heredoc pipe
+// on success return heredoc file
+// on failure return NULL
+char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 {
 	char	*heredoc;
 
@@ -155,20 +158,20 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)//int *hfd, in
 	return (NULL);
 }
 
-void	send_clean_heredoc(t_pvars *pvars)//char *heredoc, int *heredocfd)
+// send heredoc through heredoc pipe, free it and set it to NULL
+void	send_clean_heredoc(t_pvars *pvars)
 {
-	//if (pvars->htoken)
 	if (pvars->hdoc)
 	{
 		ft_putstr_fd(pvars->hdoc, pvars->pfd[2][1]);
 		edit_pipeset(pvars->pfd[2], NULL, 0, 1);
-		//if (pvars->hdoc)
 		free (pvars->hdoc);
 		pvars->hdoc = NULL;
 	}
 	pvars->htoken = NULL;
 }
 
+// get next command after pipe
 t_token	*get_next_cmd(t_token *currentt)
 {
 	t_token	*nextt;
@@ -214,18 +217,26 @@ void	prep_pfork(t_data *data, t_token *currt, t_token *nextt, t_pvars *pvars)
 	}
 }
 
-/* void	prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars)
+// prepare variables for the next while iteration in call_pipe:
+// if current command is first, then close the pfd[0] (stdin)
+// if there is next command, then put pfd[1] into pfd[0]
+//		setting up this command's output as next command's input
+// if there's heredoc set up - send it out, free it and close heredoc's pipe
+// setup next currentt cmd as next or NULL, if there are failure indicators
+t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars)
 {
 	if (currentt->prev != NULL) // Close the previous pipe in the parent
 		edit_pipeset(pvars->pfd[0], NULL, 0, 1);
 	if (nextt) // Move the current pipe to prev_pfd for the next iteration
 		edit_pipeset(pvars->pfd[0], pvars->pfd[1], 0, 0);
-	currentt = nextt; // set next command as current command
-	send_clean_heredoc(pvars->hdoc, pvars->pfd[2]);
-	if (pvars->status < 0 || pvars->pid < 0) // errors from forks?
-		currentt = NULL;
-} */
+	send_clean_heredoc(pvars);
+	if (pvars->status >= 0 || pvars->pid >= 0)
+		return (nextt);
+	else
+		return (NULL);
+}
 
+// runs while function to go through all the piped cmds upon each iteration
 int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 {
 	t_pvars	pvars;
@@ -235,27 +246,20 @@ int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 	while (currentt)
 	{
 		nextt = get_next_cmd(currentt);
-		pvars.hdoc = set_heredoc(data, currentt, &pvars);//.pfd[2], &(pvars.status));
+		pvars.hdoc = set_heredoc(data, currentt, &pvars);
 		if (return_1stheredoct(currentt) && (g_sigint || pvars.status < 0))
 			break ;
 		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1], pvars.status) == 0)
 			break ;
 		prep_pfork(data, currentt, nextt, &pvars);
-		if (currentt->prev != NULL) // Close the previous pipe in the parent
-			edit_pipeset(pvars.pfd[0], NULL, 0, 1);
-		if (nextt) // Move the current pipe to prev_pfd for the next iteration
-			edit_pipeset(pvars.pfd[0], pvars.pfd[1], 0, 0);
-		currentt = nextt; // set next command as current command
-		send_clean_heredoc(&pvars);
-		if (pvars.status < 0 || pvars.pid < 0) // errors from forks?
-			currentt = NULL;
+		currentt = prep_next_iter(currentt, nextt, &pvars);
 	}
-	if (pvars.pfd[0][0] != -1 && pvars.pfd[0][1] != -1) // Close the last pipe in the parent process
+	if (pvars.pfd[0][0] != -1 && pvars.pfd[0][1] != -1)
 		edit_pipeset(pvars.pfd[0], NULL, 0, 1);
 	waitpid(pvars.pid, &(pvars.status), 0);
 	if (g_sigint)
 		pvars.status = 0x8200;
-	while (wait(NULL) > 0) // Wait for all child processes
+	while (wait(NULL) > 0)
 		;
 	signal_manager(sigint_handler, SA_RESTART);
 	return (WEXITSTATUS(pvars.status));

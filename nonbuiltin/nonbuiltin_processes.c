@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/16 17:20:16 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:42:52 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	check_launch_redir(t_token *redirt)
 {
 	while (redirt)
 	{
-		if (redirt->type >= TRUNC && redirt->type <= INPUT &&
-			handle_redirection(redirt->next, redirt->type) != 0)
+		if (redirt->type >= TRUNC && redirt->type <= INPUT
+			&& handle_redirection(redirt->next, redirt->type) != 0)
 			return (1);
 		redirt = return_redirt(redirt->next);
 	}

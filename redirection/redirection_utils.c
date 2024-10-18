@@ -6,13 +6,13 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 08:37:40 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:45:19 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/* wrapper function for redirection of builtin commands*/
+/* wrapper function for redirection of builtin commands */
 int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 {
 	int	status;
@@ -23,8 +23,8 @@ int	redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir)
 		return (err_msg(NULL, NULL, strerror(errno), 1));
 	while (redir)
 	{
-		if (redir->type >= TRUNC && redir-> type <= INPUT &&
-			handle_redirection(redir->next, redir->type))
+		if (redir->type >= TRUNC && redir-> type <= INPUT
+			&& handle_redirection(redir->next, redir->type))
 		{
 			if (dup2(minilib_stdout, STDOUT_FILENO) < 0)
 				err_msg(NULL, NULL, strerror(errno), 1);
