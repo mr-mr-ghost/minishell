@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 12:09:32 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/08/19 12:09:32 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/19 23:26:24 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,25 @@ void	print_echo(t_token *echo_token)
 			ft_putchar_fd(' ', 1);
 	}
 }
+
+/* void	print_echo(t_token *echo_token)
+{
+	int	first;
+
+	first = 1;
+	while (echo_token && echo_token->type < PIPE)
+	{
+		if (echo_token->type == ARG)
+		{
+			if (first)
+				first = 0;
+			else
+				ft_putchar_fd(' ', 1);
+			ft_putstr_fd(echo_token->value, 1);
+		}
+		echo_token = echo_token->next;
+	}
+} */
 
 int	echo_command(t_token *token)
 {
