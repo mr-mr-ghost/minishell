@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:50:30 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 21:51:54 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 22:22:03 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 {
 	char	*heredoc;
 
-	pvars->htoken = return_1stheredoct(currentt);
+	pvars->htoken = return_lastheredoct(currentt);
 	if (pvars->htoken)
 	{
 		heredoc = get_heredoc(data, pvars->htoken->next->value);

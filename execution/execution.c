@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:08:30 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/19 22:21:54 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,23 @@ t_token	*get_nth_token(t_token *token, int n)
 	return (tmp);
 }
 
-t_token	*return_1stheredoct(t_token *cmdt)
+t_token	*return_lastheredoct(t_token *cmdt)
 {
 	int		count;
 	t_token	*redirt;
+	t_token	*last_heredoc;
 
+	last_heredoc = NULL;
 	count = count_args(cmdt, TRUNC);
 	redirt = get_nth_token(cmdt, count);
-	while (redirt && redirt->type >= TRUNC && redirt->type <= INPUT)
+	while (redirt && redirt->type >= TRUNC && redirt->type <= HEREDOC)
 	{
+		if (redirt->type == HEREDOC)
+			last_heredoc = redirt;
 		count = count_args(redirt->next, TRUNC);
 		redirt = get_nth_token(redirt->next, count);
 	}
-	if (redirt && redirt->type == HEREDOC)
-		return (redirt);
-	else
-		return (NULL);
+	return (last_heredoc);
 }
 
 int	launch_single_anycmd(t_data *data, t_token *cmdt)
@@ -66,7 +67,7 @@ int	launch_single_anycmd(t_data *data, t_token *cmdt)
 	}
 	else
 	{
-		hdtoken = return_1stheredoct(cmdt);
+		hdtoken = return_lastheredoct(cmdt);
 		if (is_cmd(cmdt->value, 0))
 			return (hredir_builtin(data, cmdt, redirt, 0));
 		else if (hdtoken)

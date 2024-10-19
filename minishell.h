@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 21:47:16 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 22:21:39 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ int		check_launch_redir(t_token *redirt);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
-t_token	*return_1stheredoct(t_token *cmdt);
+t_token	*return_lastheredoct(t_token *cmdt);
 int		launch_single_anycmd(t_data *data, t_token *cmdt);
 void	process_n_exec(t_data *data);
 

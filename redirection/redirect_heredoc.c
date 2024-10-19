@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 14:37:15 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/08 12:47:13 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/19 22:22:13 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	hredir_builtin(t_data *data, t_token *cmdt, t_token *redir, int ispipe)
 	heredoc = NULL;
 	if (!ispipe)
 	{
-		hdtoken = return_1stheredoct(cmdt);
+		hdtoken = return_lastheredoct(cmdt);
 		if (hdtoken)
 			heredoc = get_heredoc(data, hdtoken->next->value);
 		if (heredoc)
