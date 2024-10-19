@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_list_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 20:43:03 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/09 14:08:02 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/19 20:58:10 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,23 @@ int	token_lst_add(t_token **token, char *line, bool div)
 		return (1);
 	token_add_back(token, new);
 	return (0);
+}
+
+// deletes a token and returns the next token or NULL in its place
+t_token	*delete_token(t_token *currentt)
+{
+	t_token	*prevt;
+	t_token	*nextt;
+
+	if (!currentt)
+		return (NULL);
+	prevt = currentt->prev;
+	nextt = currentt->next;
+	if (prevt)
+		prevt->next = nextt;
+	if (nextt)
+		nextt->prev = prevt;
+	free(currentt->value);
+	free(currentt);
+	return (nextt);
 }

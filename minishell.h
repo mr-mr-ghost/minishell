@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 12:52:02 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 20:58:46 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ char	*get_dollar_value(t_env *env, char *line, int *start);
 t_token	*token_new(char *value, bool div);
 void	token_add_back(t_token **token, t_token *new);
 int		token_lst_add(t_token **token, char *line, bool div);
+t_token	*delete_token(t_token *currentt);
 
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 12:53:00 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:06:51 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	bin_error(t_data *data, char *cmd)
 	exit(exit_status);
 }
 
+// exits the child proccess and frees all it's allocated memory
 void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 {
 	int	exit_status;
@@ -69,13 +70,14 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 	exit(exit_status);
 }
 
+// launches the redirections (< > >>)
+// deletes and skips the input redirection if the next next token is an argument
+// returns 0 on success or 1 on error
 int	check_launch_redir(t_token *redirt)
 {
-	//t_token *tmp; // also can there be more than one input?
-
 	while (redirt)
 	{
-		if (redirt->type >= TRUNC && redirt->type < INPUT
+		if ((redirt->type == TRUNC || redirt->type == APPEND)
 			&& handle_redirection(redirt->next, redirt->type) != 0)
 			return (1);
 		else if (redirt->type == INPUT)
@@ -83,8 +85,9 @@ int	check_launch_redir(t_token *redirt)
 			if (redirt->next && redirt->next->type == CMD
 				&& redirt->next->next && redirt->next->next->type == ARG)
 			{
-				redirt->prev->next = redirt->next->next;
-				// delete redir and redir->next
+				redirt = delete_token(redirt);
+				redirt = delete_token(redirt);
+				continue ;
 			}
 			else
 			{
