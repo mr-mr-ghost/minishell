@@ -6,9 +6,10 @@
 - [x] pick first heredoc, ignore the other heredocs, but deal with all other redirs
 - [x] builtins and heredoc
 - [x] builtins, nonbuiltins, heredoc, redirections and pipes working together
+- [ ] take the last heredoc instead, as in bash?
 - [ ] multiple heredocs?
 - [x] cleanup the calamity of the call_pipe function in pipes_utils
-- [ ] ls | cat << X > t.txt | tr 'a' 'A' | pwd		 (writes ls to txt when heredoc NULL - it shouldn't)
+- [x] ls | cat << X > t.txt | tr 'a' 'A' | pwd		 (writes ls to txt when heredoc NULL - it shouldn't)
 - [ ] fix minishell_tester fails
 - [ ] probably some memory leaks
 - [ ] resolve the semi-colon question
@@ -18,7 +19,7 @@
 
 - [ ] echo "$" (should return $)
 - [ ] echo hi < a.txt bye bye (should ignore redirection and repeat words after redir)
-- [ ] cat <.filename ./filename (should ignore the first file)
+- [x] cat <.filename ./filename (should ignore the first file)
 - [ ] echo hi > b.txt bye (should write "hi bye" in the file)
 - [ ] some bad $? during builtin redirection stuff maybe?
 
