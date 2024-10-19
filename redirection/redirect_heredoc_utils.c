@@ -79,6 +79,7 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 	if (pvars->htoken)
 	{
 		heredoc = get_heredoc(data, pvars->htoken->next->value);
+		signal_manager(sigint_handler_incmd, SA_RESTART);
 		if (!heredoc || g_sigint)
 			return (NULL);
 		if (!is_pipe(heredoc, pvars->pfd[2]))
