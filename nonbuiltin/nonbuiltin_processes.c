@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nonbuiltin_processes.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/12 01:02:00 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/19 12:53:00 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,34 @@ void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda)
 	exit(exit_status);
 }
 
+int	check_launch_redir(t_token *redirt)
+{
+	//t_token *tmp; // also can there be more than one input?
+
+	while (redirt)
+	{
+		if (redirt->type >= TRUNC && redirt->type < INPUT
+			&& handle_redirection(redirt->next, redirt->type) != 0)
+			return (1);
+		else if (redirt->type == INPUT)
+		{
+			if (redirt->next && redirt->next->type == CMD
+				&& redirt->next->next && redirt->next->next->type == ARG)
+			{
+				redirt->prev->next = redirt->next->next;
+				// delete redir and redir->next
+			}
+			else
+			{
+				if (handle_redirection(redirt->next, redirt->type) != 0)
+					return (1);
+			}
+		}
+		redirt = return_redirt(redirt->next);
+	}
+	return (0);
+}
+
 void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 {
 	char	**enva;
@@ -79,13 +107,8 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt)
 	enva = NULL;
 	cmda = NULL;
 	signal_manager(sig_child_handler, 0);
-	while (redirt)
-	{
-		if (redirt->type >= TRUNC && redirt->type <= INPUT
-			&& handle_redirection(redirt->next, redirt->type) != 0)
-			child_cleanexit(data, bin, enva, cmda);
-		redirt = return_redirt(redirt->next);
-	}
+	if (check_launch_redir(redirt) == 1)
+		child_cleanexit(data, bin, enva, cmda);
 	bin = find_bin(data->env, cmdt->value);
 	if (!bin)
 		bin_error(data, cmdt->value);

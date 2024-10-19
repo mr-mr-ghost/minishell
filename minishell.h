@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 22:07:56 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 12:52:02 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
 void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda);
 int		check_error(char *path);
 void	bin_error(t_data *data, char *cmd);
+int		check_launch_redir(t_token *redirt);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
