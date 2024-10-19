@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 11:02:46 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/18 22:09:43 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:45:05 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ void	prep_pfork(t_data *data, t_token *currt, t_token *next, t_pvars *pvars)
 	if (currt->prev == NULL)
 	{
 		edit_pipeset(pvars->pfd[0], NULL, -1, 0);
-		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars);
 	}
 	else if (next)
-		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars);
 	else
 	{
 		edit_pipeset(pvars->pfd[1], NULL, -1, 0);
-		pvars->pid = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+		pvars->pid = pipe_fork(data, currt, pvars->pfd, pvars);
 	}
 }
 
@@ -89,7 +89,7 @@ int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 	{
 		nextt = get_next_cmd(currentt);
 		pvars.hdoc = set_heredoc(data, currentt, &pvars);
-		if (return_1stheredoct(currentt) && (g_sigint || pvars.status < 0))
+		if (pvars.htoken && (g_sigint || pvars.status < 0))
 			break ;
 		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1], &(pvars.status)) == 0)
 			break ;

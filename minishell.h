@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 20:58:46 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:47:16 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
 int		is_pipe(char *heredoc, int *fd, int *status);
 void	edit_pipeset(int *pipefd, int *replace, int replace_fd, int close);
-int		close_fd(int fd[3][2], char *heredoc);
-int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
+int		close_fd(int fd[3][2], t_token *htoken);
+int		pipe_fork(t_data *data, t_token *cmdt, int pfd[3][2], t_pvars *pvars);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:50:30 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/18 22:10:02 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/19 21:51:54 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,15 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 	if (pvars->htoken)
 	{
 		heredoc = get_heredoc(data, pvars->htoken->next->value);
-		if (!heredoc || g_sigint)
+		if (g_sigint)
 			return (NULL);
 		if (!is_pipe(heredoc, pvars->pfd[2], &(pvars->status)))
+		{
+			if (heredoc)
+				free(heredoc);
+			pvars->htoken = NULL;
 			return (NULL);
+		}
 		return (heredoc);
 	}
 	return (NULL);
@@ -91,12 +96,15 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 // send heredoc through heredoc pipe, free it and set it to NULL
 void	send_clean_heredoc(t_pvars *pvars)
 {
-	if (pvars->hdoc)
+	if (pvars->htoken)
 	{
 		ft_putstr_fd(pvars->hdoc, pvars->pfd[2][1]);
 		edit_pipeset(pvars->pfd[2], NULL, 0, 1);
-		free (pvars->hdoc);
-		pvars->hdoc = NULL;
+		if (pvars->hdoc)
+		{
+			free(pvars->hdoc);
+			pvars->hdoc = NULL;
+		}
 	}
 	pvars->htoken = NULL;
 }
