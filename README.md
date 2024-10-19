@@ -6,10 +6,11 @@
 - [x] pick first heredoc, ignore the other heredocs, but deal with all other redirs
 - [x] builtins and heredoc
 - [x] builtins, nonbuiltins, heredoc, redirections and pipes working together
-- [ ] take the last heredoc instead, as in bash?
+- [x] take the last heredoc instead, as in bash?
 - [ ] multiple heredocs?
 - [x] cleanup the calamity of the call_pipe function in pipes_utils
 - [x] ls | cat << X > t.txt | tr 'a' 'A' | pwd		 (writes ls to txt when heredoc NULL - it shouldn't)
+- [ ] **fix "echo < file" nonsense**
 - [ ] fix minishell_tester fails
 - [ ] probably some memory leaks
 - [ ] resolve the semi-colon question
