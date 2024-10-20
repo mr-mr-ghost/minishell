@@ -10,19 +10,17 @@
 - [ ] multiple heredocs?
 - [x] cleanup the calamity of the call_pipe function in pipes_utils
 - [x] ls | cat << X > t.txt | tr 'a' 'A' | pwd		 (writes ls to txt when heredoc NULL - it shouldn't)
-- [ ] **fix "echo < file" nonsense**
-- [ ] fix minishell_tester fails
-- [ ] probably some memory leaks
+- [x] **fix "echo < file" nonsense** (missed pretty bad bug)
+- [ ] **improve builtin handling of INPUT redirection**
 - [ ] resolve the semi-colon question
-- [ ] cleanup
+- [ ] testing testing testing
 
 ## minishel tester fails:
 
 - [ ] echo "$" (should return $)
-- [ ] echo hi < a.txt bye bye (should ignore redirection and repeat words after redir)
+- [x] echo hi < a.txt bye bye (should ignore redirection and repeat words after redir)
 - [x] cat <.filename ./filename (should ignore the first file)
-- [ ] echo hi > b.txt bye (should write "hi bye" in the file)
-- [ ] some bad $? during builtin redirection stuff maybe?
+- [x] echo hi > b.txt bye (should write "hi bye" in the file)
 
 ## LINKS:
 - https://www.codequoi.com/en/handling-a-file-by-its-descriptor-in-c/
