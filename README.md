@@ -11,7 +11,7 @@
 - [x] cleanup the calamity of the call_pipe function in pipes_utils
 - [x] ls | cat << X > t.txt | tr 'a' 'A' | pwd		 (writes ls to txt when heredoc NULL - it shouldn't)
 - [x] **fix "echo < file" nonsense** (missed pretty bad bug)
-- [ ] **improve builtin handling of INPUT redirection**
+- [x] **improve builtin handling of INPUT redirection**
 - [ ] resolve the semi-colon question
 - [ ] testing testing testing
 
