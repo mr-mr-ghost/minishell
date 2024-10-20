@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:45:55 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 22:21:39 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/20 13:11:03 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ void	free_array(char **array);
 
 /*	redirections	*/
 int		handle_redirection(t_token *fname, int type);
+int		call_redir_handler(t_token *redir, int	minilib_stdout);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 t_token	*return_redirt(t_token *cmdt);
 
