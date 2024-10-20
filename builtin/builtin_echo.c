@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 12:09:32 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 23:26:24 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/20 12:03:25 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /* if 1 str - prints new line, returns 1									  */
 /* if 2 strs - if str2 = "-n", returns 1, else prints str2, returns 1		  */
 /* if more strs - prints all strings, adds new line if str2 = "-n", returns 1 */
-void	print_echo(t_token *echo_token)
+/* void	print_echo(t_token *echo_token)
 {
 	while (echo_token && echo_token->type <= ARG)
 	{
@@ -26,9 +26,9 @@ void	print_echo(t_token *echo_token)
 		if (echo_token && echo_token->type <= ARG)
 			ft_putchar_fd(' ', 1);
 	}
-}
+} */
 
-/* void	print_echo(t_token *echo_token)
+void	print_echo(t_token *echo_token)
 {
 	int	first;
 
@@ -45,14 +45,14 @@ void	print_echo(t_token *echo_token)
 		}
 		echo_token = echo_token->next;
 	}
-} */
+}
 
 int	echo_command(t_token *token)
 {
 	bool	n_flag;
 	t_token	*echo_token;
 
-	if (!token->next || token->next->type >= TRUNC)
+	if (!token->next || token->next->type > PIPE) //= TRUNC)
 	{
 		printf("\n");
 		return (0);
@@ -61,13 +61,14 @@ int	echo_command(t_token *token)
 	n_flag = false;
 	if (!ft_memcmp(echo_token->value, "-n", 3))
 	{
-		if (!echo_token->next || echo_token->next->type >= TRUNC)
+		if (!echo_token->next || echo_token->next->type > PIPE) //>= TRUNC)
 			return (0);
 		echo_token = echo_token->next;
 		n_flag = true;
 	}
 	print_echo(echo_token);
 	if (!n_flag)
-		printf("\n");
+		ft_putchar_fd('\n', 1);
+		//printf("\n");
 	return (0);
 }
