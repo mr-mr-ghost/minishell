@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:34:26 by gklimasa          #+#    #+#             */
-/*   Updated: 2024/10/20 13:10:44 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/21 11:57:12 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_token	*return_redirt(t_token *cmdt)
 // if redirection type is INPUT, checks if file exists/readable and returns
 // ignores HEREDOC, because it was dealt previousy (spaghetti regretti...)
 // returns 0 on success, 1 on failure
-int	call_redir_handler(t_token *redir, int	minilib_stdout)
+int	call_redir_handler(t_token *redir, int minilib_stdout)
 {
 	if ((redir->type == TRUNC || redir-> type == APPEND)
 		&& handle_redirection(redir->next, redir->type))
