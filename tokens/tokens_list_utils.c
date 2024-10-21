@@ -56,3 +56,21 @@ int	token_lst_add(t_token **token, char *line, bool div)
 	token_add_back(token, new);
 	return (0);
 }
+
+t_token	*delete_token(t_token *currentt)
+{
+	t_token	*prevt;
+	t_token	*nextt;
+
+	if (!currentt)
+		return (NULL);
+	prevt = currentt->prev;
+	nextt = currentt->next;
+	if (prevt)
+		prevt->next = nextt;
+	if (nextt)
+		nextt->prev = prevt;
+	free(currentt->value);
+	free(currentt);
+	return (nextt);
+}

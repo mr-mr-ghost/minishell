@@ -135,6 +135,7 @@ char	*get_dollar_value(t_env *env, char *line, int *start);
 t_token	*token_new(char *value, bool div);
 void	token_add_back(t_token **token, t_token *new);
 int		token_lst_add(t_token **token, char *line, bool div);
+t_token	*delete_token(t_token *currentt);
 
 /*	tokens utils	*/
 bool	select_cmp(const char *line, const char *cmp, int start, int len);
@@ -203,6 +204,7 @@ void	child_process(t_data *data, t_token *cmdt, t_token *redirt);
 void	child_cleanexit(t_data *data, char *bin, char **enva, char **cmda);
 int		check_error(char *path);
 void	bin_error(t_data *data, char *cmd);
+int		check_launch_redir(t_token *redirt);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
