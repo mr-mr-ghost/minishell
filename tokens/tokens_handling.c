@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 14:05:48 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/09 13:44:14 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/21 21:52:26 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ int	parse_tokens(t_data *data, t_token *token)
 	tmp = token;
 	while (tmp)
 	{
-		if (tmp->type == PIPE && (!tmp->prev || tmp->next->type == PIPE))
+		if (tmp->type == PIPE && (!tmp->prev
+			|| (tmp->next && tmp->next->type == PIPE)))
 			return (syntax_err(data, "|"));
 		else if ((tmp->type >= TRUNC && tmp->type <= HEREDOC)
 			&& tmp->next && tmp->next->type >= TRUNC)
