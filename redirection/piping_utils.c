@@ -129,13 +129,13 @@ void	edit_pipeset(int *pipefd, int *pipefd2, int value, int isclose)
 // opens pipe, writes the fds into the pipe matrix
 // returns 1 on success
 // returns 0 on failure and frees heredoc before return
-int	is_pipe(char *heredoc, int *fd)
+int	is_pipe(char *heredoc, int *fd, int *status)
 {
 	if (pipe(fd) == -1)
 	{
 		if (heredoc)
 			free(heredoc);
-		err_msg(NULL, NULL, strerror(errno), -1);
+		*status = err_msg(NULL, NULL, strerror(errno), 1);
 		return (0);
 	}
 	return (1);

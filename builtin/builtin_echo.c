@@ -18,12 +18,12 @@
 /* if more strs - prints all strings, adds new line if str2 = "-n", returns 1 */
 void	print_echo(t_token *echo_token)
 {
-	while (echo_token && echo_token->type <= ARG)
+	while (echo_token && echo_token->type <= HEREDOC)
 	{
 		if (echo_token->type == ARG)
 			ft_putstr_fd(echo_token->value, 1);
 		echo_token = echo_token->next;
-		if (echo_token && echo_token->type <= ARG)
+		if (echo_token && (echo_token->type == ARG || echo_token->type == 0))
 			ft_putchar_fd(' ', 1);
 	}
 }

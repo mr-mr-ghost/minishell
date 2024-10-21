@@ -89,9 +89,9 @@ int	call_pipe(t_data *data, t_token *currentt, t_token	*nextt)
 	{
 		nextt = get_next_cmd(currentt);
 		pvars.hdoc = set_heredoc(data, currentt, &pvars);
-		if (return_1stheredoct(currentt) && (g_sigint || pvars.status < 0))
+		if (pvars.htoken && (g_sigint || pvars.status < 0))
 			break ;
-		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1]) == 0)
+		if (nextt && is_pipe(pvars.hdoc, pvars.pfd[1], &(pvars.status)) == 0)
 			break ;
 		prep_pfork(data, currentt, nextt, &pvars);
 		currentt = prep_next_iter(currentt, nextt, &pvars);

@@ -224,6 +224,7 @@ void	free_array(char **array);
 int		handle_redirection(t_token *fname, int type);
 int		redirection_wrap_builtins(t_data *data, t_token *cmdt, t_token *redir);
 t_token	*return_redirt(t_token *cmdt);
+int		call_redir_handler(t_token *redir, int minilib_stdout);
 
 /*	heredoc redirect	*/
 char	*get_heredoc(t_data *data, char *delimiter);
@@ -248,7 +249,7 @@ t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
 
 /*	pipes utils	*/
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
-int		is_pipe(char *heredoc, int *fd);
+int		is_pipe(char *heredoc, int *fd, int *status);
 void	edit_pipeset(int *pipefd, int *replace, int replace_fd, int close);
 int		close_fd(int fd[3][2], char *heredoc);
 int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);

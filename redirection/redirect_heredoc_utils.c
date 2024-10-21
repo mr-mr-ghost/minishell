@@ -82,8 +82,13 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 		signal_manager(sigint_handler_incmd, SA_RESTART);
 		if (!heredoc || g_sigint)
 			return (NULL);
-		if (!is_pipe(heredoc, pvars->pfd[2]))
+		if (!is_pipe(heredoc, pvars->pfd[2], NULL))
+		{
+			if (heredoc)
+				free(heredoc);
+			pvars->htoken = NULL;
 			return (NULL);
+		}
 		return (heredoc);
 	}
 	return (NULL);
@@ -96,8 +101,11 @@ void	send_clean_heredoc(t_pvars *pvars)
 	{
 		ft_putstr_fd(pvars->hdoc, pvars->pfd[2][1]);
 		edit_pipeset(pvars->pfd[2], NULL, 0, 1);
-		free (pvars->hdoc);
-		pvars->hdoc = NULL;
+		if (pvars->hdoc)
+		{
+			free(pvars->hdoc);
+			pvars->hdoc = NULL;
+		}
 	}
 	pvars->htoken = NULL;
 }
