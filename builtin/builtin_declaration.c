@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_declaration.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhoddy <jhoddy@student.42luxembourg.lu>    +#+  +:+       +#+        */
+/*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:21:38 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/09/19 17:21:38 by jhoddy           ###   ########.fr       */
+/*   Updated: 2024/10/21 23:36:44 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	handle_declaration(t_env *secret_env, t_token *token)
 
 	arg = check_declaration(token);
 	if (arg)
-		return (err_msg(NULL, arg, "Command not found", 127));
+		return (err_msg(NULL, arg, "command not found", 127));
 	tmp = token;
 	while (tmp && tmp->type <= ARG)
 	{

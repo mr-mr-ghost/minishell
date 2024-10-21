@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:57:01 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 22:21:54 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:36:50 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,5 @@ void	process_n_exec(t_data *data)
 		data->exit_code = call_pipe(data, data->token, nextt->next);
 	else
 		data->exit_code = err_msg(NULL, data->token->value,
-				"Command not found", 127);
+				"command not found", 127);
 }

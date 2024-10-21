@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 15:53:19 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/19 21:06:51 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:36:58 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	check_error(char *path)
 	dir = opendir(path);
 	exit_code = 0;
 	if (!ft_strchr(path, '/'))
-		exit_code = err_msg(NULL, path, "Command not found", 127);
+		exit_code = err_msg(NULL, path, "command not found", 127);
 	else if (access(path, F_OK))
 		exit_code = err_msg(NULL, path, strerror(errno), 127);
 	else if (fd == -1 && dir != NULL)

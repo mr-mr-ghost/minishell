@@ -26,7 +26,7 @@ OFILES = $(addprefix $(OBJ_DIR), $(notdir $(patsubst %.c, %.o, $(CFILES))))
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 LIBRARY = libft/libft.a -lreadline
 
