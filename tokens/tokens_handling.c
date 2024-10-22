@@ -67,7 +67,8 @@ int	parse_tokens(t_data *data, t_token *token)
 	tmp = token;
 	while (tmp)
 	{
-		if (tmp->type == PIPE && (!tmp->next || tmp->next->type == PIPE))
+		if (tmp->type == PIPE
+			&& (!tmp->prev || (tmp->next && tmp->next->type == PIPE)))
 			return (syntax_err(data, "|"));
 		else if ((tmp->type >= TRUNC && tmp->type <= HEREDOC)
 			&& tmp->next && tmp->next->type >= TRUNC)

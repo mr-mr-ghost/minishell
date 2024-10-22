@@ -81,7 +81,7 @@ bool	add_dollar_value(t_data *data, char *buffer, int *j, int *k)
 	bool	quote;
 
 	quote = false;
-	if (data->line[*j - 1] && data->line[*j - 1] == '\"')
+	if (*j > 0 && data->line[*j - 1] && data->line[*j - 1] == '\"')
 		quote = true;
 	env_value = process_dollar(data, data->line, j);
 	i = 0;
