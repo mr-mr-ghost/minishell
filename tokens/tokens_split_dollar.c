@@ -64,7 +64,7 @@ char	*process_dollar(t_data *data, char *line, int *i)
 	else if (select_valid_env(data->env, line, *i))
 		env_value = get_dollar_value(data->env, line, i);
 	else if (!select_valid_env(data->env, line, *i)
-		&& (!ft_strchr("><|%+,./:=^~ ", line[*i])))
+		&& (!ft_strchr("><|%+,./:=^~\" ", line[*i])))
 	{
 		env_value = ft_strdup("");
 		*i = update_line_iter(line, *i);
