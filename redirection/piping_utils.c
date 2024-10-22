@@ -41,7 +41,7 @@ int	launch_cmd_inpipe(t_data *data, t_token *cmdt)
 }
 
 // forks current cmd and cleans child's memory if cmd is builtin
-int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
+int	pipe_fork(t_data *data, t_token *cmdt, int pfd[3][2], t_pvars *pvars)
 {
 	pid_t	pid;
 	int		status;
@@ -52,11 +52,11 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 		return (err_msg(NULL, NULL, strerror(errno), -1));
 	else if (pid == 0)
 	{
-		status = close_fd(pipefd, heredoc);
-		if (heredoc)
+		status = close_fd(pfd, pvars->htoken);
+		if (pvars->hdoc)
 		{
-			free(heredoc);
-			heredoc = NULL;
+			free(pvars->hdoc);
+			pvars->hdoc = NULL;
 		}
 		if (status >= 0)
 			status = launch_cmd_inpipe(data, cmdt);
@@ -74,19 +74,19 @@ int	pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc)
 // fd[0] pair is feeding prev cmd's result to current cmd (0 is in, 1 is out)
 // fd[1] pair is feeding current cmd's result to next cmd (0 is in, 1 is out)
 // fd[2] pair replaces fd[0] or stdin with heredoc (0 is in, 1 is out)
-int	close_fd(int fd[3][2], char *heredoc)
+int	close_fd(int fd[3][2], t_token *htoken)
 {
 	int	status;
 
 	status = 0;
 	if (fd[0][0] != -1 && fd[0][1] != -1)
 	{
-		if (!heredoc)
+		if (!htoken)
 			status = dup2(fd[0][0], STDIN_FILENO);
 		close(fd[0][0]);
 		close(fd[0][1]);
 	}
-	if (heredoc)
+	if (htoken)
 	{
 		if (status >= 0)
 			status = dup2(fd[2][0], STDIN_FILENO);

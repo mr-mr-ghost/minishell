@@ -48,14 +48,14 @@ void	prep_pfork(t_data *data, t_token *currt, t_token *next, t_pvars *pvars)
 	if (currt->prev == NULL)
 	{
 		edit_pipeset(pvars->pfd[0], NULL, -1, 0);
-		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars);
 	}
 	else if (next)
-		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+		pvars->status = pipe_fork(data, currt, pvars->pfd, pvars);
 	else
 	{
 		edit_pipeset(pvars->pfd[1], NULL, -1, 0);
-		pvars->pid = pipe_fork(data, currt, pvars->pfd, pvars->hdoc);
+		pvars->pid = pipe_fork(data, currt, pvars->pfd, pvars);
 	}
 }
 

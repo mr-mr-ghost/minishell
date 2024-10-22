@@ -12,3 +12,4 @@ libft/obj
 a.out
 cmake-build-debug
 CMakeLists.txt
+minishell_tester

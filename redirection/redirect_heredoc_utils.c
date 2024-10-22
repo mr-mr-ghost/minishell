@@ -75,7 +75,7 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 {
 	char	*heredoc;
 
-	pvars->htoken = return_1stheredoct(currentt);
+	pvars->htoken = return_lastheredoct(currentt);
 	if (pvars->htoken)
 	{
 		heredoc = get_heredoc(data, pvars->htoken->next->value);
@@ -97,7 +97,7 @@ char	*set_heredoc(t_data *data, t_token *currentt, t_pvars *pvars)
 // send heredoc through heredoc pipe, free it and set it to NULL
 void	send_clean_heredoc(t_pvars *pvars)
 {
-	if (pvars->hdoc)
+	if (pvars->htoken)
 	{
 		ft_putstr_fd(pvars->hdoc, pvars->pfd[2][1]);
 		edit_pipeset(pvars->pfd[2], NULL, 0, 1);

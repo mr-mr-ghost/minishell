@@ -208,7 +208,7 @@ int		check_launch_redir(t_token *redirt);
 
 /*	execution	*/
 t_token	*get_nth_token(t_token *token, int n);
-t_token	*return_1stheredoct(t_token *cmdt);
+t_token	*return_lastheredoct(t_token *cmdt);
 int		launch_single_anycmd(t_data *data, t_token *cmdt);
 void	process_n_exec(t_data *data);
 
@@ -253,7 +253,7 @@ t_token	*prep_next_iter(t_token *currentt, t_token *nextt, t_pvars *pvars);
 int		launch_cmd_inpipe(t_data *data, t_token *cmdt);
 int		is_pipe(char *heredoc, int *fd, int *status);
 void	edit_pipeset(int *pipefd, int *replace, int replace_fd, int close);
-int		close_fd(int fd[3][2], char *heredoc);
-int		pipe_fork(t_data *data, t_token *cmdt, int pipefd[3][2], char *heredoc);
+int		close_fd(int fd[3][2], t_token *htoken);
+int		pipe_fork(t_data *data, t_token *cmdt, int pfd[3][2], t_pvars *pvars);
 
 #endif

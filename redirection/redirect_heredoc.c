@@ -115,7 +115,7 @@ int	hredir_builtin(t_data *data, t_token *cmdt, t_token *redir, int ispipe)
 	heredoc = NULL;
 	if (!ispipe)
 	{
-		hdtoken = return_1stheredoct(cmdt);
+		hdtoken = return_lastheredoct(cmdt);
 		if (hdtoken)
 			heredoc = get_heredoc(data, hdtoken->next->value);
 		if (heredoc)
