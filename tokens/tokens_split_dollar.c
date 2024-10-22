@@ -6,7 +6,7 @@
 /*   By: gklimasa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 12:20:14 by jhoddy            #+#    #+#             */
-/*   Updated: 2024/10/21 23:34:25 by gklimasa         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:50:30 by gklimasa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,7 @@ char	*process_dollar(t_data *data, char *line, int *i)
 	char	*env_value;
 
 	(*i)++;
-	if (line[*i] == '"')
-		env_value = ft_strdup("$");
-	else if (line[*i] == '?')
+	if (line[*i] == '?')
 	{
 		env_value = ft_itoa(data->exit_code);
 		(*i)++;
@@ -71,6 +69,8 @@ char	*process_dollar(t_data *data, char *line, int *i)
 		env_value = ft_strdup("");
 		*i = update_line_iter(line, *i);
 	}
+	else
+		env_value = ft_strdup("$");
 	return (env_value);
 }
 
